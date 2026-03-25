@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Jenkins 是最流行的持续集成工具之一。从安装到配置 Pipeline，手把手带你搭建自动化部署流程。">
+<title>Jenkins CI/CD 从入门到实战：自动化部署不再难</title>
+
+
+<link rel="canonical" href="https://jonnynan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="Jenkins CI/CD 从入门到实战：自动化部署不再难">
+<meta property='og:description' content="Jenkins 是最流行的持续集成工具之一。从安装到配置 Pipeline，手把手带你搭建自动化部署流程。">
+<meta property='og:url' content='https://jonnynan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/'>
+<meta property='og:site_name' content='Jasper&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Jenkins' /><meta property='article:tag' content='CI/CD' /><meta property='article:tag' content='运维' /><meta property='article:tag' content='Docker' /><meta property='article:published_time' content='2026-03-25T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-25T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Jenkins CI/CD 从入门到实战：自动化部署不再难">
+<meta name="twitter:description" content="Jenkins 是最流行的持续集成工具之一。从安装到配置 Pipeline，手把手带你搭建自动化部署流程。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Jasper&#39;s Blog</a></h1>
+            <h2 class="site-description">致良知</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post/' >
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/">Jenkins CI/CD 从入门到实战：自动化部署不再难</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Jenkins 是最流行的持续集成工具之一。从安装到配置 Pipeline，手把手带你搭建自动化部署流程。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-25T00:00:00Z'>Wednesday, March 25, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        4 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p>Jenkins 虽然老了，但仍然是企业里用得最多的 CI/CD 工具。掌握 Jenkins Pipeline 是全栈/测试工程师的加分项。</p>
+
+    </blockquote>
+<hr>
+<h2 id="一安装-jenkins">一、安装 Jenkins
+</h2><h3 id="docker-一键安装推荐">Docker 一键安装（推荐）
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run -d <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --name jenkins <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -p 8080:8080 <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -p 50000:50000 <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -v jenkins_home:/var/jenkins_home <span class="se">\
+</span></span></span><span class="line"><span class="cl">  -v /var/run/docker.sock:/var/run/docker.sock <span class="se">\
+</span></span></span><span class="line"><span class="cl">  --restart unless-stopped <span class="se">\
+</span></span></span><span class="line"><span class="cl">  jenkins/jenkins:lts
+</span></span></code></pre></div>
+    <blockquote>
+        <p>挂载 docker.sock 是为了在 Pipeline 里能用 Docker。</p>
+
+    </blockquote>
+<h3 id="初始化">初始化
+</h3><ol>
+<li>访问 <code>http://your-ip:8080</code></li>
+<li>查看初始密码：<code>docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword</code></li>
+<li>安装推荐插件</li>
+<li>创建管理员账户</li>
+</ol>
+<h3 id="推荐安装的插件">推荐安装的插件
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>插件</th>
+          <th>用途</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Git</td>
+          <td>代码拉取</td>
+      </tr>
+      <tr>
+          <td>Pipeline</td>
+          <td>流水线定义</td>
+      </tr>
+      <tr>
+          <td>Docker Pipeline</td>
+          <td>在 Pipeline 中使用 Docker</td>
+      </tr>
+      <tr>
+          <td>Credentials</td>
+          <td>凭证管理</td>
+      </tr>
+      <tr>
+          <td>Blue Ocean</td>
+          <td>可视化 Pipeline（已弃用但好看）</td>
+      </tr>
+      <tr>
+          <td>Chinese Localization</td>
+          <td>中文界面</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="二基础概念">二、基础概念
+</h2><h3 id="jenkins-核心术语">Jenkins 核心术语
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>术语</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Job</strong></td>
+          <td>一个构建任务</td>
+      </tr>
+      <tr>
+          <td><strong>Pipeline</strong></td>
+          <td>多阶段流水线（推荐方式）</td>
+      </tr>
+      <tr>
+          <td><strong>Stage</strong></td>
+          <td>流水线的一个阶段</td>
+      </tr>
+      <tr>
+          <td><strong>Step</strong></td>
+          <td>阶段中的一个具体操作</td>
+      </tr>
+      <tr>
+          <td><strong>Node / Agent</strong></td>
+          <td>执行构建的机器</td>
+      </tr>
+      <tr>
+          <td><strong>Workspace</strong></td>
+          <td>构建的工作目录</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="pipeline-vs-传统-job">Pipeline vs 传统 Job
+</h3><p><strong>传统 Freestyle Job：</strong> 在网页上点按钮配置，适合简单任务，但不方便版本管理。</p>
+<p><strong>Pipeline：</strong> 用代码（Jenkinsfile）定义流程，提交到代码仓库，<strong>推荐使用。</strong></p>
+<hr>
+<h2 id="三pipeline-实战">三、Pipeline 实战
+</h2><h3 id="jenkinsfile-示例python-项目">Jenkinsfile 示例：Python 项目
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">pipeline</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">agent</span> <span class="n">any</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">environment</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">PYTHON_VERSION</span> <span class="o">=</span> <span class="s1">&#39;3.11&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">stages</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;拉取代码&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">git</span> <span class="s1">&#39;https://github.com/yourname/yourproject.git&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;安装依赖&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;pip install -r requirements.txt&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;代码检查&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;运行测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;pytest tests/ -v --junitxml=report.xml&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">post</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">always</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">junit</span> <span class="s1">&#39;report.xml&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;构建镜像&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;docker build -t myapp:${BUILD_NUMBER} .&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;部署&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;docker stop myapp || true&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;docker rm myapp || true&#39;</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;docker run -d --name myapp -p 8000:8000 myapp:${BUILD_NUMBER}&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">post</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">success</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">echo</span> <span class="s1">&#39;✅ 部署成功！&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">failure</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">echo</span> <span class="s1">&#39;❌ 部署失败，请检查日志。&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">always</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">cleanWs</span><span class="o">()</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="jenkinsfile-示例前端项目">Jenkinsfile 示例：前端项目
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">pipeline</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">agent</span> <span class="n">any</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">stages</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;安装依赖&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;npm install&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;代码检查&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;npm run lint&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;构建&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;npm run build&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;部署到 Nginx&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;docker cp dist/ nginx-container:/usr/share/nginx/html/&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><hr>
+<h2 id="四常用操作">四、常用操作
+</h2><h3 id="凭证管理">凭证管理
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="c1">// 使用 Git 凭证
+</span></span></span><span class="line"><span class="cl"><span class="n">checkout</span><span class="o">([</span>
+</span></span><span class="line"><span class="cl">    <span class="n">$class</span><span class="o">:</span> <span class="s1">&#39;GitSCM&#39;</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nl">branches:</span> <span class="o">[[</span><span class="nl">name:</span> <span class="s1">&#39;main&#39;</span><span class="o">]],</span>
+</span></span><span class="line"><span class="cl">    <span class="nl">userRemoteConfigs:</span> <span class="o">[[</span>
+</span></span><span class="line"><span class="cl">        <span class="nl">url:</span> <span class="s1">&#39;https://github.com/yourname/project.git&#39;</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nl">credentialsId:</span> <span class="s1">&#39;git-credentials&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">]]</span>
+</span></span><span class="line"><span class="cl"><span class="o">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 使用 SSH 密钥
+</span></span></span><span class="line"><span class="cl"><span class="n">withCredentials</span><span class="o">([</span><span class="n">sshUserPrivateKey</span><span class="o">(</span>
+</span></span><span class="line"><span class="cl">    <span class="nl">credentialsId:</span> <span class="s1">&#39;ssh-key&#39;</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nl">keyFileVariable:</span> <span class="s1">&#39;SSH_KEY&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="o">)])</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">sh</span> <span class="s2">&#34;ssh -i $SSH_KEY user@server &#39;deploy.sh&#39;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="参数化构建">参数化构建
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">pipeline</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">agent</span> <span class="n">any</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parameters</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">string</span><span class="o">(</span><span class="nl">name:</span> <span class="s1">&#39;BRANCH&#39;</span><span class="o">,</span> <span class="nl">defaultValue:</span> <span class="s1">&#39;main&#39;</span><span class="o">,</span> <span class="nl">description:</span> <span class="s1">&#39;构建分支&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">choice</span><span class="o">(</span><span class="nl">name:</span> <span class="s1">&#39;ENV&#39;</span><span class="o">,</span> <span class="nl">choices:</span> <span class="o">[</span><span class="s1">&#39;dev&#39;</span><span class="o">,</span> <span class="s1">&#39;staging&#39;</span><span class="o">,</span> <span class="s1">&#39;prod&#39;</span><span class="o">],</span> <span class="nl">description:</span> <span class="s1">&#39;部署环境&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">booleanParam</span><span class="o">(</span><span class="nl">name:</span> <span class="s1">&#39;SKIP_TESTS&#39;</span><span class="o">,</span> <span class="nl">defaultValue:</span> <span class="kc">false</span><span class="o">,</span> <span class="nl">description:</span> <span class="s1">&#39;跳过测试&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">stages</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;拉取代码&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">git</span> <span class="nl">branch:</span> <span class="n">params</span><span class="o">.</span><span class="na">BRANCH</span><span class="o">,</span> <span class="nl">url:</span> <span class="s1">&#39;https://github.com/yourname/project.git&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">when</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">expression</span> <span class="o">{</span> <span class="o">!</span><span class="n">params</span><span class="o">.</span><span class="na">SKIP_TESTS</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;pytest tests/&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;部署&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">echo</span> <span class="s2">&#34;部署到 ${params.ENV} 环境&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="定时构建">定时构建
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="c1">// Poll SCM：每 5 分钟检查一次代码变更
+</span></span></span><span class="line"><span class="cl"><span class="n">triggers</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pollSCM</span><span class="o">(</span><span class="s1">&#39;H/5 * * * *&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 定时构建：每天上午 10 点
+</span></span></span><span class="line"><span class="cl"><span class="n">triggers</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">cron</span><span class="o">(</span><span class="s1">&#39;H 10 * * *&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><hr>
+<h2 id="五多节点agent配置">五、多节点（Agent）配置
+</h2><p>如果你有多台机器：</p>
+<h3 id="添加-agent">添加 Agent
+</h3><ol>
+<li><strong>Manage Jenkins</strong> → <strong>Nodes</strong> → <strong>New Node</strong></li>
+<li>设置节点名称、工作目录</li>
+<li>选择连接方式（SSH）</li>
+<li>配置 SSH 凭证</li>
+</ol>
+<h3 id="在-pipeline-中指定节点">在 Pipeline 中指定节点
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">pipeline</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">agent</span> <span class="n">none</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">stages</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;构建&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">agent</span> <span class="o">{</span> <span class="n">label</span> <span class="s1">&#39;build-server&#39;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;make build&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">agent</span> <span class="o">{</span> <span class="n">label</span> <span class="s1">&#39;test-server&#39;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;make test&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;部署&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">agent</span> <span class="o">{</span> <span class="n">label</span> <span class="s1">&#39;prod-server&#39;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">                <span class="n">sh</span> <span class="s1">&#39;make deploy&#39;</span>
+</span></span><span class="line"><span class="cl">            <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><hr>
+<h2 id="六webhook-自动触发">六、Webhook 自动触发
+</h2><h3 id="github--gitlab-集成">GitHub / GitLab 集成
+</h3><ol>
+<li>Jenkins 安装插件：<code>Generic Webhook Trigger</code> 或 <code>GitLab Plugin</code></li>
+<li>在 Jenkins Job 中配置 Webhook URL</li>
+<li>在 GitHub/GitLab 仓库设置中添加 Webhook</li>
+</ol>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">triggers</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GenericTrigger</span><span class="o">(</span>
+</span></span><span class="line"><span class="cl">        <span class="nl">genericVariables:</span> <span class="o">[[</span><span class="nl">key:</span> <span class="s1">&#39;ref&#39;</span><span class="o">,</span> <span class="nl">value:</span> <span class="s1">&#39;$.ref&#39;</span><span class="o">]],</span>
+</span></span><span class="line"><span class="cl">        <span class="nl">causeString:</span> <span class="s1">&#39;Triggered by push&#39;</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nl">printContributedVariables:</span> <span class="kc">true</span><span class="o">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nl">printPostContent:</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><hr>
+<h2 id="七实用技巧">七、实用技巧
+</h2><h3 id="并行构建">并行构建
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;并行测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parallel</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;单元测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span> <span class="n">sh</span> <span class="s1">&#39;pytest tests/unit/&#39;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stage</span><span class="o">(</span><span class="s1">&#39;集成测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            <span class="n">steps</span> <span class="o">{</span> <span class="n">sh</span> <span class="s1">&#39;pytest tests/integration/&#39;</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="构建超时">构建超时
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">stage</span><span class="o">(</span><span class="s1">&#39;测试&#39;</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">options</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">timeout</span><span class="o">(</span><span class="nl">time:</span> <span class="mi">30</span><span class="o">,</span> <span class="nl">unit:</span> <span class="s1">&#39;MINUTES&#39;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">steps</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span> <span class="s1">&#39;pytest tests/&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="构建通知">构建通知
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="n">post</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">success</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="c1">// 飞书/钉钉/企业微信通知
+</span></span></span><span class="line"><span class="cl">        <span class="n">sh</span> <span class="s1">&#39;curl -X POST &#34;$WEBHOOK_URL&#34; -H &#34;Content-Type: application/json&#34; -d \&#39;{&#34;msg_type&#34;:&#34;text&#34;,&#34;content&#34;:{&#34;text&#34;:&#34;✅ 构建成功: $JOB_NAME #${BUILD_NUMBER}&#34;}}\&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="n">failure</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sh</span> <span class="s1">&#39;curl -X POST &#34;$WEBHOOK_URL&#34; -H &#34;Content-Type: application/json&#34; -d \&#39;{&#34;msg_type&#34;:&#34;text&#34;,&#34;content&#34;:{&#34;text&#34;:&#34;❌ 构建失败: $JOB_NAME #${BUILD_NUMBER}&#34;}}\&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><hr>
+<h2 id="八jenkins-维护">八、Jenkins 维护
+</h2><h3 id="清理旧构建">清理旧构建
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-groovy" data-lang="groovy"><span class="line"><span class="cl"><span class="c1">// Pipeline 中配置
+</span></span></span><span class="line"><span class="cl"><span class="n">options</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="n">buildDiscarder</span><span class="o">(</span><span class="n">logRotator</span><span class="o">(</span><span class="nl">numToKeepStr:</span> <span class="s1">&#39;10&#39;</span><span class="o">))</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h3 id="备份与恢复">备份与恢复
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 备份（Docker 方式）</span>
+</span></span><span class="line"><span class="cl">docker run --rm -v jenkins_home:/var/jenkins_home -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/backup <span class="se">\
+</span></span></span><span class="line"><span class="cl">  busybox tar czf /backup/jenkins-backup.tar.gz /var/jenkins_home
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 恢复</span>
+</span></span><span class="line"><span class="cl">docker run --rm -v jenkins_home:/var/jenkins_home -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/backup <span class="se">\
+</span></span></span><span class="line"><span class="cl">  busybox tar xzf /backup/jenkins-backup.tar.gz -C /
+</span></span></code></pre></div><hr>
+<p><em>Jenkins 虽然界面不够现代，但功能强大、插件丰富、社区成熟。学会写 Pipeline，你就掌握了 CI/CD 的核心能力。</em></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/jenkins/">Jenkins</a>
+        
+            <a href="/tags/ci/cd/">CI/CD</a>
+        
+            <a href="/tags/%E8%BF%90%E7%BB%B4/">运维</a>
+        
+            <a href="/tags/docker/">Docker</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Docker 常用命令速查手册</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Linux 进程管理实战：从查找、过滤到终止</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">群晖 Synology NAS 新手入门完全指南</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">使用Logrotate归档日志</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">git系列之安装并创建版本库</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    
+<div style="text-align:center; margin-top:2rem;">
+  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:#f0694f;color:#fff;border:none;padding:12px 36px;border-radius:24px;cursor:pointer;font-size:16px;font-weight:bold;box-shadow:0 2px 8px rgba(240,105,79,0.3);">
+    ☕ 请我喝杯咖啡
+  </button>
+</div>
+
+
+<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
+    
+    
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
+      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
+    </div>
+    
+    
+    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    
+    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
+  </div>
+</div>
+
+<script>
+function switchPay(type) {
+  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
+  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
+  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
+  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
+  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
+  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
+}
+</script>
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2019 - 
+        
+        2026 Jasper&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" defer></script>
+
+
+    </body>
+</html>
