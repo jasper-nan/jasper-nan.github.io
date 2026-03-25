@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="aliases:\n/posts/2019-08-12-git系列之安装并创建版本库/ git的安装 windows安装无脑下一步即可\nlinux： ubuntu :\n1$ sudo apt install git arch:\n1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34; 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址\ngit创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。\n找一个空目录执行下面命令：\n1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。\n如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。\n也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。\n把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。\n比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.\n现在新建一个文件：readme.txt,内容如下：\n12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。\n将一个文件放到git仓库只需2步：\n第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。\n">
+<title>git系列之安装并创建版本库</title>
+
+
+<link rel="canonical" href="https://jonnynan.github.io/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="git系列之安装并创建版本库">
+<meta property='og:description' content="aliases:\n/posts/2019-08-12-git系列之安装并创建版本库/ git的安装 windows安装无脑下一步即可\nlinux： ubuntu :\n1$ sudo apt install git arch:\n1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34; 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址\ngit创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。\n找一个空目录执行下面命令：\n1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。\n如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。\n也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。\n把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。\n比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.\n现在新建一个文件：readme.txt,内容如下：\n12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。\n将一个文件放到git仓库只需2步：\n第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。\n">
+<meta property='og:url' content='https://jonnynan.github.io/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/'>
+<meta property='og:site_name' content='Jonny&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='git' /><meta property='article:tag' content='运维' /><meta property='article:published_time' content='2019-08-12T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2019-08-12T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="git系列之安装并创建版本库">
+<meta name="twitter:description" content="aliases:\n/posts/2019-08-12-git系列之安装并创建版本库/ git的安装 windows安装无脑下一步即可\nlinux： ubuntu :\n1$ sudo apt install git arch:\n1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34; 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址\ngit创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。\n找一个空目录执行下面命令：\n1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。\n如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。\n也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。\n把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。\n比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.\n现在新建一个文件：readme.txt,内容如下：\n12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。\n将一个文件放到git仓库只需2步：\n第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。\n">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Jonny&#39;s Blog</a></h1>
+            <h2 class="site-description">致良知</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post/' >
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">git系列之安装并创建版本库</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2019-08-12T00:00:00Z'>Monday, August 12, 2019</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        1 minute read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <p>aliases:</p>
+<ul>
+<li>/posts/2019-08-12-git系列之安装并创建版本库/</li>
+</ul>
+<h2 id="git的安装">git的安装
+</h2><ul>
+<li>
+<p>windows安装无脑下一步即可</p>
+</li>
+<li>
+<p>linux：
+ubuntu :</p>
+</li>
+</ul>
+<pre tabindex="0"><code>1$ sudo apt install git
+</code></pre><p>arch:</p>
+<pre tabindex="0"><code>1$ sudo pacman -S git
+</code></pre><ul>
+<li>macos:</li>
+</ul>
+<pre tabindex="0"><code>1brew install git
+</code></pre><ul>
+<li>linux和macos 也可以源码编译安装。</li>
+</ul>
+<h2 id="git安装后的配置">git安装后的配置
+</h2><ul>
+<li>Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。</li>
+</ul>
+<pre tabindex="0"><code>12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34;
+</code></pre><p>注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址</p>
+<h2 id="git创建版本库">git创建版本库
+</h2><p>什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。</p>
+<p>找一个空目录执行下面命令：</p>
+<pre tabindex="0"><code>1$ git init
+</code></pre><p>Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。</p>
+<p>如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。</p>
+<p>也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。</p>
+<h2 id="把文件添加到版本库">把文件添加到版本库
+</h2><p>首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。</p>
+<p>比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.</p>
+<p>现在新建一个文件：readme.txt,内容如下：</p>
+<pre tabindex="0"><code>12Git is a version control system.Git is free software.
+</code></pre><p>此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。</p>
+<p>将一个文件放到git仓库只需2步：</p>
+<ul>
+<li>第一步，用命令git add告诉Git，把文件添加到仓库：</li>
+</ul>
+<pre tabindex="0"><code>1$ git add readme.txt
+</code></pre><ul>
+<li>第二步，用命令git commit告诉Git，把文件提交到仓库：</li>
+</ul>
+<pre tabindex="0"><code>1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt
+</code></pre><p>简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。</p>
+<p>嫌麻烦不想输入-m “xxx”行不行？确实有办法可以这么干，但是强烈不建议你这么干，因为输入说明对自己对别人阅读都很重要。</p>
+<p>git commit命令执行成功后会告诉你，1 file changed：1个文件被改动（我们新添加的readme.txt文件）；2 insertions：插入了两行内容（readme.txt有两行内容）。</p>
+<h2 id="为什么git添加文件要两步走">为什么git添加文件要两步走？
+</h2><p>因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：</p>
+<pre tabindex="0"><code>123$ git add file1.txt$ git add file2.txt file3.txt$ git commit -m &#34;add 3 files.&#34;
+</code></pre><h2 id="小结">小结
+</h2><p>初始化一个Git仓库，使用git init命令。</p>
+<p>添加文件到Git仓库，分两步：</p>
+<p>使用命令git add &lt;file&gt;，注意，可反复多次使用，添加多个文件；使用命令git commit -m &lt;message&gt;，完成。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/git/">Git</a>
+        
+            <a href="/tags/%E8%BF%90%E7%BB%B4/">运维</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    
+<div style="text-align:center; margin-top:2rem;">
+  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:var(--primary);color:#fff;border:none;padding:10px 32px;border-radius:20px;cursor:pointer;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+    ☕ 请我喝杯咖啡
+  </button>
+</div>
+
+
+<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
+    
+    
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
+      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
+    </div>
+    
+    
+    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    
+    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
+  </div>
+</div>
+
+<script>
+function switchPay(type) {
+  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
+  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
+  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
+  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
+  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
+  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
+}
+</script>
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2019 - 
+        
+        2026 Jonny&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" defer></script>
+
+
+    </body>
+</html>
