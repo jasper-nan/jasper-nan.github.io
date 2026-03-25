@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>git系列之时光穿梭 | Jonny&#39;s Blog</title>
+<meta name="keywords" content="git, 版本管理">
+<meta name="description" content="小结
+要随时掌握工作区的状态，使用git status命令。
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
+版本回退
+git 每次 commit 都会产生一个 版本 commit 编号
+查看可以使用  git log 命令
+需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。
+好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？
+首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：
+12$ git reset --hard HEAD^HEAD is now at e475afc add distributed
+查看文件可以发现确实已经回到了上个版本提交的内容。
+此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？
+还是有办法 。再学两个命令：
+git reflog  查看之前执行的每个命令。找到对应的 commit log
+然后执行命令 git reset –hard commit_id
+即可恢复到指定提交版本了。
+小结
+HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+工作区和暂存区
+核心知识点来了。
+git学的好不好最要紧的就是理解这个暂存区。
+工作区
+首先来看看什么是工作区。">
+<meta name="author" content="Jonny">
+<link rel="canonical" href="https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://jonnynan.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://jonnynan.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://jonnynan.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://jonnynan.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://jonnynan.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/">
+  <meta property="og:site_name" content="Jonny&#39;s Blog">
+  <meta property="og:title" content="git系列之时光穿梭">
+  <meta property="og:description" content="小结 要随时掌握工作区的状态，使用git status命令。
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
+版本回退 git 每次 commit 都会产生一个 版本 commit 编号
+查看可以使用 git log 命令
+需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。
+好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？
+首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：
+12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。
+此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？
+还是有办法 。再学两个命令：
+git reflog 查看之前执行的每个命令。找到对应的 commit log
+然后执行命令 git reset –hard commit_id
+即可恢复到指定提交版本了。
+小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+工作区和暂存区 核心知识点来了。
+git学的好不好最要紧的就是理解这个暂存区。
+工作区 首先来看看什么是工作区。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2019-08-13T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-08-13T00:00:00+00:00">
+    <meta property="article:tag" content="Git">
+    <meta property="article:tag" content="版本管理">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="git系列之时光穿梭">
+  <meta name="twitter:description" content="小结 要随时掌握工作区的状态，使用git status命令。
+如果git status告诉你有文件被修改过，用git diff可以查看修改内容。
+版本回退 git 每次 commit 都会产生一个 版本 commit 编号
+查看可以使用 git log 命令
+需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。
+好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？
+首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。
+现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：
+12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。
+此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？
+还是有办法 。再学两个命令：
+git reflog 查看之前执行的每个命令。找到对应的 commit log
+然后执行命令 git reset –hard commit_id
+即可恢复到指定提交版本了。
+小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。
+穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。
+要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。
+工作区和暂存区 核心知识点来了。
+git学的好不好最要紧的就是理解这个暂存区。
+工作区 首先来看看什么是工作区。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://jonnynan.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "git系列之时光穿梭",
+      "item": "https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "git系列之时光穿梭",
+  "name": "git系列之时光穿梭",
+  "description": "小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\ngit学的好不好最要紧的就是理解这个暂存区。\n工作区 首先来看看什么是工作区。\n",
+  "keywords": [
+    "git", "版本管理"
+  ],
+  "articleBody": "小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\ngit学的好不好最要紧的就是理解这个暂存区。\n工作区 首先来看看什么是工作区。\n我们在某个空文件夹内执行了 git init 命令。此文件夹以及其子文件夹就都属于工作区。\n注意 目录中 有一个 .git的隐藏目录 ，它属于版本库,不算工作区。\n暂存区 Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD\n分支和HEAD以后再讲。\n前面说了往git仓库中加文件需要两步走，第一步add 第二步 commit,其实这里：第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；\n第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。\n因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以，现在，git commit就是往master分支上提交更改。\n你可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。\n此时我们编辑下 redeme.txt文件，再新建一个 LICENSE 文件。\ngit status 查看状态\n1234567891011121314$ git statusOn branch masterChanges not staged for commit: (use \"git add \u0026lt;file\u0026gt;...\" to update what will be committed) (use \"git checkout -- \u0026lt;file\u0026gt;...\" to discard changes in working directory)\tmodified: readme.txtUntracked files: (use \"git add \u0026lt;file\u0026gt;...\" to include in what will be committed)\tLICENSEno changes added to commit (use \"git add\" and/or \"git commit -a\") Git非常清楚地告诉我们，readme.txt被修改了，而LICENSE还从来没有被添加过，所以它的状态是Untracked。\n现在，使用两次命令git add，把readme.txt和LICENSE都添加后，用git status再查看一下：\n1234567$ git statusOn branch masterChanges to be committed: (use \"git reset HEAD \u0026lt;file\u0026gt;...\" to unstage)\tnew file: LICENSE\tmodified: readme.txt 所以，git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。\n1234$ git commit -m \"understand how stage works\"[master e43a48b] understand how stage works 2 files changed, 2 insertions(+) create mode 100644 LICENSE 一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的：\n123$ git statusOn branch masternothing to commit, working tree clean 小结 暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么\n管理修改 git 管理的是修改本身，而不是文件。这也是git的特色之一。\n假如你修改了一次 readme.txt add了 一次 。然后又修改了一次 readme.txt，再提交。\n此时 执行 git status,你会发现第二次的修改没有被提交。\n123你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别： 第一次修改 -\u003e git add -\u003e 第二次修改 -\u003e git commit.你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。\n提交后，用git diff HEAD – readme.txt命令可以查看工作区和版本库里面最新版本的区别：\n1234567891011$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files. 那怎么提交第二次修改呢？你可以继续git add再git commit，也可以别着急提交第一次修改，先git add第二次修改，再git commit，就相当于把两次修改合并后一块提交了：\n第一次修改 -\u003e git add -\u003e 第二次修改 -\u003e git add -\u003e git commit\n小结 理解了Git是如何跟踪修改的，每次修改，如果不用git add到暂存区，那就不会加入到commit中。\n#撤销修改\n万一我提交的东西里面有错误内容，可以后悔吗？可以！\n丢弃工作区修改 丢弃工作区的修改 ,恢复到上次提交时候的内容\n1git checkout -- readme.txt 命令git checkout – readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，这里有两种情况：\n一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；\n一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。\n总之，就是让这个文件回到最近一次git commit或git add时的状态。\n还原暂存区的修改 执行了 git add 还没有 commit 的修改也能撤销\nGit同样告诉我们，用命令git reset HEAD 可以把暂存区的修改撤销掉（unstage），重新放回工作区：\n123$ git reset HEAD readme.txtUnstaged changes after reset:M\treadme.txt git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。\n现在用git status查看一下，现在暂存区是干净的，工作区有修改.\n再 git checkout – readme.txt 工作区修改也还原了\n小结 场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout – file。\n场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD ，就回到了场景1，第二步按场景1操作。\n场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。\n删除文件 假如我已经提交的文件，我本地给删除了。如何git库中也进行删除呢？\n在Git中，删除也是一个修改操作，我们实战一下，先添加一个新文件test.txt到Git并且提交：\n123456$ git add test.txt$ git commit -m \"add test.txt\"[master b84166e] add test.txt 1 file changed, 1 insertion(+) create mode 100644 test.txt 一般情况下，你通常直接在文件管理器中把没用的文件删了，或者用rm命令删了：\n1$ rm test.txt 这个时候，Git知道你删除了文件，因此，工作区和版本库就不一致了，git status命令会立刻告诉你哪些文件被删除了：\n123456789$ git statusOn branch masterChanges not staged for commit: (use \"git add/rm \u0026lt;file\u0026gt;...\" to update what will be committed) (use \"git checkout -- \u0026lt;file\u0026gt;...\" to discard changes in working directory)\tdeleted: test.txtno changes added to commit (use \"git add\" and/or \"git commit -a\") 现在你有两个选择，一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：\n1234567$ git rm test.txtrm 'test.txt'$ git commit -m \"remove test.txt\"[master d46f35e] remove test.txt 1 file changed, 1 deletion(-) delete mode 100644 test.txt 另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：\n1git checkout -- test.txt git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。 从来没有被添加到版本库就被删除的文件，是无法恢复的！\n小结 命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。\nLast updated: 2021-06-24 16:19:40 ![image](/img/avatar.jpg) 南璋 [赏](javascript:;) - git- 版本管理 - - - - - - Prev 使用Logrotate归档日志 Next git系列之安装并创建版本库 var disqus_shortname = 'true'; lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js') Please enable JavaScript to view the [comments powered by Disqus.](https://disqus.com/?ref_noscript) ",
+  "wordCount" : "524",
+  "inLanguage": "en",
+  "datePublished": "2019-08-13T00:00:00Z",
+  "dateModified": "2019-08-13T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jonny"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Jonny's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jonnynan.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://jonnynan.github.io/" accesskey="h" title="Jonny&#39;s Blog (Alt + H)">Jonny&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://jonnynan.github.io/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://jonnynan.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://jonnynan.github.io/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      git系列之时光穿梭
+    </h1>
+    <div class="post-meta"><span title='2019-08-13 00:00:00 +0000 UTC'>August 13, 2019</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>Jonny</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="小结">小结<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h2>
+<p>要随时掌握工作区的状态，使用git status命令。</p>
+<p>如果git status告诉你有文件被修改过，用git diff可以查看修改内容。</p>
+<p><a href="#%E7%89%88%E6%9C%AC%E5%9B%9E%E9%80%80"></a>版本回退
+git 每次 commit 都会产生一个 版本 commit 编号</p>
+<p>查看可以使用  git log 命令</p>
+<p>需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。</p>
+<p>好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？</p>
+<p>首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。</p>
+<p>现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：</p>
+<pre tabindex="0"><code>12$ git reset --hard HEAD^HEAD is now at e475afc add distributed
+</code></pre><p>查看文件可以发现确实已经回到了上个版本提交的内容。</p>
+<p>此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？</p>
+<p>还是有办法 。再学两个命令：</p>
+<p>git reflog  查看之前执行的每个命令。找到对应的 commit log</p>
+<p>然后执行命令 git reset –hard commit_id</p>
+<p>即可恢复到指定提交版本了。</p>
+<h2 id="小结-1">小结<a hidden class="anchor" aria-hidden="true" href="#小结-1">#</a></h2>
+<p>HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。</p>
+<p>穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。</p>
+<p>要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。</p>
+<p><a href="#%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8C%E6%9A%82%E5%AD%98%E5%8C%BA"></a>工作区和暂存区
+核心知识点来了。</p>
+<p>git学的好不好最要紧的就是理解这个暂存区。</p>
+<h2 id="工作区">工作区<a hidden class="anchor" aria-hidden="true" href="#工作区">#</a></h2>
+<p>首先来看看什么是工作区。</p>
+<p>我们在某个空文件夹内执行了 git init 命令。此文件夹以及其子文件夹就都属于工作区。</p>
+<p>注意 目录中 有一个 .git的隐藏目录 ，它属于版本库,不算工作区。</p>
+<h2 id="暂存区">暂存区<a hidden class="anchor" aria-hidden="true" href="#暂存区">#</a></h2>
+<p>Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD</p>
+<p>分支和HEAD以后再讲。</p>
+<p>前面说了往git仓库中加文件需要两步走，第一步add 第二步 commit,其实这里：第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；</p>
+<p>第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。</p>
+<p>因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以，现在，git commit就是往master分支上提交更改。</p>
+<p>你可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。</p>
+<p>此时我们编辑下 redeme.txt文件，再新建一个 LICENSE 文件。</p>
+<p>git status 查看状态</p>
+<pre tabindex="0"><code>1234567891011121314$ git statusOn branch masterChanges not staged for commit:  (use &#34;git add &amp;lt;file&amp;gt;...&#34; to update what will be committed)  (use &#34;git checkout -- &amp;lt;file&amp;gt;...&#34; to discard changes in working directory)	modified:   readme.txtUntracked files:  (use &#34;git add &amp;lt;file&amp;gt;...&#34; to include in what will be committed)	LICENSEno changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
+</code></pre><p>Git非常清楚地告诉我们，readme.txt被修改了，而LICENSE还从来没有被添加过，所以它的状态是Untracked。</p>
+<p>现在，使用两次命令git add，把readme.txt和LICENSE都添加后，用git status再查看一下：</p>
+<pre tabindex="0"><code>1234567$ git statusOn branch masterChanges to be committed:  (use &#34;git reset HEAD &amp;lt;file&amp;gt;...&#34; to unstage)	new file:   LICENSE	modified:   readme.txt
+</code></pre><p>所以，git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。</p>
+<pre tabindex="0"><code>1234$ git commit -m &#34;understand how stage works&#34;[master e43a48b] understand how stage works 2 files changed, 2 insertions(+) create mode 100644 LICENSE
+</code></pre><p>一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的：</p>
+<pre tabindex="0"><code>123$ git statusOn branch masternothing to commit, working tree clean
+</code></pre><h2 id="小结-2">小结<a hidden class="anchor" aria-hidden="true" href="#小结-2">#</a></h2>
+<p>暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么</p>
+<p><a href="#%E7%AE%A1%E7%90%86%E4%BF%AE%E6%94%B9"></a>管理修改
+git 管理的是修改本身，而不是文件。这也是git的特色之一。</p>
+<p>假如你修改了一次 readme.txt add了 一次 。然后又修改了一次 readme.txt，再提交。</p>
+<p>此时 执行 git status,你会发现第二次的修改没有被提交。</p>
+<pre tabindex="0"><code>123你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：
+</code></pre><p>第一次修改 -&gt; git add -&gt; 第二次修改 -&gt; git commit.你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。</p>
+<p>提交后，用git diff HEAD – readme.txt命令可以查看工作区和版本库里面最新版本的区别：</p>
+<pre tabindex="0"><code>1234567891011$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files.
+</code></pre><p>那怎么提交第二次修改呢？你可以继续git add再git commit，也可以别着急提交第一次修改，先git add第二次修改，再git commit，就相当于把两次修改合并后一块提交了：</p>
+<p>第一次修改 -&gt; git add -&gt; 第二次修改 -&gt; git add -&gt; git commit</p>
+<h2 id="小结-3">小结<a hidden class="anchor" aria-hidden="true" href="#小结-3">#</a></h2>
+<p>理解了Git是如何跟踪修改的，每次修改，如果不用git add到暂存区，那就不会加入到commit中。</p>
+<p>#撤销修改</p>
+<p>万一我提交的东西里面有错误内容，可以后悔吗？可以！</p>
+<h2 id="丢弃工作区修改">丢弃工作区修改<a hidden class="anchor" aria-hidden="true" href="#丢弃工作区修改">#</a></h2>
+<p>丢弃工作区的修改 ,恢复到上次提交时候的内容</p>
+<pre tabindex="0"><code>1git checkout -- readme.txt
+</code></pre><p>命令git checkout – readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，这里有两种情况：</p>
+<p>一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；</p>
+<p>一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。</p>
+<p>总之，就是让这个文件回到最近一次git commit或git add时的状态。</p>
+<h2 id="还原暂存区的修改">还原暂存区的修改<a hidden class="anchor" aria-hidden="true" href="#还原暂存区的修改">#</a></h2>
+<p>执行了 git add 还没有 commit 的修改也能撤销</p>
+<p>Git同样告诉我们，用命令git reset HEAD &lt;file&gt;可以把暂存区的修改撤销掉（unstage），重新放回工作区：</p>
+<pre tabindex="0"><code>123$ git reset HEAD readme.txtUnstaged changes after reset:M	readme.txt
+</code></pre><p>git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。</p>
+<p>现在用git status查看一下，现在暂存区是干净的，工作区有修改.</p>
+<p>再 git checkout – readme.txt  工作区修改也还原了</p>
+<h2 id="小结-4">小结<a hidden class="anchor" aria-hidden="true" href="#小结-4">#</a></h2>
+<p>场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout – file。</p>
+<p>场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD &lt;file&gt;，就回到了场景1，第二步按场景1操作。</p>
+<p>场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。</p>
+<p><a href="#%E5%88%A0%E9%99%A4%E6%96%87%E4%BB%B6"></a>删除文件
+假如我已经提交的文件，我本地给删除了。如何git库中也进行删除呢？</p>
+<p>在Git中，删除也是一个修改操作，我们实战一下，先添加一个新文件test.txt到Git并且提交：</p>
+<pre tabindex="0"><code>123456$ git add test.txt$ git commit -m &#34;add test.txt&#34;[master b84166e] add test.txt 1 file changed, 1 insertion(+) create mode 100644 test.txt
+</code></pre><p>一般情况下，你通常直接在文件管理器中把没用的文件删了，或者用rm命令删了：</p>
+<pre tabindex="0"><code>1$ rm test.txt
+</code></pre><p>这个时候，Git知道你删除了文件，因此，工作区和版本库就不一致了，git status命令会立刻告诉你哪些文件被删除了：</p>
+<pre tabindex="0"><code>123456789$ git statusOn branch masterChanges not staged for commit:  (use &#34;git add/rm &amp;lt;file&amp;gt;...&#34; to update what will be committed)  (use &#34;git checkout -- &amp;lt;file&amp;gt;...&#34; to discard changes in working directory)	deleted:    test.txtno changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
+</code></pre><p>现在你有两个选择，一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：</p>
+<pre tabindex="0"><code>1234567$ git rm test.txtrm &#39;test.txt&#39;$ git commit -m &#34;remove test.txt&#34;[master d46f35e] remove test.txt 1 file changed, 1 deletion(-) delete mode 100644 test.txt
+</code></pre><p>另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：</p>
+<pre tabindex="0"><code>1git checkout -- test.txt
+</code></pre><ul>
+<li>git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。</li>
+</ul>
+<p>从来没有被添加到版本库就被删除的文件，是无法恢复的！</p>
+<h2 id="小结-5">小结<a hidden class="anchor" aria-hidden="true" href="#小结-5">#</a></h2>
+<p>命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。</p>
+<pre><code>Last updated: 2021-06-24 16:19:40
+
+    
+
+
+
+    
+        ![image](/img/avatar.jpg)
+        南璋
+    
+
+
+    
+
+[赏](javascript:;)
+
+    
+        
+- git- 版本管理
+
+        
+
+
+
+
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+
+
+
+
+    
+
+
+    
+
+
+
+
+
+
+  
+     Prev
+    使用Logrotate归档日志
+  
+
+
+
+
+
+  
+    Next 
+    git系列之安装并创建版本库
+  
+
+
+
+
+
+
+
+var disqus_shortname = 'true';
+lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+
+Please enable JavaScript to view the [comments powered by Disqus.](https://disqus.com/?ref_noscript)
+</code></pre>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://jonnynan.github.io/tags/git/">Git</a></li>
+      <li><a href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/">版本管理</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://jonnynan.github.io/posts/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>使用Logrotate归档日志</span>
+  </a>
+  <a class="next" href="https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
+    <span class="title">Next »</span>
+    <br>
+    <span>git系列之安装并创建版本库</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://jonnynan.github.io/">Jonny&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

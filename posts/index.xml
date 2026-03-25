@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Posts on Jonny&#39;s Blog</title>
+    <link>https://jonnynan.github.io/posts/</link>
+    <description>Recent content in Posts on Jonny&#39;s Blog</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 19 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://jonnynan.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>git系列之远程仓库</title>
+      <link>https://jonnynan.github.io/posts/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/</link>
+      <pubDate>Mon, 19 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://jonnynan.github.io/posts/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/</guid>
+      <description>&lt;h2 id=&#34;使用github&#34;&gt;使用github&lt;/h2&gt;
+&lt;p&gt;远程仓库有很多，最常用的就是国际上的github。国内也有码云，码市。当然有些公司也会自己搭建git服务器，开源的比如gitlab。但是为了学习远程仓库去自己搭建服务器就有点小题大做了。&lt;/p&gt;
+&lt;h2 id=&#34;注册github&#34;&gt;注册github&lt;/h2&gt;
+&lt;p&gt;只要注册一个GitHub账号，就可以免费获得Git远程仓库&lt;/p&gt;
+&lt;h2 id=&#34;创建ssh-key&#34;&gt;创建SSH key&lt;/h2&gt;
+&lt;p&gt;由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一点设置.&lt;/p&gt;
+&lt;p&gt;第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：&lt;/p&gt;
+&lt;p&gt;$ ssh-keygen -t rsa -C “youremail@example.com“&lt;/p&gt;
+&lt;p&gt;你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，无需创建密码。&lt;/p&gt;
+&lt;p&gt;如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。&lt;/p&gt;
+&lt;p&gt;第2步，登陆GitHub，打开“Account settings”，“SSH Keys”页面：然后，点“Add SSH Key”，填上任意Title，比如『我的macbookpro』在Key文本框里粘贴id_rsa.pub文件的内容.&lt;/p&gt;
+&lt;p&gt;为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。&lt;/p&gt;
+&lt;p&gt;当然，GitHub允许你添加多个Key。假定你有若干电脑，你一会儿在公司提交，一会儿在家里提交，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。&lt;/p&gt;
+&lt;p&gt;github免费版的仓库默认是公开的，所有人都能看到，所以敏感信息不要放到里面。也可以付费获取隐私空间。当然企业开发大多数都是自己搭建私有的gitlab。&lt;/p&gt;
+&lt;h2 id=&#34;添加远程库&#34;&gt;添加远程库&lt;/h2&gt;
+&lt;p&gt;你已经在本地创建了一个Git仓库后，又想在GitHub创建一个Git仓库，并且让这两个仓库进行远程同步，这样，GitHub上的仓库既可以作为备份，又可以让其他人通过该仓库来协作.&lt;/p&gt;
+&lt;p&gt;登录github后，右上角找到“Create a new repo”按钮，创建一个新的仓库.&lt;/p&gt;
+&lt;p&gt;在Repository name填入learngit，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库&lt;/p&gt;
+&lt;p&gt;目前，在GitHub上的这个learngit仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库。&lt;/p&gt;
+&lt;h2 id=&#34;关联本地库&#34;&gt;关联本地库&lt;/h2&gt;
+&lt;p&gt;git remote add origin &lt;a href=&#34;mailto:git@github.com&#34;&gt;git@github.com&lt;/a&gt;:jonnynan/learngit.git&lt;/p&gt;
+&lt;p&gt;请千万注意，把上面的jonnynan替换成你自己的GitHub账户名，否则，你在本地关联的就是我的远程库，关联没有问题，但是你以后推送是推不上去的，因为你的SSH Key公钥不在我的账户列表中。&lt;/p&gt;
+&lt;p&gt;添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。&lt;/p&gt;
+&lt;p&gt;下一步，就可以把本地库的所有内容推送到远程库上：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12345678910$ git push -u origin masterCounting objects: 20, done.Delta compression using up to 4 threads.Compressing objects: 100% (15/15), done.Writing objects: 100% (20/20), 1.64 KiB | 560.00 KiB/s, done.Total 20 (delta 5), reused 0 (delta 0)remote: Resolving deltas: 100% (5/5), done.To github.com:jonnynan/learngit.git * [new branch]      master -&amp;amp;gt; masterBranch &amp;#39;master&amp;#39; set up to track remote branch &amp;#39;master&amp;#39; from &amp;#39;origin&amp;#39;.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>使用Logrotate归档日志</title>
+      <link>https://jonnynan.github.io/posts/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</link>
+      <pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://jonnynan.github.io/posts/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</guid>
+      <description>&lt;h2 id=&#34;创建tomcat的配置文件&#34;&gt;创建tomcat的配置文件&lt;/h2&gt;
+&lt;p&gt;vim /etc/logrotate.d/tomcat&lt;/p&gt;
+&lt;p&gt;内容：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;123456789/application/tomcat/logs/catalina.out &amp;amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;amp;#125;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数&lt;/p&gt;
+&lt;p&gt;关于每个参数的作用我们可以查看全局文件cat /etc/logrotate.conf 我们可以把配置文件写在/etc/logrotate.conf里面或者放在/etc/logrotate.d下面&lt;/p&gt;
+&lt;h2 id=&#34;参数解释&#34;&gt;参数解释&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12345678daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;不常用的参数&#34;&gt;不常用的参数&lt;/h2&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12345678910111213141516weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#%E6%B5%8B%E8%AF%95&#34;&gt;&lt;/a&gt;测试&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调试 （d = debug）参数为配置文件，不指定则执行全局配置文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;logrotate -d /etc/logrotate.d/tomcat.conf&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;强制执行（-f = force），可以配合-v(-v =verbose）使用，注意调试信息默认携带-v；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;logrotate -v -f /etc/logrotate.d/tomcat.conf&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>git系列之时光穿梭</title>
+      <link>https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</link>
+      <pubDate>Tue, 13 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</guid>
+      <description>&lt;h2 id=&#34;小结&#34;&gt;小结&lt;/h2&gt;
+&lt;p&gt;要随时掌握工作区的状态，使用git status命令。&lt;/p&gt;
+&lt;p&gt;如果git status告诉你有文件被修改过，用git diff可以查看修改内容。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#%E7%89%88%E6%9C%AC%E5%9B%9E%E9%80%80&#34;&gt;&lt;/a&gt;版本回退
+git 每次 commit 都会产生一个 版本 commit 编号&lt;/p&gt;
+&lt;p&gt;查看可以使用  git log 命令&lt;/p&gt;
+&lt;p&gt;需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。&lt;/p&gt;
+&lt;p&gt;好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？&lt;/p&gt;
+&lt;p&gt;首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。&lt;/p&gt;
+&lt;p&gt;现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12$ git reset --hard HEAD^HEAD is now at e475afc add distributed
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看文件可以发现确实已经回到了上个版本提交的内容。&lt;/p&gt;
+&lt;p&gt;此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？&lt;/p&gt;
+&lt;p&gt;还是有办法 。再学两个命令：&lt;/p&gt;
+&lt;p&gt;git reflog  查看之前执行的每个命令。找到对应的 commit log&lt;/p&gt;
+&lt;p&gt;然后执行命令 git reset –hard commit_id&lt;/p&gt;
+&lt;p&gt;即可恢复到指定提交版本了。&lt;/p&gt;
+&lt;h2 id=&#34;小结-1&#34;&gt;小结&lt;/h2&gt;
+&lt;p&gt;HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。&lt;/p&gt;
+&lt;p&gt;穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。&lt;/p&gt;
+&lt;p&gt;要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;#%E5%B7%A5%E4%BD%9C%E5%8C%BA%E5%92%8C%E6%9A%82%E5%AD%98%E5%8C%BA&#34;&gt;&lt;/a&gt;工作区和暂存区
+核心知识点来了。&lt;/p&gt;
+&lt;p&gt;git学的好不好最要紧的就是理解这个暂存区。&lt;/p&gt;
+&lt;h2 id=&#34;工作区&#34;&gt;工作区&lt;/h2&gt;
+&lt;p&gt;首先来看看什么是工作区。&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>git系列之安装并创建版本库</title>
+      <link>https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/</link>
+      <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
+      <guid>https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/</guid>
+      <description>&lt;h2 id=&#34;git的安装&#34;&gt;git的安装&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;windows安装无脑下一步即可&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linux：
+ubuntu :&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1$ sudo apt install git
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;arch:&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1$ sudo pacman -S git
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;macos:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1brew install git
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;linux和macos 也可以源码编译安装。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;git安装后的配置&#34;&gt;git安装后的配置&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12$ git config --global user.name &amp;#34;Your Name&amp;#34;$ git config --global user.email &amp;#34;email@example.com&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址&lt;/p&gt;
+&lt;h2 id=&#34;git创建版本库&#34;&gt;git创建版本库&lt;/h2&gt;
+&lt;p&gt;什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。&lt;/p&gt;
+&lt;p&gt;找一个空目录执行下面命令：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1$ git init
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。&lt;/p&gt;
+&lt;p&gt;如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。&lt;/p&gt;
+&lt;p&gt;也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。&lt;/p&gt;
+&lt;h2 id=&#34;把文件添加到版本库&#34;&gt;把文件添加到版本库&lt;/h2&gt;
+&lt;p&gt;首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。&lt;/p&gt;
+&lt;p&gt;比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.&lt;/p&gt;
+&lt;p&gt;现在新建一个文件：readme.txt,内容如下：&lt;/p&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;12Git is a version control system.Git is free software.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。&lt;/p&gt;
+&lt;p&gt;将一个文件放到git仓库只需2步：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;第一步，用命令git add告诉Git，把文件添加到仓库：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1$ git add readme.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;
+&lt;li&gt;第二步，用命令git commit告诉Git，把文件提交到仓库：&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1234$ git commit -m &amp;#34;wrote a readme file&amp;#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

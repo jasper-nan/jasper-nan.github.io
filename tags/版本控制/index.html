@@ -1,253 +1,255 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+<html lang="en" dir="auto" data-theme="auto">
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
-
-<script class="next-config" data-name="main" type="application/json">{"hostname":"jonnynan.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
-
-    <meta name="description" content="个人技术博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Jonny&#39;s Blog">
-<meta property="og:url" content="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/index.html">
-<meta property="og:site_name" content="Jonny&#39;s Blog">
-<meta property="og:description" content="个人技术博客">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:author" content="Jonny">
-<meta property="article:tag" content="技术,编程,测试,自动化">
-<meta name="twitter:card" content="summary">
-
-
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>版本控制 | Jonny&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="个人技术博客 - 致良知">
+<meta name="author" content="Jonny">
 <link rel="canonical" href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">
-
-
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"tags/版本控制/index.html","title":""}</script>
-
-<script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>标签: 版本控制 | Jonny's Blog</title>
-  
-
-
-
-
-
-
-
-
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
-<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
-
-  
-
-
-
-
-
-
-  
-
-
-
-
-
-  <noscript>
-    <link rel="stylesheet" href="/css/noscript.css">
-  </noscript>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
-  <div class="headband"></div>
-
-  <main class="main">
-    <div class="column">
-      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏" role="button">
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-        <span class="toggle-line"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <i class="logo-line"></i>
-      <p class="site-title">Jonny's Blog</p>
-      <i class="logo-line"></i>
-    </a>
-      <p class="site-subtitle" itemprop="description">致良知</p>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger" aria-label="搜索" role="button">
-    </div>
-  </div>
-</div>
-
-
-
-<nav class="site-nav">
-  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
-  </ul>
-</nav>
-
-
-
-
-</header>
-        
-  
-  <aside class="sidebar">
-
-    <div class="sidebar-inner sidebar-overview-active">
-      <ul class="sidebar-nav">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <div class="sidebar-panel-container">
-        <!--noindex-->
-        <div class="post-toc-wrap sidebar-panel">
-        </div>
-        <!--/noindex-->
-
-        <div class="site-overview-wrap sidebar-panel">
-          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <img class="site-author-image" itemprop="image" alt="Jonny"
-      src="/images/avatar.gif">
-  <p class="site-author-name" itemprop="name">Jonny</p>
-  <div class="site-description" itemprop="description">个人技术博客</div>
-</div>
-<div class="site-state-wrap animated">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-        <a href="/archives/">
-          <span class="site-state-item-count">4</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">5</span>
-        <span class="site-state-item-name">标签</span>
-      </div>
-  </nav>
-</div>
-  <div class="links-of-author animated">
-      <span class="links-of-author-item">
-        <a href="https://github.com/jonnynan" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;jonnynan" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
-      </span>
-  </div>
-
-        </div>
-      </div>
-    </div>
-
-    
-  </aside>
-
-
-    </div>
-
-    <div class="main-inner tag posts-collapse">
-
-
-  
-  
-  
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h1 class="collection-header">版本控制
-          <small>标签</small>
-        </h1>
-      </div>
-
-      
-    <div class="collection-year">
-      <span class="collection-header">2019</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2019-08-19T00:00:00+08:00"
-              content="2019-08-19">
-          08-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2019/08/19/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/" itemprop="url">
-            <span itemprop="name">git系列之远程仓库</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
-  </div>
-  
-  
-  
-
-</div>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-
-  <div class="copyright">
-    &copy; 2019 – 
-    <span itemprop="copyrightYear">2026</span>
-    <span class="with-love">
-      <i class="fa fa-heart"></i>
-    </span>
-    <span class="author" itemprop="copyrightHolder">Jonny</span>
-  </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
-  </div>
-
-    </div>
-  </footer>
-
-  
-  <div class="toggle sidebar-toggle" role="button">
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-    <span class="toggle-line"></span>
-  </div>
-  <div class="sidebar-dimmer"></div>
-  <div class="back-to-top" role="button" aria-label="返回顶部">
-    <i class="fa fa-arrow-up fa-lg"></i>
-    <span>0%</span>
-  </div>
-
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://jonnynan.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://jonnynan.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://jonnynan.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://jonnynan.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://jonnynan.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" type="application/rss+xml" href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">
 <noscript>
-  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
-</noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
 
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">
+  <meta property="og:site_name" content="Jonny&#39;s Blog">
+  <meta property="og:title" content="版本控制">
+  <meta property="og:description" content="个人技术博客 - 致良知">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="website">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="版本控制">
+  <meta name="twitter:description" content="个人技术博客 - 致良知">
+
+</head>
+<body class="list" id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://jonnynan.github.io/" accesskey="h" title="Jonny&#39;s Blog (Alt + H)">Jonny&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://jonnynan.github.io/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main"> 
+<header class="page-header"><div class="breadcrumbs"><a href="https://jonnynan.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://jonnynan.github.io/tags/">Tags</a></div>
+  <h1>
+    版本控制
+  </h1>
+</header>
+
+<article class="post-entry tag-entry"> 
+  <header class="entry-header">
+    <h2 class="entry-hint-parent">git系列之远程仓库
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>使用github 远程仓库有很多，最常用的就是国际上的github。国内也有码云，码市。当然有些公司也会自己搭建git服务器，开源的比如gitlab。但是为了学习远程仓库去自己搭建服务器就有点小题大做了。
+注册github 只要注册一个GitHub账号，就可以免费获得Git远程仓库
+创建SSH key 由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一点设置.
+第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：
+$ ssh-keygen -t rsa -C “youremail@example.com“
+你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，无需创建密码。
+如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。
+第2步，登陆GitHub，打开“Account settings”，“SSH Keys”页面：然后，点“Add SSH Key”，填上任意Title，比如『我的macbookpro』在Key文本框里粘贴id_rsa.pub文件的内容.
+为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。
+当然，GitHub允许你添加多个Key。假定你有若干电脑，你一会儿在公司提交，一会儿在家里提交，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。
+github免费版的仓库默认是公开的，所有人都能看到，所以敏感信息不要放到里面。也可以付费获取隐私空间。当然企业开发大多数都是自己搭建私有的gitlab。
+添加远程库 你已经在本地创建了一个Git仓库后，又想在GitHub创建一个Git仓库，并且让这两个仓库进行远程同步，这样，GitHub上的仓库既可以作为备份，又可以让其他人通过该仓库来协作.
+登录github后，右上角找到“Create a new repo”按钮，创建一个新的仓库.
+在Repository name填入learngit，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库
+目前，在GitHub上的这个learngit仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库。
+关联本地库 git remote add origin git@github.com:jonnynan/learngit.git
+请千万注意，把上面的jonnynan替换成你自己的GitHub账户名，否则，你在本地关联的就是我的远程库，关联没有问题，但是你以后推送是推不上去的，因为你的SSH Key公钥不在我的账户列表中。
+添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。
+下一步，就可以把本地库的所有内容推送到远程库上：
+12345678910$ git push -u origin masterCounting objects: 20, done.Delta compression using up to 4 threads.Compressing objects: 100% (15/15), done.Writing objects: 100% (20/20), 1.64 KiB | 560.00 KiB/s, done.Total 20 (delta 5), reused 0 (delta 0)remote: Resolving deltas: 100% (5/5), done.To github.com:jonnynan/learngit.git * [new branch] master -&amp;gt; masterBranch &#39;master&#39; set up to track remote branch &#39;master&#39; from &#39;origin&#39;. 把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2019-08-19 00:00:00 +0000 UTC'>August 19, 2019</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>Jonny</span></footer>
+  <a class="entry-link" aria-label="post link to git系列之远程仓库" href="https://jonnynan.github.io/posts/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/"></a>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://jonnynan.github.io/">Jonny&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
 </body>
+
 </html>

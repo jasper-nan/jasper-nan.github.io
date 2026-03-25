@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>日志 | Jonny&#39;s Blog</title>
+<title>Tags | Jonny&#39;s Blog</title>
 <meta name="keywords" content="">
 <meta name="description" content="个人技术博客 - 致良知">
 <meta name="author" content="Jonny">
-<link rel="canonical" href="https://jonnynan.github.io/tags/%E6%97%A5%E5%BF%97/">
+<link rel="canonical" href="https://jonnynan.github.io/tags/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
 <link rel="icon" href="https://jonnynan.github.io/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="https://jonnynan.github.io/favicon-16x16.png">
@@ -18,8 +18,8 @@
 <link rel="mask-icon" href="https://jonnynan.github.io/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" type="application/rss+xml" href="https://jonnynan.github.io/tags/%E6%97%A5%E5%BF%97/index.xml" title="rss">
-<link rel="alternate" hreflang="en" href="https://jonnynan.github.io/tags/%E6%97%A5%E5%BF%97/">
+<link rel="alternate" type="application/rss+xml" href="https://jonnynan.github.io/tags/index.xml" title="rss">
+<link rel="alternate" hreflang="en" href="https://jonnynan.github.io/tags/">
 <noscript>
     <style>
         #theme-toggle,
@@ -71,15 +71,15 @@
         document.querySelector("html").dataset.theme = 'light';
     }
 
-</script><meta property="og:url" content="https://jonnynan.github.io/tags/%E6%97%A5%E5%BF%97/">
+</script><meta property="og:url" content="https://jonnynan.github.io/tags/">
   <meta property="og:site_name" content="Jonny&#39;s Blog">
-  <meta property="og:title" content="日志">
+  <meta property="og:title" content="Tags">
   <meta property="og:description" content="个人技术博客 - 致良知">
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="website">
 
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="日志">
+  <meta name="twitter:title" content="Tags">
   <meta name="twitter:description" content="个人技术博客 - 致良知">
 
 </head>
@@ -119,7 +119,7 @@
             </li>
             <li>
                 <a href="https://jonnynan.github.io/tags/" title="标签">
-                    <span>标签</span>
+                    <span class="active">标签</span>
                 </a>
             </li>
             <li>
@@ -135,32 +135,28 @@
         </ul>
     </nav>
 </header>
-<main class="main"> 
-<header class="page-header"><div class="breadcrumbs"><a href="https://jonnynan.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://jonnynan.github.io/tags/">Tags</a></div>
-  <h1>
-    日志
-  </h1>
+<main class="main">
+<header class="page-header">
+    <h1>Tags</h1>
 </header>
 
-<article class="post-entry tag-entry"> 
-  <header class="entry-header">
-    <h2 class="entry-hint-parent">使用Logrotate归档日志
-    </h2>
-  </header>
-  <div class="entry-content">
-    <p>创建tomcat的配置文件 vim /etc/logrotate.d/tomcat
-内容：
-123456789/application/tomcat/logs/catalina.out &amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;#125; 注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数
-关于每个参数的作用我们可以查看全局文件cat /etc/logrotate.conf 我们可以把配置文件写在/etc/logrotate.conf里面或者放在/etc/logrotate.d下面
-参数解释 12345678daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！ 不常用的参数 12345678910111213141516weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行 温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除
-测试
-调试 （d = debug）参数为配置文件，不指定则执行全局配置文件 logrotate -d /etc/logrotate.d/tomcat.conf
-强制执行（-f = force），可以配合-v(-v =verbose）使用，注意调试信息默认携带-v； logrotate -v -f /etc/logrotate.d/tomcat.conf
-...</p>
-  </div>
-  <footer class="entry-footer"><span title='2019-08-15 00:00:00 +0000 UTC'>August 15, 2019</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>Jonny</span></footer>
-  <a class="entry-link" aria-label="post link to 使用Logrotate归档日志" href="https://jonnynan.github.io/posts/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/"></a>
-</article>
+<ul class="terms-tags">
+    <li>
+        <a href="https://jonnynan.github.io/tags/git/">git <sup><strong><sup>3</sup></strong></sup> </a>
+    </li>
+    <li>
+        <a href="https://jonnynan.github.io/tags/%E6%97%A5%E5%BF%97/">日志 <sup><strong><sup>1</sup></strong></sup> </a>
+    </li>
+    <li>
+        <a href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6/">版本控制 <sup><strong><sup>1</sup></strong></sup> </a>
+    </li>
+    <li>
+        <a href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/">版本管理 <sup><strong><sup>1</sup></strong></sup> </a>
+    </li>
+    <li>
+        <a href="https://jonnynan.github.io/tags/%E8%BF%90%E7%BB%B4/">运维 <sup><strong><sup>2</sup></strong></sup> </a>
+    </li>
+</ul>
     </main>
     
 <footer class="footer">

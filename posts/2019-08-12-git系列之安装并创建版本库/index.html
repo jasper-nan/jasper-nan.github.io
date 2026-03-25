@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>git系列之安装并创建版本库 | Jonny&#39;s Blog</title>
+<meta name="keywords" content="git, 运维">
+<meta name="description" content="git的安装
+
+
+windows安装无脑下一步即可
+
+
+linux：
+ubuntu :
+
+
+1$ sudo apt install git
+arch:
+1$ sudo pacman -S git
+
+macos:
+
+1brew install git
+
+linux和macos 也可以源码编译安装。
+
+git安装后的配置
+
+Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。
+
+12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34;
+注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址
+git创建版本库
+什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。
+找一个空目录执行下面命令：
+1$ git init
+Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。
+如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。
+也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。
+把文件添加到版本库
+首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。
+比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.
+现在新建一个文件：readme.txt,内容如下：
+12Git is a version control system.Git is free software.
+此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。
+将一个文件放到git仓库只需2步：
+
+第一步，用命令git add告诉Git，把文件添加到仓库：
+
+1$ git add readme.txt
+
+第二步，用命令git commit告诉Git，把文件提交到仓库：
+
+1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(&#43;) create mode 100644 readme.txt
+简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。">
+<meta name="author" content="Jonny">
+<link rel="canonical" href="https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.da3211e5ef867bf2b75fd5a6515cfed7195c011e8ab735694e203810a827097b.css" integrity="sha256-2jIR5e&#43;Ge/K3X9WmUVz&#43;1xlcAR6KtzVpTiA4EKgnCXs=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://jonnynan.github.io/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://jonnynan.github.io/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://jonnynan.github.io/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://jonnynan.github.io/apple-touch-icon.png">
+<link rel="mask-icon" href="https://jonnynan.github.io/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
+  <meta property="og:site_name" content="Jonny&#39;s Blog">
+  <meta property="og:title" content="git系列之安装并创建版本库">
+  <meta property="og:description" content="git的安装 windows安装无脑下一步即可
+linux： ubuntu :
+1$ sudo apt install git arch:
+1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34; 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址
+git创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。
+找一个空目录执行下面命令：
+1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。
+如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。
+也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。
+把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。
+比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.
+现在新建一个文件：readme.txt,内容如下：
+12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。
+将一个文件放到git仓库只需2步：
+第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(&#43;) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2019-08-12T00:00:00+00:00">
+    <meta property="article:modified_time" content="2019-08-12T00:00:00+00:00">
+    <meta property="article:tag" content="Git">
+    <meta property="article:tag" content="运维">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="git系列之安装并创建版本库">
+  <meta name="twitter:description" content="git的安装 windows安装无脑下一步即可
+linux： ubuntu :
+1$ sudo apt install git arch:
+1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34; 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址
+git创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。
+找一个空目录执行下面命令：
+1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。
+如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。
+也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。
+把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。
+比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.
+现在新建一个文件：readme.txt,内容如下：
+12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。
+将一个文件放到git仓库只需2步：
+第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(&#43;) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://jonnynan.github.io/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "git系列之安装并创建版本库",
+      "item": "https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "git系列之安装并创建版本库",
+  "name": "git系列之安装并创建版本库",
+  "description": "git的安装 windows安装无脑下一步即可\nlinux： ubuntu :\n1$ sudo apt install git arch:\n1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name \u0026#34;Your Name\u0026#34;$ git config --global user.email \u0026#34;email@example.com\u0026#34; 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址\ngit创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。\n找一个空目录执行下面命令：\n1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。\n如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。\n也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。\n把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。\n比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.\n现在新建一个文件：readme.txt,内容如下：\n12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。\n将一个文件放到git仓库只需2步：\n第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m \u0026#34;wrote a readme file\u0026#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。\n",
+  "keywords": [
+    "git", "运维"
+  ],
+  "articleBody": "git的安装 windows安装无脑下一步即可\nlinux： ubuntu :\n1$ sudo apt install git arch:\n1$ sudo pacman -S git macos: 1brew install git linux和macos 也可以源码编译安装。 git安装后的配置 Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。 12$ git config --global user.name \"Your Name\"$ git config --global user.email \"email@example.com\" 注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址\ngit创建版本库 什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。\n找一个空目录执行下面命令：\n1$ git init Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。\n如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。\n也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。\n把文件添加到版本库 首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。\n比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.\n现在新建一个文件：readme.txt,内容如下：\n12Git is a version control system.Git is free software. 此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。\n将一个文件放到git仓库只需2步：\n第一步，用命令git add告诉Git，把文件添加到仓库： 1$ git add readme.txt 第二步，用命令git commit告诉Git，把文件提交到仓库： 1234$ git commit -m \"wrote a readme file\"[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。\n嫌麻烦不想输入-m “xxx”行不行？确实有办法可以这么干，但是强烈不建议你这么干，因为输入说明对自己对别人阅读都很重要。\ngit commit命令执行成功后会告诉你，1 file changed：1个文件被改动（我们新添加的readme.txt文件）；2 insertions：插入了两行内容（readme.txt有两行内容）。\n为什么git添加文件要两步走？ 因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：\n123$ git add file1.txt$ git add file2.txt file3.txt$ git commit -m \"add 3 files.\" 小结 初始化一个Git仓库，使用git init命令。\n添加文件到Git仓库，分两步：\n使用命令git add ，注意，可反复多次使用，添加多个文件；使用命令git commit -m ，完成。\nLast updated: 2021-06-24 16:19:40 ![image](/img/avatar.jpg) 南璋 [赏](javascript:;) - git- 版本管理 - - - - - - Prev git系列之时光穿梭 var disqus_shortname = 'true'; lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js') Please enable JavaScript to view the [comments powered by Disqus.](https://disqus.com/?ref_noscript) ",
+  "wordCount" : "168",
+  "inLanguage": "en",
+  "datePublished": "2019-08-12T00:00:00Z",
+  "dateModified": "2019-08-12T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Jonny"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://jonnynan.github.io/posts/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Jonny's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://jonnynan.github.io/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://jonnynan.github.io/" accesskey="h" title="Jonny&#39;s Blog (Alt + H)">Jonny&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://jonnynan.github.io/posts/" title="文章">
+                    <span>文章</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/tags/" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/archives/" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://jonnynan.github.io/about/" title="关于">
+                    <span>关于</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="https://jonnynan.github.io/">Home</a>&nbsp;»&nbsp;<a href="https://jonnynan.github.io/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      git系列之安装并创建版本库
+    </h1>
+    <div class="post-meta"><span title='2019-08-12 00:00:00 +0000 UTC'>August 12, 2019</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>Jonny</span>
+
+</div>
+  </header> 
+  <div class="post-content"><h2 id="git的安装">git的安装<a hidden class="anchor" aria-hidden="true" href="#git的安装">#</a></h2>
+<ul>
+<li>
+<p>windows安装无脑下一步即可</p>
+</li>
+<li>
+<p>linux：
+ubuntu :</p>
+</li>
+</ul>
+<pre tabindex="0"><code>1$ sudo apt install git
+</code></pre><p>arch:</p>
+<pre tabindex="0"><code>1$ sudo pacman -S git
+</code></pre><ul>
+<li>macos:</li>
+</ul>
+<pre tabindex="0"><code>1brew install git
+</code></pre><ul>
+<li>linux和macos 也可以源码编译安装。</li>
+</ul>
+<h2 id="git安装后的配置">git安装后的配置<a hidden class="anchor" aria-hidden="true" href="#git安装后的配置">#</a></h2>
+<ul>
+<li>Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。</li>
+</ul>
+<pre tabindex="0"><code>12$ git config --global user.name &#34;Your Name&#34;$ git config --global user.email &#34;email@example.com&#34;
+</code></pre><p>注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址</p>
+<h2 id="git创建版本库">git创建版本库<a hidden class="anchor" aria-hidden="true" href="#git创建版本库">#</a></h2>
+<p>什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。</p>
+<p>找一个空目录执行下面命令：</p>
+<pre tabindex="0"><code>1$ git init
+</code></pre><p>Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。</p>
+<p>如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。</p>
+<p>也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。</p>
+<h2 id="把文件添加到版本库">把文件添加到版本库<a hidden class="anchor" aria-hidden="true" href="#把文件添加到版本库">#</a></h2>
+<p>首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。</p>
+<p>比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.</p>
+<p>现在新建一个文件：readme.txt,内容如下：</p>
+<pre tabindex="0"><code>12Git is a version control system.Git is free software.
+</code></pre><p>此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。</p>
+<p>将一个文件放到git仓库只需2步：</p>
+<ul>
+<li>第一步，用命令git add告诉Git，把文件添加到仓库：</li>
+</ul>
+<pre tabindex="0"><code>1$ git add readme.txt
+</code></pre><ul>
+<li>第二步，用命令git commit告诉Git，把文件提交到仓库：</li>
+</ul>
+<pre tabindex="0"><code>1234$ git commit -m &#34;wrote a readme file&#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt
+</code></pre><p>简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。</p>
+<p>嫌麻烦不想输入-m “xxx”行不行？确实有办法可以这么干，但是强烈不建议你这么干，因为输入说明对自己对别人阅读都很重要。</p>
+<p>git commit命令执行成功后会告诉你，1 file changed：1个文件被改动（我们新添加的readme.txt文件）；2 insertions：插入了两行内容（readme.txt有两行内容）。</p>
+<h2 id="为什么git添加文件要两步走">为什么git添加文件要两步走？<a hidden class="anchor" aria-hidden="true" href="#为什么git添加文件要两步走">#</a></h2>
+<p>因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：</p>
+<pre tabindex="0"><code>123$ git add file1.txt$ git add file2.txt file3.txt$ git commit -m &#34;add 3 files.&#34;
+</code></pre><h2 id="小结">小结<a hidden class="anchor" aria-hidden="true" href="#小结">#</a></h2>
+<p>初始化一个Git仓库，使用git init命令。</p>
+<p>添加文件到Git仓库，分两步：</p>
+<p>使用命令git add &lt;file&gt;，注意，可反复多次使用，添加多个文件；使用命令git commit -m &lt;message&gt;，完成。</p>
+<pre><code>Last updated: 2021-06-24 16:19:40
+
+    
+
+
+
+    
+        ![image](/img/avatar.jpg)
+        南璋
+    
+
+
+    
+
+[赏](javascript:;)
+
+    
+        
+- git- 版本管理
+
+        
+
+
+
+
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+
+
+
+
+    
+
+
+    
+
+
+
+
+
+
+  
+     Prev
+    git系列之时光穿梭
+  
+
+
+
+
+
+
+
+
+
+var disqus_shortname = 'true';
+lazyScripts.push('//' + disqus_shortname + '.disqus.com/embed.js')
+
+Please enable JavaScript to view the [comments powered by Disqus.](https://disqus.com/?ref_noscript)
+</code></pre>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="https://jonnynan.github.io/tags/git/">Git</a></li>
+      <li><a href="https://jonnynan.github.io/tags/%E8%BF%90%E7%BB%B4/">运维</a></li>
+    </ul>
+<nav class="paginav">
+  <a class="prev" href="https://jonnynan.github.io/posts/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/">
+    <span class="title">« Prev</span>
+    <br>
+    <span>git系列之时光穿梭</span>
+  </a>
+</nav>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="https://jonnynan.github.io/">Jonny&#39;s Blog</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
