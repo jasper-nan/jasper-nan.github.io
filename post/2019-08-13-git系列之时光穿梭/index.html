@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-cn" dir="ltr">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="aliases:\n/posts/2019-08-13-git系列之时光穿梭/ 小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\n">
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="aliases:\n/posts/2019-08-13-git系列之时光穿梭/ 小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\n">
 <title>git系列之时光穿梭</title>
 
 
@@ -13,12 +13,12 @@
 
 
 <link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="git系列之时光穿梭">
-<meta property='og:description' content="aliases:\n/posts/2019-08-13-git系列之时光穿梭/ 小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\n">
+<meta property='og:description' content="aliases:\n/posts/2019-08-13-git系列之时光穿梭/ 小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\n">
 <meta property='og:url' content='https://jonnynan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/'>
 <meta property='og:site_name' content='Jasper&#39;s Blog'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='git' /><meta property='article:tag' content='版本管理' /><meta property='article:published_time' content='2019-08-13T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2019-08-13T00:00:00&#43;00:00'/>
 <meta name="twitter:title" content="git系列之时光穿梭">
-<meta name="twitter:description" content="aliases:\n/posts/2019-08-13-git系列之时光穿梭/ 小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n12$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\n">
+<meta name="twitter:description" content="aliases:\n/posts/2019-08-13-git系列之时光穿梭/ 小结 要随时掌握工作区的状态，使用git status命令。\n如果git status告诉你有文件被修改过，用git diff可以查看修改内容。\n版本回退 git 每次 commit 都会产生一个 版本 commit 编号\n查看可以使用 git log 命令\n需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。\n好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？\n首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。\n现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：\n$ git reset --hard HEAD^HEAD is now at e475afc add distributed 查看文件可以发现确实已经回到了上个版本提交的内容。\n此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？\n还是有办法 。再学两个命令：\ngit reflog 查看之前执行的每个命令。找到对应的 commit log\n然后执行命令 git reset –hard commit_id\n即可恢复到指定提交版本了。\n小结 HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。\n穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。\n要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。\n工作区和暂存区 核心知识点来了。\n">
     </head>
     <body class="
     article-page
@@ -207,7 +207,7 @@ git 每次 commit 都会产生一个 版本 commit 编号</p>
 <p>好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？</p>
 <p>首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。</p>
 <p>现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：</p>
-<pre tabindex="0"><code>12$ git reset --hard HEAD^HEAD is now at e475afc add distributed
+<pre tabindex="0"><code>$ git reset --hard HEAD^HEAD is now at e475afc add distributed
 </code></pre><p>查看文件可以发现确实已经回到了上个版本提交的内容。</p>
 <p>此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？</p>
 <p>还是有办法 。再学两个命令：</p>
@@ -234,14 +234,14 @@ git 每次 commit 都会产生一个 版本 commit 编号</p>
 <p>你可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。</p>
 <p>此时我们编辑下 redeme.txt文件，再新建一个 LICENSE 文件。</p>
 <p>git status 查看状态</p>
-<pre tabindex="0"><code>1234567891011121314$ git statusOn branch masterChanges not staged for commit:  (use &#34;git add &amp;lt;file&amp;gt;...&#34; to update what will be committed)  (use &#34;git checkout -- &amp;lt;file&amp;gt;...&#34; to discard changes in working directory)	modified:   readme.txtUntracked files:  (use &#34;git add &amp;lt;file&amp;gt;...&#34; to include in what will be committed)	LICENSEno changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
+<pre tabindex="0"><code>$ git statusOn branch masterChanges not staged for commit:  (use &#34;git add &amp;lt;file&amp;gt;...&#34; to update what will be committed)  (use &#34;git checkout -- &amp;lt;file&amp;gt;...&#34; to discard changes in working directory)	modified:   readme.txtUntracked files:  (use &#34;git add &amp;lt;file&amp;gt;...&#34; to include in what will be committed)	LICENSEno changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
 </code></pre><p>Git非常清楚地告诉我们，readme.txt被修改了，而LICENSE还从来没有被添加过，所以它的状态是Untracked。</p>
 <p>现在，使用两次命令git add，把readme.txt和LICENSE都添加后，用git status再查看一下：</p>
-<pre tabindex="0"><code>1234567$ git statusOn branch masterChanges to be committed:  (use &#34;git reset HEAD &amp;lt;file&amp;gt;...&#34; to unstage)	new file:   LICENSE	modified:   readme.txt
+<pre tabindex="0"><code>$ git statusOn branch masterChanges to be committed:  (use &#34;git reset HEAD &amp;lt;file&amp;gt;...&#34; to unstage)	new file:   LICENSE	modified:   readme.txt
 </code></pre><p>所以，git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。</p>
-<pre tabindex="0"><code>1234$ git commit -m &#34;understand how stage works&#34;[master e43a48b] understand how stage works 2 files changed, 2 insertions(+) create mode 100644 LICENSE
+<pre tabindex="0"><code>$ git commit -m &#34;understand how stage works&#34;[master e43a48b] understand how stage works 2 files changed, 2 insertions(+) create mode 100644 LICENSE
 </code></pre><p>一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的：</p>
-<pre tabindex="0"><code>123$ git statusOn branch masternothing to commit, working tree clean
+<pre tabindex="0"><code>$ git statusOn branch masternothing to commit, working tree clean
 </code></pre><h2 id="小结-2">小结
 </h2><p>暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么</p>
 <p><a class="link" href="#%e7%ae%a1%e7%90%86%e4%bf%ae%e6%94%b9" ></a>管理修改
@@ -251,7 +251,7 @@ git 管理的是修改本身，而不是文件。这也是git的特色之一。<
 <pre tabindex="0"><code>123你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：
 </code></pre><p>第一次修改 -&gt; git add -&gt; 第二次修改 -&gt; git commit.你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。</p>
 <p>提交后，用git diff HEAD – readme.txt命令可以查看工作区和版本库里面最新版本的区别：</p>
-<pre tabindex="0"><code>1234567891011$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files.
+<pre tabindex="0"><code>$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files.
 </code></pre><p>那怎么提交第二次修改呢？你可以继续git add再git commit，也可以别着急提交第一次修改，先git add第二次修改，再git commit，就相当于把两次修改合并后一块提交了：</p>
 <p>第一次修改 -&gt; git add -&gt; 第二次修改 -&gt; git add -&gt; git commit</p>
 <h2 id="小结-3">小结
@@ -268,7 +268,7 @@ git 管理的是修改本身，而不是文件。这也是git的特色之一。<
 <h2 id="还原暂存区的修改">还原暂存区的修改
 </h2><p>执行了 git add 还没有 commit 的修改也能撤销</p>
 <p>Git同样告诉我们，用命令git reset HEAD &lt;file&gt;可以把暂存区的修改撤销掉（unstage），重新放回工作区：</p>
-<pre tabindex="0"><code>123$ git reset HEAD readme.txtUnstaged changes after reset:M	readme.txt
+<pre tabindex="0"><code>$ git reset HEAD readme.txtUnstaged changes after reset:M	readme.txt
 </code></pre><p>git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。</p>
 <p>现在用git status查看一下，现在暂存区是干净的，工作区有修改.</p>
 <p>再 git checkout – readme.txt  工作区修改也还原了</p>
@@ -279,13 +279,13 @@ git 管理的是修改本身，而不是文件。这也是git的特色之一。<
 <p><a class="link" href="#%e5%88%a0%e9%99%a4%e6%96%87%e4%bb%b6" ></a>删除文件
 假如我已经提交的文件，我本地给删除了。如何git库中也进行删除呢？</p>
 <p>在Git中，删除也是一个修改操作，我们实战一下，先添加一个新文件test.txt到Git并且提交：</p>
-<pre tabindex="0"><code>123456$ git add test.txt$ git commit -m &#34;add test.txt&#34;[master b84166e] add test.txt 1 file changed, 1 insertion(+) create mode 100644 test.txt
+<pre tabindex="0"><code>$ git add test.txt$ git commit -m &#34;add test.txt&#34;[master b84166e] add test.txt 1 file changed, 1 insertion(+) create mode 100644 test.txt
 </code></pre><p>一般情况下，你通常直接在文件管理器中把没用的文件删了，或者用rm命令删了：</p>
-<pre tabindex="0"><code>1$ rm test.txt
+<pre tabindex="0"><code>$ rm test.txt
 </code></pre><p>这个时候，Git知道你删除了文件，因此，工作区和版本库就不一致了，git status命令会立刻告诉你哪些文件被删除了：</p>
-<pre tabindex="0"><code>123456789$ git statusOn branch masterChanges not staged for commit:  (use &#34;git add/rm &amp;lt;file&amp;gt;...&#34; to update what will be committed)  (use &#34;git checkout -- &amp;lt;file&amp;gt;...&#34; to discard changes in working directory)	deleted:    test.txtno changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
+<pre tabindex="0"><code>$ git statusOn branch masterChanges not staged for commit:  (use &#34;git add/rm &amp;lt;file&amp;gt;...&#34; to update what will be committed)  (use &#34;git checkout -- &amp;lt;file&amp;gt;...&#34; to discard changes in working directory)	deleted:    test.txtno changes added to commit (use &#34;git add&#34; and/or &#34;git commit -a&#34;)
 </code></pre><p>现在你有两个选择，一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：</p>
-<pre tabindex="0"><code>1234567$ git rm test.txtrm &#39;test.txt&#39;$ git commit -m &#34;remove test.txt&#34;[master d46f35e] remove test.txt 1 file changed, 1 deletion(-) delete mode 100644 test.txt
+<pre tabindex="0"><code>$ git rm test.txtrm &#39;test.txt&#39;$ git commit -m &#34;remove test.txt&#34;[master d46f35e] remove test.txt 1 file changed, 1 deletion(-) delete mode 100644 test.txt
 </code></pre><p>另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：</p>
 <pre tabindex="0"><code>1git checkout -- test.txt
 </code></pre><ul>
