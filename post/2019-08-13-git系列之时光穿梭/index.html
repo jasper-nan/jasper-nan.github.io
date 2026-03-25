@@ -248,7 +248,7 @@ git 每次 commit 都会产生一个 版本 commit 编号</p>
 git 管理的是修改本身，而不是文件。这也是git的特色之一。</p>
 <p>假如你修改了一次 readme.txt add了 一次 。然后又修改了一次 readme.txt，再提交。</p>
 <p>此时 执行 git status,你会发现第二次的修改没有被提交。</p>
-<pre tabindex="0"><code>123你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：
+<pre tabindex="0"><code>你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：
 </code></pre><p>第一次修改 -&gt; git add -&gt; 第二次修改 -&gt; git commit.你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。</p>
 <p>提交后，用git diff HEAD – readme.txt命令可以查看工作区和版本库里面最新版本的区别：</p>
 <pre tabindex="0"><code>$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files.
