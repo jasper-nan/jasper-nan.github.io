@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="自动驾驶测试工程师的核心技能之一。从CAN总线基础到日志解析，一文讲透。">
+<title>CAN 总线日志分析入门：自动驾驶测试必备技能</title>
+
+
+<link rel="canonical" href="https://jonnynan.github.io/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="CAN 总线日志分析入门：自动驾驶测试必备技能">
+<meta property='og:description' content="自动驾驶测试工程师的核心技能之一。从CAN总线基础到日志解析，一文讲透。">
+<meta property='og:url' content='https://jonnynan.github.io/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/'>
+<meta property='og:site_name' content='Jasper&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='CAN总线' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='测试' /><meta property='article:tag' content='Python' /><meta property='article:published_time' content='2026-03-25T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-25T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="CAN 总线日志分析入门：自动驾驶测试必备技能">
+<meta name="twitter:description" content="自动驾驶测试工程师的核心技能之一。从CAN总线基础到日志解析，一文讲透。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Jasper&#39;s Blog</a></h1>
+            <h2 class="site-description">致良知</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post/' >
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/">CAN 总线日志分析入门：自动驾驶测试必备技能</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            自动驾驶测试工程师的核心技能之一。从CAN总线基础到日志解析，一文讲透。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-25T00:00:00Z'>Wednesday, March 25, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        4 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p>如果你从事自动驾驶或智能网联汽车测试，CAN 总线日志分析是绕不开的技能。这篇从基础概念到实战解析，帮你快速上手。</p>
+
+    </blockquote>
+<hr>
+<h2 id="一什么是-can-总线">一、什么是 CAN 总线？
+</h2><p>CAN（Controller Area Network）是汽车内部最主流的通信协议。简单说：</p>
+
+    <blockquote>
+        <p>车辆的各个 ECU（电子控制单元）通过 CAN 总线互相&quot;说话&quot;，比如发动机告诉仪表盘转速、方向盘告诉转向灯亮灯。</p>
+
+    </blockquote>
+<h3 id="核心概念">核心概念
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>概念</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>报文（Frame）</strong></td>
+          <td>CAN 总线上传输的最小数据单元</td>
+      </tr>
+      <tr>
+          <td><strong>ID</strong></td>
+          <td>报文的&quot;身份证&quot;，决定优先级，ID 越小优先级越高</td>
+      </tr>
+      <tr>
+          <td><strong>DLC</strong></td>
+          <td>数据长度（0-8 字节）</td>
+      </tr>
+      <tr>
+          <td><strong>Payload</strong></td>
+          <td>实际数据内容</td>
+      </tr>
+      <tr>
+          <td><strong>周期</strong></td>
+          <td>某些报文按固定周期发送（如 10ms、100ms）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="报文结构">报文结构
+</h3><pre tabindex="0"><code>┌─────────┬───────┬─────┬──────────┬────────┬─────────┐
+│ Start   │ ID    │ DLC │ Payload  │ CRC    │ ACK     │
+│ of Frame│ 11bit │     │ 0-8 bytes│ Check  │         │
+└─────────┴───────┴─────┴──────────┴────────┴─────────┘
+</code></pre><hr>
+<h2 id="二can-dbc-文件">二、CAN DBC 文件
+</h2><p>DBC 是 CAN 数据的&quot;字典文件&quot;，定义了每个 ID 对应什么信号、如何解析。</p>
+<h3 id="dbc-文件长什么样">DBC 文件长什么样
+</h3><pre tabindex="0"><code>VERSION &#34;&#34;
+
+NS_ :
+
+BS_:
+
+BU_: ECU1 ECU2 ECU3
+
+BO_ 256 SteeringAngle: 7 ECU1
+ SG_ SteeringAngle_Value : 0|15@1+ (0.1,0) [0|6553.5] &#34;deg&#34; Vector__XXX
+ SG_ SteeringAngle_Speed : 16|15@1+ (1,0) [0|32767] &#34;deg/s&#34; Vector__XXX
+</code></pre><p><strong>解读：</strong></p>
+<ul>
+<li><code>BO_ 256</code> → CAN ID 为 0x100 (256)</li>
+<li><code>SteeringAngle</code> → 信号名：方向盘转角</li>
+<li><code>0|15@1+</code> → 从第 0 位开始，长度 15 位，小端序，无符号</li>
+<li><code>(0.1,0)</code> → 精度 0.1，偏移 0（实际值 = 原始值 × 0.1 + 0）</li>
+<li><code>[0|6553.5]</code> → 物理值范围 0 到 6553.5</li>
+<li><code>&quot;deg&quot;</code> → 单位：度</li>
+</ul>
+<p><strong>没有 DBC 文件，你看到的只是十六进制数据；有了 DBC，你才能知道这些数据代表什么。</strong></p>
+<hr>
+<h2 id="三日志格式">三、日志格式
+</h2><h3 id="常见日志格式">常见日志格式
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>格式</th>
+          <th>说明</th>
+          <th>工具</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>ASC</strong></td>
+          <td>Vector CANalyzer/CANoe 格式</td>
+          <td>CANalyzer、CANoe</td>
+      </tr>
+      <tr>
+          <td><strong>BLF</strong></td>
+          <td>Binary Log Format</td>
+          <td>Vector 工具</td>
+      </tr>
+      <tr>
+          <td><strong>PCAP</strong></td>
+          <td>通用网络抓包格式</td>
+          <td>Wireshark</td>
+      </tr>
+      <tr>
+          <td><strong>CSV</strong></td>
+          <td>逗号分隔，通用性强</td>
+          <td>Python/Excel</td>
+      </tr>
+      <tr>
+          <td><strong>MDF</strong></td>
+          <td>测量数据格式</td>
+          <td>CANape、DIAdem</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="asc-格式示例">ASC 格式示例
+</h3><pre tabindex="0"><code>date Mon Jan 01 10:00:00 am 2026
+base hex  timestamps absolute
+   0.000000 1  100             Tx   d 8 01 02 03 04 05 06 07 08
+   0.001000 1  1A0             Rx   d 8 AA BB CC DD EE FF 00 11
+   0.002500 1  200             Rx   d 4 12 34 56 78
+</code></pre><p><strong>每列含义：</strong> 时间戳 | 通道 | ID | 方向 | 帧类型 | DLC | 数据字节</p>
+<hr>
+<h2 id="四python-解析实战">四、Python 解析实战
+</h2><h3 id="1-解析-asc-文件">1. 解析 ASC 文件
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">re</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">parse_asc</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;解析 ASC 格式的 CAN 日志&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pattern</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="sa">r</span><span class="s1">&#39;(\d+\.\d+)\s+\d+\s+([0-9A-Fa-f]+)\s+\w+\s+d\s+(\d+)\s+(.*)&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">match</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="k">match</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">timestamp</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">                <span class="n">can_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">dlc</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">                <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">()]</span>
+</span></span><span class="line"><span class="cl">                <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">timestamp</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">can_id</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;dlc&#39;</span><span class="p">:</span> <span class="n">dlc</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">data</span>
+</span></span><span class="line"><span class="cl">                <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">frames</span>
+</span></span></code></pre></div><h3 id="2-使用-cantools-解析-dbc">2. 使用 cantools 解析 DBC
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cantools</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 加载 DBC 文件</span>
+</span></span><span class="line"><span class="cl"><span class="n">db</span> <span class="o">=</span> <span class="n">cantools</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="s1">&#39;vehicle.dbc&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 查看所有报文</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">db</span><span class="o">.</span><span class="n">messages</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;ID: 0x</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">frame_id</span><span class="si">:</span><span class="s2">03X</span><span class="si">}</span><span class="s2">  Name: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">  &#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="sa">f</span><span class="s2">&#34;Signals: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">signals</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 解析一条报文</span>
+</span></span><span class="line"><span class="cl"><span class="n">msg</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_message_by_frame_id</span><span class="p">(</span><span class="mh">0x100</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">decoded</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="nb">bytes</span><span class="p">([</span><span class="mh">0x01</span><span class="p">,</span> <span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">,</span> <span class="mh">0x04</span><span class="p">,</span> <span class="mh">0x05</span><span class="p">,</span> <span class="mh">0x06</span><span class="p">,</span> <span class="mh">0x07</span><span class="p">,</span> <span class="mh">0x08</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># {&#39;SteeringAngle_Value&#39;: 15.3, &#39;SteeringAngle_Speed&#39;: 259.0}</span>
+</span></span></code></pre></div><h3 id="3-信号提取--时序分析">3. 信号提取 + 时序分析
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">extract_signal</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">message_name</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;从日志中提取指定信号的时间序列&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">msg</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">get_message_by_name</span><span class="p">(</span><span class="n">message_name</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">timestamps</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">frame</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">msg</span><span class="o">.</span><span class="n">frame_id</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">decoded</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">            <span class="n">timestamps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">decoded</span><span class="p">[</span><span class="n">signal_name</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;timestamp&#39;</span><span class="p">:</span> <span class="n">timestamps</span><span class="p">,</span> <span class="n">signal_name</span><span class="p">:</span> <span class="n">values</span><span class="p">})</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 提取方向盘转角</span>
+</span></span><span class="line"><span class="cl"><span class="n">df</span> <span class="o">=</span> <span class="n">extract_signal</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="s1">&#39;SteeringAngle&#39;</span><span class="p">,</span> <span class="s1">&#39;SteeringAngle_Value&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 画图</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;SteeringAngle_Value&#39;</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Time (s)&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Steering Angle (deg)&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Steering Angle Time Series&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;steering_angle.png&#39;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+</span></span></code></pre></div><h3 id="4-报文频率统计">4. 报文频率统计
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">message_frequency</span><span class="p">(</span><span class="n">frames</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;统计每个 CAN ID 的发送频率&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">id_counts</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">total_time</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">freq</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">can_id</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">id_counts</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">freq</span><span class="p">[</span><span class="n">can_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;count&#39;</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="s1">&#39;frequency&#39;</span><span class="p">:</span> <span class="n">count</span> <span class="o">/</span> <span class="n">total_time</span> <span class="k">if</span> <span class="n">total_time</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">freq</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出前 10 个最频繁的报文</span>
+</span></span><span class="line"><span class="cl"><span class="n">freq</span> <span class="o">=</span> <span class="n">message_frequency</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> <span class="n">can_id</span><span class="p">,</span> <span class="n">info</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">freq</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="mi">10</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;ID: 0x</span><span class="si">{</span><span class="n">can_id</span><span class="si">:</span><span class="s2">03X</span><span class="si">}</span><span class="s2">  Count: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  &#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="sa">f</span><span class="s2">&#34;Freq: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> Hz&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><hr>
+<h2 id="五常见分析场景">五、常见分析场景
+</h2><h3 id="场景-1验证报文周期">场景 1：验证报文周期
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">check_period</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="n">expected_period_ms</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;检查报文发送周期是否符合预期&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">target_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frames</span> <span class="k">if</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">target_id</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">periods</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_frames</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">period_ms</span> <span class="o">=</span> <span class="p">(</span><span class="n">target_frames</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">target_frames</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1000</span>
+</span></span><span class="line"><span class="cl">        <span class="n">periods</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">period_ms</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">periods</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">expected_period_ms</span><span class="p">)</span> <span class="o">/</span> <span class="n">expected_period_ms</span> <span class="o">&gt;</span> <span class="n">tolerance</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;平均周期: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;最大偏差: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;超差次数: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">issues</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">issues</span>
+</span></span></code></pre></div><h3 id="场景-2检测总线负载率">场景 2：检测总线负载率
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">bus_load</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">bitrate</span><span class="o">=</span><span class="mi">500000</span><span class="p">,</span> <span class="n">total_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;计算 CAN 总线负载率&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">total_time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">total_time</span> <span class="o">=</span> <span class="n">frames</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 每帧占用的 bit 数（标准帧）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bits_per_frame</span> <span class="o">=</span> <span class="mi">47</span> <span class="o">+</span> <span class="mi">8</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;dlc&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">frames</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span>  <span class="c1"># 简化估算</span>
+</span></span><span class="line"><span class="cl">    <span class="n">total_bits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frames</span><span class="p">)</span> <span class="o">*</span> <span class="n">bits_per_frame</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="n">load</span> <span class="o">=</span> <span class="n">total_bits</span> <span class="o">/</span> <span class="p">(</span><span class="n">bitrate</span> <span class="o">*</span> <span class="n">total_time</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;总线负载率: </span><span class="si">{</span><span class="n">load</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">load</span>
+</span></span></code></pre></div><h3 id="场景-3错误帧检测">场景 3：错误帧检测
+</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">find_error_frames</span><span class="p">(</span><span class="n">filepath</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;查找日志中的错误帧&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="s1">&#39;Error&#39;</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">or</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;发现 </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="si">}</span><span class="s2"> 个错误帧&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">ln</span><span class="p">,</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">[:</span><span class="mi">10</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;  Line </span><span class="si">{</span><span class="n">ln</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">content</span><span class="p">[:</span><span class="mi">100</span><span class="p">]</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">errors</span>
+</span></span></code></pre></div><hr>
+<h2 id="六常用工具">六、常用工具
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>工具</th>
+          <th>用途</th>
+          <th>价格</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Vector CANalyzer</strong></td>
+          <td>CAN 日志录制与分析</td>
+          <td>商业（贵）</td>
+      </tr>
+      <tr>
+          <td><strong>Vector CANoe</strong></td>
+          <td>仿真 + 测试 + 分析</td>
+          <td>商业（很贵）</td>
+      </tr>
+      <tr>
+          <td><strong>PCAN-View</strong></td>
+          <td>简单的 CAN 监控</td>
+          <td>硬件附赠</td>
+      </tr>
+      <tr>
+          <td><strong>Wireshark (CAN) plugin</strong></td>
+          <td>开源抓包分析</td>
+          <td>免费</td>
+      </tr>
+      <tr>
+          <td><strong>can-utils (Linux)</strong></td>
+          <td>命令行 CAN 工具</td>
+          <td>免费</td>
+      </tr>
+      <tr>
+          <td><strong>cantools (Python)</strong></td>
+          <td>DBC 解析 + 信号提取</td>
+          <td>免费</td>
+      </tr>
+      <tr>
+          <td><strong>SavvyCAN</strong></td>
+          <td>开源 CAN 分析工具</td>
+          <td>免费</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>新手推荐：</strong> Python + cantools 免费强大，配合 pandas/matplotlib 做可视化。</p>
+<hr>
+<h2 id="七调试技巧">七、调试技巧
+</h2><ol>
+<li><strong>先确认 ID 是否正确</strong> — 用十六进制和十进制都要检查一遍</li>
+<li><strong>检查字节序</strong> — 大端序（Motorola）和小端序（Intel）搞混是常见错误</li>
+<li><strong>关注时间戳</strong> — 确保时间戳是连续的，有没有断点</li>
+<li><strong>先看一个信号</strong> — 不要一次性分析所有信号，先从一个简单的开始</li>
+<li><strong>对齐视频和日志</strong> — 问题复现时，视频时间戳和日志时间戳对齐是关键</li>
+</ol>
+<hr>
+<p><em>CAN 日志分析是自动驾驶测试工程师的核心竞争力。掌握 Python 解析 + DBC 解码 + 可视化分析，你的测试效率会提升一个量级。</em></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/can%E6%80%BB%E7%BA%BF/">CAN总线</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E6%B5%8B%E8%AF%95/">测试</a>
+        
+            <a href="/tags/python/">Python</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    
+<div style="text-align:center; margin-top:2rem;">
+  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:#f0694f;color:#fff;border:none;padding:12px 36px;border-radius:24px;cursor:pointer;font-size:16px;font-weight:bold;box-shadow:0 2px 8px rgba(240,105,79,0.3);">
+    ☕ 请我喝杯咖啡
+  </button>
+</div>
+
+
+<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
+    
+    
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
+      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
+    </div>
+    
+    
+    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    
+    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
+  </div>
+</div>
+
+<script>
+function switchPay(type) {
+  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
+  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
+  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
+  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
+  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
+  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
+}
+</script>
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2019 - 
+        
+        2026 Jasper&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" defer></script>
+
+
+    </body>
+</html>
