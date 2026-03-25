@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 8.1.1">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha256-VHqXKFhhMxcpubYf9xiWdCiojEbY9NexQ4jh8AxbvcM=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"jonnynan.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.27.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"codeblock":{"theme":{"light":"default","dark":"stackoverflow-dark"},"prism":{"light":"prism","dark":"prism-dark"},"copy_button":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"language":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="创建tomcat的配置文件vim &#x2F;etc&#x2F;logrotate.d&#x2F;tomcat 内容： 1123456789&#x2F;application&#x2F;tomcat&#x2F;logs&#x2F;catalina.out &amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;#125;  注意上面内容中大括号">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Logrotate归档日志">
+<meta property="og:url" content="https://jonnynan.github.io/2019/08/15/2019-08-15-%E4%BD%BF%E7%94%A8Logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/index.html">
+<meta property="og:site_name" content="Jonny&#39;s Blog">
+<meta property="og:description" content="创建tomcat的配置文件vim &#x2F;etc&#x2F;logrotate.d&#x2F;tomcat 内容： 1123456789&#x2F;application&#x2F;tomcat&#x2F;logs&#x2F;catalina.out &amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;#125;  注意上面内容中大括号">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-08-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-25T01:57:34.653Z">
+<meta property="article:author" content="Jonny">
+<meta property="article:tag" content="日志">
+<meta property="article:tag" content="运维">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://jonnynan.github.io/2019/08/15/2019-08-15-%E4%BD%BF%E7%94%A8Logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://jonnynan.github.io/2019/08/15/2019-08-15-%E4%BD%BF%E7%94%A8Logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/","path":"2019/08/15/2019-08-15-使用Logrotate归档日志/","title":"使用Logrotate归档日志"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>使用Logrotate归档日志 | Jonny's Blog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Jonny's Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">致良知</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAtomcat%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">1.</span> <span class="nav-text">创建tomcat的配置文件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%A7%A3%E9%87%8A"><span class="nav-number">2.</span> <span class="nav-text">参数解释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E5%B8%B8%E7%94%A8%E7%9A%84%E5%8F%82%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">不常用的参数</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Jonny"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Jonny</p>
+  <div class="site-description" itemprop="description">个人技术博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/jonnynan" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;jonnynan" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://jonnynan.github.io/2019/08/15/2019-08-15-%E4%BD%BF%E7%94%A8Logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Jonny">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonny's Blog">
+      <meta itemprop="description" content="个人技术博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="使用Logrotate归档日志 | Jonny's Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用Logrotate归档日志
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-08-15 00:00:00" itemprop="dateCreated datePublished" datetime="2019-08-15T00:00:00+08:00">2019-08-15</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="创建tomcat的配置文件"><a href="#创建tomcat的配置文件" class="headerlink" title="创建tomcat的配置文件"></a>创建tomcat的配置文件</h2><p>vim &#x2F;etc&#x2F;logrotate.d&#x2F;tomcat</p>
+<p>内容：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">123456789/application/tomcat/logs/catalina.out &amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数</p>
+<p>关于每个参数的作用我们可以查看全局文件cat &#x2F;etc&#x2F;logrotate.conf 我们可以把配置文件写在&#x2F;etc&#x2F;logrotate.conf里面或者放在&#x2F;etc&#x2F;logrotate.d下面</p>
+<h2 id="参数解释"><a href="#参数解释" class="headerlink" title="参数解释"></a>参数解释</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">12345678daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！</span><br></pre></td></tr></table></figure>
+
+<h2 id="不常用的参数"><a href="#不常用的参数" class="headerlink" title="不常用的参数"></a>不常用的参数</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">12345678910111213141516weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行</span><br></pre></td></tr></table></figure>
+
+<p>温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除</p>
+<p><a href="#%E6%B5%8B%E8%AF%95"></a>测试</p>
+<ul>
+<li>调试 （d &#x3D; debug）参数为配置文件，不指定则执行全局配置文件</li>
+</ul>
+<p>logrotate -d &#x2F;etc&#x2F;logrotate.d&#x2F;tomcat.conf</p>
+<ul>
+<li>强制执行（-f &#x3D; force），可以配合-v(-v &#x3D;verbose）使用，注意调试信息默认携带-v；</li>
+</ul>
+<p>logrotate -v -f &#x2F;etc&#x2F;logrotate.d&#x2F;tomcat.conf</p>
+<p>配合crontab定时器即可实现每天备份当天日志并压缩归档了。</p>
+<pre><code>Last updated: 2021-06-24 16:19:40
+
+    
+
+
+
+    
+        ![image](/img/avatar.jpg)
+        南璋
+    
+
+
+    
+
+[赏](javascript:;)
+
+    
+        
+- 日志- 运维
+
+        
+
+
+
+
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+
+
+
+
+    
+
+
+    
+
+
+
+
+
+
+  
+     Prev
+    git系列之远程仓库
+  
+
+
+
+
+
+  
+    Next 
+    git系列之时光穿梭
+  
+
+
+
+
+
+
+
+var disqus_shortname = &#39;true&#39;;
+lazyScripts.push(&#39;//&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;)
+
+Please enable JavaScript to view the [comments powered by Disqus.](https://disqus.com/?ref_noscript)
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%BF%90%E7%BB%B4/" rel="tag"># 运维</a>
+              <a href="/tags/%E6%97%A5%E5%BF%97/" rel="tag"># 日志</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/08/13/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/" rel="prev" title="git系列之时光穿梭">
+                  <i class="fa fa-angle-left"></i> git系列之时光穿梭
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/08/19/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/" rel="next" title="git系列之远程仓库">
+                  git系列之远程仓库 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 2019 – 
+    <span itemprop="copyrightYear">2026</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Jonny</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
