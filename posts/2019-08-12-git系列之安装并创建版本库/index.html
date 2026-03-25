@@ -406,6 +406,43 @@ Please enable JavaScript to view the [comments powered by Disqus.](https://disqu
 
   </div>
 
+  
+<div style="text-align:center; margin-top:2rem;">
+  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:var(--primary);color:#fff;border:none;padding:10px 32px;border-radius:20px;cursor:pointer;font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+    ☕ 请我喝杯咖啡
+  </button>
+</div>
+
+
+<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
+    
+    
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
+      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
+    </div>
+    
+    
+    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    
+    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
+  </div>
+</div>
+
+<script>
+function switchPay(type) {
+  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
+  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
+  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
+  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
+  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
+  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
+}
+</script>
+
   <footer class="post-footer">
     <ul class="post-tags">
       <li><a href="https://jonnynan.github.io/tags/git/">Git</a></li>
