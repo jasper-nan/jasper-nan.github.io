@@ -313,17 +313,34 @@
 </ul>
 
 <h3 id="15-月之暗面-kimi">1.5 月之暗面 Kimi</h3>
-<p>Kimi 的核心优势是超长上下文（支持百万级 Token），最新发布了 Kimi K2 模型，支持 Agent 能力。</p>
-<p>⚠️ <strong>注意</strong>：Kimi API 定价页面近期有调整（部分页面返回 404），以下信息基于公开渠道整理，请以官方最新公告为准。</p>
-<p><strong>特点：</strong></p>
+<p>Kimi 最新旗舰模型为 K2.5（2026年1月27日发布），原生多模态，256K 上下文窗口。提供 Kimi Code Plan 订阅套餐和按量 API 两种模式。</p>
+<p><strong>Kimi Code Plan 套餐：</strong></p>
+<table>
+<thead><tr><th>套餐</th><th>月费</th><th>额度</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td>Andante</td><td>¥49/月（年付¥39/月）</td><td>5h token 配额（~300-1,200次 API 调用），每7天刷新</td><td>含 AI 建站/文档/PPT</td></tr>
+<tr><td>Moderato（推荐）</td><td>¥99/月（年付¥79/月）</td><td>更大 token 配额，每7天刷新</td><td>支持多设备、Claude Code/Roo Code</td></tr>
+</tbody>
+</table>
+<p><strong>API 按量计费：</strong></p>
+<table>
+<thead><tr><th>模型</th><th>输入（$/百万Token）</th><th>输出（$/百万Token）</th><th>上下文</th></tr></thead>
+<tbody>
+<tr><td>Kimi K2.5</td><td>$0.60（≈¥4.3）</td><td>$2.50-3.00（≈¥18-21）</td><td>256K</td></tr>
+<tr><td>Kimi K2</td><td>$0.60</td><td>$2.50</td><td>128K</td></tr>
+</tbody>
+</table>
+<p>API 限流按充值层级递增：起步 $1 充值仅 3 RPM，充值 $10+ 升至 200 RPM，充值 $3,000+ 达 10,000 RPM。上下文缓存可降低输入成本最高 75%。</p>
+<p><strong>优势：</strong></p>
 <ul>
-<li>超长上下文是其核心优势（百万级 Token）</li>
-<li>K2 模型支持 Agent / 工具调用能力</li>
-<li>按 Token 计费</li>
+<li>256K 超长上下文窗口，OpenClaw 长记忆场景友好</li>
+<li>支持 Claude Code、Roo Code 等主流编程工具</li>
+<li>限时 3 倍额度扩容活动</li>
 </ul>
 <p><strong>劣势：</strong></p>
 <ul>
-<li>API 文档结构近期变动，定价和限流信息不够透明</li>
+<li>API 低充值档位限流严重（3 RPM），需要充值 $10+ 才能正常使用</li>
+<li>Code Plan 额度按 7 天周期刷新，不累积</li>
 <li>社区反馈的 OpenClaw 适配经验相对较少</li>
 </ul>
 
