@@ -215,20 +215,20 @@
 <table>
 <thead><tr><th>套餐</th><th>月费</th><th>定位</th><th>建议并发项目数</th></tr></thead>
 <tbody>
-<tr><td>Lite</td><td>免费</td><td>个人尝鲜</td><td>1个项目</td></tr>
-<tr><td>Pro</td><td>¥99/月</td><td>个人主力</td><td>1-2个项目</td></tr>
-<tr><td>Max</td><td>¥299/月</td><td>重度用户</td><td>2+个项目</td></tr>
+<tr><td>Lite</td><td>¥49/月（包年¥34/月）</td><td>个人轻量</td><td>~80 prompts/5h</td></tr>
+<tr><td>Pro（最受欢迎）</td><td>¥149/月（包年¥104/月）</td><td>个人主力</td><td>~400 prompts/5h</td></tr>
+<tr><td>Max</td><td>¥469/月（包年¥328/月）</td><td>重度用户</td><td>~1,600 prompts/5h</td></tr>
 </tbody>
 </table>
 <p><strong>优势：</strong></p>
 <ul>
-<li>包含 GLM-5（744B MoE）的使用额度</li>
+<li>Lite 套餐仅支持 GLM-4.7/4.6（GLM-5 需 Pro 及以上）；Pro/Max 才支持 GLM-5（744B MoE），且 GLM-5 消耗 3 倍额度</li>
 <li>套餐制，不用操心 Token 计费</li>
 <li>低峰期动态提升并发</li>
 </ul>
 <p><strong>劣势：</strong></p>
 <ul>
-<li>并发限制较严格——有开发者反馈 Pro 套餐在工作日高峰期（下午 15:00-18:00）连基础请求都频繁被拦截</li>
+<li>按 prompt 配额计费而非无限用——有开发者反馈 Pro 套餐在工作日高峰期（下午 15:00-18:00）连基础请求都频繁被拦截</li>
 <li>套餐用户不支持申请调整并发，固定等级</li>
 <li>曾因限流问题在 V2EX 社区引发讨论（来源：<a href="https://www.80aj.com/2026/01/20/zhipu-glm-rate-limit-problem/">前沿哨所报道</a>）</li>
 </ul>
@@ -334,12 +334,12 @@
 <table>
 <thead><tr><th>方案</th><th>月费用估算</th><th>备注</th></tr></thead>
 <tbody>
-<tr><td>智谱 Pro</td><td>¥99</td><td>套餐内不限 Token（但有并发限制）</td></tr>
-<tr><td>智谱 Max</td><td>¥299</td><td>更高并发</td></tr>
+<tr><td>智谱 Pro</td><td>¥149</td><td>套餐内不限 Token（但有并发限制）</td></tr>
+<tr><td>智谱 Max</td><td>¥469</td><td>1,600 prompts/5h</td></tr>
 <tr><td>DeepSeek V3.2</td><td>¥57（缓存命中率 50%）</td><td>无缓存约 ¥102</td></tr>
-<tr><td>Qwen 3.5 Flash</td><td>¥29</td><td>最便宜的选项</td></tr>
+<tr><td>Qwen 3.5 Flash</td><td>¥29（按量计费）</td><td>最便宜的选项</td></tr>
 <tr><td>Qwen 3.5 Plus</td><td>¥109</td><td>性价比最好的中端</td></tr>
-<tr><td>MiniMax Starter</td><td>¥29</td><td>600 次/5小时，按请求计</td></tr>
+<tr><td>MiniMax Starter</td><td>¥29/月起</td><td>600 次/5小时，按请求计</td></tr>
 <tr><td>MiniMax Plus</td><td>¥49</td><td>1,500 次/5小时，含多模态</td></tr>
 <tr><td>MiniMax Max</td><td>¥119</td><td>4,500 次/5小时</td></tr>
 <tr><td>NVIDIA NIM 免费</td><td>¥0</td><td>40 RPM 限制</td></tr>
@@ -409,7 +409,7 @@
 <p>完全免费，零 Token 费。但 40 RPM 太低，多渠道场景会频繁触发限流。适合只挂一个渠道的个人用户。</p>
 
 <h3 id="不推荐当前阶段">⚠️ 不推荐：智谱 Coding Plan（当前阶段）</h3>
-<p>Pro 套餐 ¥99/月但并发限制严格，高峰期体验差。Max 套餐 ¥299/月价格偏高。相比之下，同价位 MiniMax Max ¥119/月（4,500 次/5小时）或百炼 Qwen Plus 按量计费都更划算。建议保留智谱 Lite（免费）作为备用。</p>
+<p>按 prompt 配额计费（~400/5小时），OpenClaw 单次对话消耗约 1-3 个 prompt，配额消耗极快；高峰限流也有反馈。Max 套餐 ¥469/月性价比不如 MiniMax Max（¥119/月，4,500 次/5小时）。 MiniMax Max ¥119/月（4,500 次/5小时）或百炼 Qwen Plus 按量计费都更划算。建议保留智谱 Lite（免费）作为备用。</p>
 
 <h2 id="四配置建议">四、配置建议</h2>
 <p>以多供应商容灾为目标，推荐 OpenClaw 的模型配置：</p>
