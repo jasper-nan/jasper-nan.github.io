@@ -207,8 +207,8 @@
     </blockquote>
 <hr>
 <h2 id="先说说背景我是谁我想要什么">先说说背景：我是谁，我想要什么
-</h2><p>我叫 Jasper，32 岁，在武汉一家物流科技公司做全栈开发。原来是测试工程师出身，写了几年自动化脚本后来转了开发，对"让机器做重复的事"这件事有天然的执念。</p>
-<p>坐标武汉，家里有一台 Mac mini（M4 Pro 那款，部署 OpenClaw 主力机），两台 NAS（一台 8 盘位飞牛 + 一台 4 盘位微联通），还有一块 Garmin Fenix 7。</p>
+</h2><p>我叫 Jasper，30 岁，在某科技公司做全栈开发。原来是测试工程师出身，写了几年自动化脚本后来转了开发，对"让机器做重复的事"这件事有天然的执念。</p>
+<p>坐标某新一线城市，家里有一台 Mac mini（M4 Pro 那款，部署 OpenClaw 主力机），两台 NAS（一台 8 盘位飞牛 + 一台 4 盘位微联通），还有一块 Garmin Fenix 7。</p>
 <p>我的核心需求很简单：<strong>工作之外的事情，能自动化就自动化，别让我操心</strong>。</p>
 <p>具体来说，我想实现这些：</p>
 <ol>
@@ -259,8 +259,8 @@
 </code></pre><p>第一次配 Cron 的时候容易搞错时区，OpenClaw 默认用 UTC，我配置的是 Asia/Shanghai，这个细节错了就会导致任务执行时间差 8 小时。<strong>一定要检查时区设置</strong>。</p>
 <h3 id="第四步接入外部服务">第四步：接入外部服务
 </h3><p>这步花的时间最长，因为每个服务的 API 和认证方式都不一样。</p>
-<p><strong>CalDAV 日历</strong>：我用一个自建的 CalDAV 服务（caldav.laji.fun），OpenClaw 通过 CardDAV/CalDAV 协议读取日历数据，然后用来做待办提醒和日程管理。</p>
-<p><strong>记账系统</strong>：我的记账用的是 money.laji.fun 这个自建项目，截图 OCR 用了本地部署的 Qwen3.5-27B 模型（跑在另一台机器上，IP 192.168.9.245:9990），识别准确率相当高。具体流程是：截图 → 通过 OpenClaw Skill 调用 OCR API → 结构化数据写入 money.laji.fun。</p>
+<p><strong>CalDAV 日历</strong>：我用一个自建的 CalDAV 服务（caldav.example.com），OpenClaw 通过 CardDAV/CalDAV 协议读取日历数据，然后用来做待办提醒和日程管理。</p>
+<p><strong>记账系统</strong>：我的记账用的是 money.example.com 这个自建项目，截图 OCR 用了本地部署的 本地大语言模型（跑在另一台机器上，局域网部署的推理服务），识别准确率相当高。具体流程是：截图 → 通过 OpenClaw Skill 调用 OCR API → 结构化数据写入 money.example.com。</p>
 <p><strong>NAS 文件管理</strong>：两台 NAS 都通过 SFTP 访问，飞牛的 IP 是内网地址，通过 Tailscale 打通了内网穿透，OpenClaw 直接用 SFTP 协议操作文件。</p>
 <p>整个部署过程花了大概一个周末，其中踩坑主要在飞书消息加解密和 CalDAV 认证这两个地方。</p>
 <hr>
@@ -283,7 +283,7 @@
 <ol>
 <li>微信/QQ 发一张支付截图给 OpenClaw</li>
 <li>OpenClaw 调用本地 OCR API（Qwen3.5-27B）识别金额、商家、分类</li>
-<li>写入 money.laji.fun，同时回复确认消息</li>
+<li>写入 money.example.com，同时回复确认消息</li>
 </ol>
 <p>OCR 识别的准确率大概在 90% 左右，金额基本不会错，分类偶尔会分错（比如把"超市"分到"餐饮"而不是"日用"），但发一条消息纠正就行，整体效率提升非常明显。</p>
 <h3 id="场景三多搜索引擎信息搜索">场景三：多搜索引擎信息搜索
