@@ -6,6 +6,12 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/openclaw/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>OpenClaw 插件与 Skill 优化实战：从堆功能到真好用</title>
+            <link>https://jonnynan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/</link>
+            <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+            <guid>https://jonnynan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/</guid>
+            <description>结合真实使用场景，梳理 OpenClaw 里哪些插件和 Skill 真正值得保留，哪些应该收敛或禁用。</description>
+        </item><item>
             <title>帮你部署 OpenClaw AI 助手 — 一杯咖啡钱拥有私人智能管家</title>
             <link>https://jonnynan.github.io/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/</link>
             <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
