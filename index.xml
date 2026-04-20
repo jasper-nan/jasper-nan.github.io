@@ -6,6 +6,13 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/index.xml" rel="self" type="application/rss+xml" /><item>
+      <title>工业级地图可视化实战：用 Konva.js 打造 AGV 车队监控大屏</title>
+      <link>https://jonnynan.github.io/post/konva-js-gong-ye-di-tu-ke-shi-hua-shi-zhan/</link>
+      <pubDate>2026-04-20T00:00:00+00:00</pubDate>
+      <guid>https://jonnynan.github.io/post/konva-js-gong-ye-di-tu-ke-shi-hua-shi-zhan/</guid>
+      <description>从坐标系地狱到丝滑交互，远舢 AIO 项目的踩坑与解决方案</description>
+    </item>
+    <item>
     <title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title>
     <link>https://jonnynan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link>
     <pubDate>Thu, 03 Apr 2026 00:00:00 +0000</pubDate>
