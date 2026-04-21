@@ -1,39 +1,1208 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>运维 on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/%E8%BF%90%E7%BB%B4/</link>
-        <description>Recent content in 运维 on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>Docker 常用命令速查手册</title>
-            <link>https://jonnynan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;Docker 命令又多又杂，这篇按使用场景整理，覆盖 90% 的日常操作。建议收藏，用到时直接查。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一镜像管理&#34;&gt;一、镜像管理&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 搜索镜像&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker search nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 拉取镜像&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker pull nginx:latest&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker pull python:3.11-slim&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看本地镜像&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker images&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker image ls&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 删除镜像&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker rmi nginx:latest&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 清理悬空镜像（无标签的）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker image prune&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看镜像详情（层信息、大小）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;history&lt;/span&gt; nginx:latest&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二容器生命周期&#34;&gt;二、容器生命周期&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 创建并运行容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker run -d --name my-nginx -p 80:80 nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# -d 后台运行&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# --name 命名&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# -p 端口映射（宿主机:容器）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# -v 数据卷挂载&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# -e 环境变量&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# --restart 重启策略&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看运行中的容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker ps&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看所有容器（包括已停止的）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker ps -a&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 启动 / 停止 / 重启&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker start my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker stop my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker restart my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 删除容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker rm my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 强制删除运行中的容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker rm -f my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 进入容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it my-nginx /bin/bash&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;exec&lt;/span&gt; -it my-nginx /bin/sh    &lt;span class=&#34;c1&#34;&gt;# Alpine 镜像用 sh&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看容器日志&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker logs my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker logs -f my-nginx       &lt;span class=&#34;c1&#34;&gt;# 实时跟踪&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker logs --tail &lt;span class=&#34;m&#34;&gt;100&lt;/span&gt; my-nginx  &lt;span class=&#34;c1&#34;&gt;# 最后100行&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看容器资源占用&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker stats&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker stats my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看容器详情（IP、挂载等）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker inspect my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三docker-run-常用参数&#34;&gt;三、docker run 常用参数&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker run -d &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --name myapp &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p 8080:80 &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -v /data/app:/app/data &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -e &lt;span class=&#34;nv&#34;&gt;TZ&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Asia/Shanghai &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -e &lt;span class=&#34;nv&#34;&gt;MYSQL_ROOT_PASSWORD&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;123456&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --restart unless-stopped &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --network my-net &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;参数&lt;/th&gt;&#xA;          &lt;th&gt;说明&lt;/th&gt;&#xA;          &lt;th&gt;示例&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;后台运行&lt;/td&gt;&#xA;          &lt;td&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;-p&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;端口映射&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;-p 8080:80&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;-v&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;挂载数据卷&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;-v /host/path:/container/path&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;-e&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;环境变量&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;-e MYSQL_ROOT_PASSWORD=xxx&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;--name&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;容器名称&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;--name myapp&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;--restart&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;重启策略&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;no / on-failure / always / unless-stopped&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;--network&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;指定网络&lt;/td&gt;&#xA;          &lt;td&gt;&lt;code&gt;--network my-net&lt;/code&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;-v $(pwd):/app&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;挂载当前目录&lt;/td&gt;&#xA;          &lt;td&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;--rm&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;容器停止后自动删除&lt;/td&gt;&#xA;          &lt;td&gt;适合一次性任务&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四数据卷管理&#34;&gt;四、数据卷管理&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 创建数据卷&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker volume create mydata&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看数据卷列表&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker volume ls&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看数据卷详情&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker volume inspect mydata&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 删除数据卷&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker volume rm mydata&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 清理未使用的数据卷&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker volume prune&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;持久化数据一定要用 &lt;code&gt;-v&lt;/code&gt; 挂载，否则容器删除后数据就丢了。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五网络管理&#34;&gt;五、网络管理&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 创建网络&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker network create my-net&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看网络列表&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker network ls&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 容器加入网络（同一网络内可用容器名互访）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker network connect my-net my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 断开网络&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker network disconnect my-net my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 删除网络&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker network rm my-net&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六docker-compose&#34;&gt;六、Docker Compose&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 启动所有服务&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose up -d&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 停止所有服务&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose down&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 停止并删除数据卷&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose down -v&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看服务状态&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose ps&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看日志&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose logs -f&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 重启某个服务&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose restart nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 重新构建并启动&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker compose up -d --build&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;docker-composeyml-示例&#34;&gt;docker-compose.yml 示例&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;3.8&amp;#39;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;services&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;nginx&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;nginx:latest&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;ports&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;s2&#34;&gt;&amp;#34;80:80&amp;#34;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;./html:/usr/share/nginx/html&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;restart&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;unless-stopped&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mysql&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;image&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;mysql:8.0&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;environment&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;MYSQL_ROOT_PASSWORD&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;m&#34;&gt;123456&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;MYSQL_DATABASE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;myapp&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;      &lt;/span&gt;- &lt;span class=&#34;l&#34;&gt;mysql-data:/var/lib/mysql&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;    &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;restart&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;l&#34;&gt;unless-stopped&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nt&#34;&gt;volumes&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;mysql-data&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;七镜像构建&#34;&gt;七、镜像构建&#xA;&lt;/h2&gt;&lt;h3 id=&#34;dockerfile-示例&#34;&gt;Dockerfile 示例&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-dockerfile&#34; data-lang=&#34;dockerfile&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;FROM&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;python:3.11-slim&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;WORKDIR&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;/app&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; requirements.txt .&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;RUN&lt;/span&gt; pip install --no-cache-dir -r requirements.txt&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;COPY&lt;/span&gt; . .&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;EXPOSE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;s&#34;&gt;8000&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;CMD&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;python&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;构建与推送&#34;&gt;构建与推送&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 构建镜像&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker build -t myapp:1.0 .&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看构建历史&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker &lt;span class=&#34;nb&#34;&gt;history&lt;/span&gt; myapp:1.0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 打标签&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker tag myapp:1.0 myregistry/myapp:1.0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 推送到仓库&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker push myregistry/myapp:1.0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;八清理命令&#34;&gt;八、清理命令&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 一键清理（停止的容器、未使用的网络、悬空镜像、构建缓存）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker system prune&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 深度清理（包括未使用的数据卷）⚠️ 慎用&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker system prune -a --volumes&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看磁盘占用&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker system df&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;九实用技巧&#34;&gt;九、实用技巧&#xA;&lt;/h2&gt;&lt;h3 id=&#34;查看容器内进程&#34;&gt;查看容器内进程&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker top my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;在容器和宿主机之间复制文件&#34;&gt;在容器和宿主机之间复制文件&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 从容器复制到宿主机&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker cp my-nginx:/etc/nginx/nginx.conf ./nginx.conf&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 从宿主机复制到容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker cp ./nginx.conf my-nginx:/etc/nginx/nginx.conf&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看容器端口映射&#34;&gt;查看容器端口映射&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker port my-nginx&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;导出和导入镜像&#34;&gt;导出和导入镜像&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker save -o myapp.tar myapp:1.0&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker load -i myapp.tar&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看容器实时资源&#34;&gt;查看容器实时资源&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker stats --no-stream    &lt;span class=&#34;c1&#34;&gt;# 只显示一次&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker stats my-nginx       &lt;span class=&#34;c1&#34;&gt;# 指定容器&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;收藏这篇，Docker 命令不用死记，用到的时候来查就行。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item><item>
-            <title>Jenkins CI/CD 从入门到实战：自动化部署不再难</title>
-            <link>https://jonnynan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;Jenkins 虽然老了，但仍然是企业里用得最多的 CI/CD 工具。掌握 Jenkins Pipeline 是全栈/测试工程师的加分项。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一安装-jenkins&#34;&gt;一、安装 Jenkins&#xA;&lt;/h2&gt;&lt;h3 id=&#34;docker-一键安装推荐&#34;&gt;Docker 一键安装（推荐）&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker run -d &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --name jenkins &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p 8080:8080 &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p 50000:50000 &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -v jenkins_home:/var/jenkins_home &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -v /var/run/docker.sock:/var/run/docker.sock &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --restart unless-stopped &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  jenkins/jenkins:lts&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;挂载 docker.sock 是为了在 Pipeline 里能用 Docker。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;初始化&#34;&gt;初始化&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;访问 &lt;code&gt;http://your-ip:8080&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;查看初始密码：&lt;code&gt;docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;安装推荐插件&lt;/li&gt;&#xA;&lt;li&gt;创建管理员账户&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;推荐安装的插件&#34;&gt;推荐安装的插件&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;插件&lt;/th&gt;&#xA;          &lt;th&gt;用途&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Git&lt;/td&gt;&#xA;          &lt;td&gt;代码拉取&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Pipeline&lt;/td&gt;&#xA;          &lt;td&gt;流水线定义&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Docker Pipeline&lt;/td&gt;&#xA;          &lt;td&gt;在 Pipeline 中使用 Docker&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Credentials&lt;/td&gt;&#xA;          &lt;td&gt;凭证管理&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Blue Ocean&lt;/td&gt;&#xA;          &lt;td&gt;可视化 Pipeline（已弃用但好看）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Chinese Localization&lt;/td&gt;&#xA;          &lt;td&gt;中文界面&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二基础概念&#34;&gt;二、基础概念&#xA;&lt;/h2&gt;&lt;h3 id=&#34;jenkins-核心术语&#34;&gt;Jenkins 核心术语&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;术语&lt;/th&gt;&#xA;          &lt;th&gt;说明&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Job&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;一个构建任务&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Pipeline&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;多阶段流水线（推荐方式）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Stage&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;流水线的一个阶段&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Step&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;阶段中的一个具体操作&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Node / Agent&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;执行构建的机器&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;Workspace&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;构建的工作目录&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;pipeline-vs-传统-job&#34;&gt;Pipeline vs 传统 Job&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;传统 Freestyle Job：&lt;/strong&gt; 在网页上点按钮配置，适合简单任务，但不方便版本管理。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Pipeline：&lt;/strong&gt; 用代码（Jenkinsfile）定义流程，提交到代码仓库，&lt;strong&gt;推荐使用。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三pipeline-实战&#34;&gt;三、Pipeline 实战&#xA;&lt;/h2&gt;&lt;h3 id=&#34;jenkinsfile-示例python-项目&#34;&gt;Jenkinsfile 示例：Python 项目&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;pipeline&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;any&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;environment&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;PYTHON_VERSION&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;3.11&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;stages&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;拉取代码&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;git&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://github.com/yourname/yourproject.git&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;安装依赖&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;pip install -r requirements.txt&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;代码检查&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;运行测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;pytest tests/ -v --junitxml=report.xml&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;post&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;always&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                    &lt;span class=&#34;n&#34;&gt;junit&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;report.xml&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;构建镜像&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;docker build -t myapp:${BUILD_NUMBER} .&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;部署&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;docker stop myapp || true&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;docker rm myapp || true&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;docker run -d --name myapp -p 8000:8000 myapp:${BUILD_NUMBER}&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;post&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;success&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;✅ 部署成功！&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;failure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;❌ 部署失败，请检查日志。&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;always&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;cleanWs&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;jenkinsfile-示例前端项目&#34;&gt;Jenkinsfile 示例：前端项目&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;pipeline&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;any&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;stages&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;安装依赖&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;npm install&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;代码检查&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;npm run lint&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;构建&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;npm run build&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;部署到 Nginx&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;docker cp dist/ nginx-container:/usr/share/nginx/html/&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四常用操作&#34;&gt;四、常用操作&#xA;&lt;/h2&gt;&lt;h3 id=&#34;凭证管理&#34;&gt;凭证管理&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 使用 Git 凭证&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;checkout&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;([&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;$class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;GitSCM&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nl&#34;&gt;branches:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;name:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]],&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nl&#34;&gt;userRemoteConfigs:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[[&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nl&#34;&gt;url:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://github.com/yourname/project.git&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nl&#34;&gt;credentialsId:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;git-credentials&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;]]&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;])&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 使用 SSH 密钥&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;withCredentials&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;([&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sshUserPrivateKey&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nl&#34;&gt;credentialsId:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;ssh-key&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nl&#34;&gt;keyFileVariable:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;SSH_KEY&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;)])&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;ssh -i $SSH_KEY user@server &amp;#39;deploy.sh&amp;#39;&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;参数化构建&#34;&gt;参数化构建&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;pipeline&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;any&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;parameters&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;name:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;BRANCH&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;defaultValue:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;main&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;description:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;构建分支&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;choice&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;name:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;ENV&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;choices:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;dev&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;staging&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;prod&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;],&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;description:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;部署环境&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;booleanParam&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;name:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;SKIP_TESTS&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;defaultValue:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;description:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;跳过测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;stages&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;拉取代码&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;git&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;branch:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;params&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;BRANCH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;url:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;https://github.com/yourname/project.git&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;when&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;expression&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;params&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;SKIP_TESTS&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;pytest tests/&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;部署&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;部署到 ${params.ENV} 环境&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;定时构建&#34;&gt;定时构建&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Poll SCM：每 5 分钟检查一次代码变更&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;triggers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;pollSCM&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;H/5 * * * *&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 定时构建：每天上午 10 点&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;triggers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;cron&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;H 10 * * *&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五多节点agent配置&#34;&gt;五、多节点（Agent）配置&#xA;&lt;/h2&gt;&lt;p&gt;如果你有多台机器：&lt;/p&gt;&#xA;&lt;h3 id=&#34;添加-agent&#34;&gt;添加 Agent&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;Manage Jenkins&lt;/strong&gt; → &lt;strong&gt;Nodes&lt;/strong&gt; → &lt;strong&gt;New Node&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;设置节点名称、工作目录&lt;/li&gt;&#xA;&lt;li&gt;选择连接方式（SSH）&lt;/li&gt;&#xA;&lt;li&gt;配置 SSH 凭证&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;在-pipeline-中指定节点&#34;&gt;在 Pipeline 中指定节点&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;pipeline&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;none&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;stages&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;构建&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;label&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;build-server&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;make build&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;label&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;test-server&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;make test&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;部署&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;agent&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;label&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;prod-server&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;                &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;make deploy&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六webhook-自动触发&#34;&gt;六、Webhook 自动触发&#xA;&lt;/h2&gt;&lt;h3 id=&#34;github--gitlab-集成&#34;&gt;GitHub / GitLab 集成&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;Jenkins 安装插件：&lt;code&gt;Generic Webhook Trigger&lt;/code&gt; 或 &lt;code&gt;GitLab Plugin&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;在 Jenkins Job 中配置 Webhook URL&lt;/li&gt;&#xA;&lt;li&gt;在 GitHub/GitLab 仓库设置中添加 Webhook&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;triggers&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;GenericTrigger&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nl&#34;&gt;genericVariables:&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[[&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;key:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;ref&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;value:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;$.ref&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]],&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nl&#34;&gt;causeString:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;Triggered by push&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nl&#34;&gt;printContributedVariables:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;nl&#34;&gt;printPostContent:&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;七实用技巧&#34;&gt;七、实用技巧&#xA;&lt;/h2&gt;&lt;h3 id=&#34;并行构建&#34;&gt;并行构建&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;并行测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;parallel&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;单元测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;pytest tests/unit/&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;集成测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;            &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;pytest tests/integration/&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;构建超时&#34;&gt;构建超时&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;stage&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;测试&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;options&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;timeout&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;time:&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;30&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nl&#34;&gt;unit:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;MINUTES&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;steps&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;pytest tests/&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;构建通知&#34;&gt;构建通知&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;post&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;success&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;c1&#34;&gt;// 飞书/钉钉/企业微信通知&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;curl -X POST &amp;#34;$WEBHOOK_URL&amp;#34; -H &amp;#34;Content-Type: application/json&amp;#34; -d \&amp;#39;{&amp;#34;msg_type&amp;#34;:&amp;#34;text&amp;#34;,&amp;#34;content&amp;#34;:{&amp;#34;text&amp;#34;:&amp;#34;✅ 构建成功: $JOB_NAME #${BUILD_NUMBER}&amp;#34;}}\&amp;#39;&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;failure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;        &lt;span class=&#34;n&#34;&gt;sh&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;curl -X POST &amp;#34;$WEBHOOK_URL&amp;#34; -H &amp;#34;Content-Type: application/json&amp;#34; -d \&amp;#39;{&amp;#34;msg_type&amp;#34;:&amp;#34;text&amp;#34;,&amp;#34;content&amp;#34;:{&amp;#34;text&amp;#34;:&amp;#34;❌ 构建失败: $JOB_NAME #${BUILD_NUMBER}&amp;#34;}}\&amp;#39;&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;八jenkins-维护&#34;&gt;八、Jenkins 维护&#xA;&lt;/h2&gt;&lt;h3 id=&#34;清理旧构建&#34;&gt;清理旧构建&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-groovy&#34; data-lang=&#34;groovy&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// Pipeline 中配置&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;options&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;buildDiscarder&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;logRotator&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nl&#34;&gt;numToKeepStr:&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;10&amp;#39;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;))&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;备份与恢复&#34;&gt;备份与恢复&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 备份（Docker 方式）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker run --rm -v jenkins_home:/var/jenkins_home -v &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;:/backup &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  busybox tar czf /backup/jenkins-backup.tar.gz /var/jenkins_home&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 恢复&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;docker run --rm -v jenkins_home:/var/jenkins_home -v &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;:/backup &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  busybox tar xzf /backup/jenkins-backup.tar.gz -C /&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;Jenkins 虽然界面不够现代，但功能强大、插件丰富、社区成熟。学会写 Pipeline，你就掌握了 CI/CD 的核心能力。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item><item>
-            <title>Linux 进程管理实战：从查找、过滤到终止</title>
-            <link>https://jonnynan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一查找进程ps&#34;&gt;一、查找进程：ps&#xA;&lt;/h2&gt;&lt;p&gt;&lt;code&gt;ps&lt;/code&gt;（Process Status）是最常用的进程查看命令。&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 列出所有进程的详细信息&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出字段说明：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;字段&lt;/th&gt;&#xA;          &lt;th&gt;含义&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;UID&lt;/td&gt;&#xA;          &lt;td&gt;进程所属用户&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;PID&lt;/td&gt;&#xA;          &lt;td&gt;进程号&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;PPID&lt;/td&gt;&#xA;          &lt;td&gt;父进程号&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;STIME&lt;/td&gt;&#xA;          &lt;td&gt;启动时间&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;CMD&lt;/td&gt;&#xA;          &lt;td&gt;启动命令&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;常用组合&#34;&gt;常用组合&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看所有进程（BSD 风格，更直观）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 按内存使用排序（Top 10）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux --sort&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;-%mem &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; head -10&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 按 CPU 使用排序（Top 10）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux --sort&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;-%cpu &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; head -10&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二过滤进程grep&#34;&gt;二、过滤进程：grep&#xA;&lt;/h2&gt;&lt;p&gt;在进程列表中精确匹配目标：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;关键字&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;⚠️ 注意：&lt;code&gt;grep&lt;/code&gt; 本身也会出现在结果中，因为命令行参数中包含&amp;quot;关键字&amp;quot;。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;过滤掉 grep 自身：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三提取进程号awk&#34;&gt;三、提取进程号：awk&#xA;&lt;/h2&gt;&lt;p&gt;拿到 PID 后经常需要做进一步操作（比如 kill），用 &lt;code&gt;awk&lt;/code&gt; 提取：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;awk &#39;{print $2}&#39;&lt;/code&gt;：提取每行的第二个字段，即 PID&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四终止进程kill&#34;&gt;四、终止进程：kill&#xA;&lt;/h2&gt;&lt;h3 id=&#34;优雅终止&#34;&gt;优雅终止&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; PID&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;发送 &lt;code&gt;SIGTERM&lt;/code&gt;（15）信号，进程可以自行清理资源后退出。&lt;/p&gt;&#xA;&lt;h3 id=&#34;强制终止&#34;&gt;强制终止&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 PID&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;发送 &lt;code&gt;SIGKILL&lt;/code&gt;（9）信号，进程无法捕获，立即被系统终止。&lt;strong&gt;慎用&lt;/strong&gt;，可能导致数据丢失。&lt;/p&gt;&#xA;&lt;h3 id=&#34;终止一组进程&#34;&gt;终止一组进程&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 终止所有 java 进程&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五程序后台运行nohup&#34;&gt;五、程序后台运行：nohup&#xA;&lt;/h2&gt;&lt;p&gt;SSH 登录服务器启动程序后，关闭终端进程就死了。用 &lt;code&gt;nohup&lt;/code&gt; 解决：&lt;/p&gt;&#xA;&lt;h3 id=&#34;基本格式&#34;&gt;基本格式&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup &amp;lt;command&amp;gt; &amp;gt; output.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;拆解说明：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;部分&lt;/th&gt;&#xA;          &lt;th&gt;作用&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;nohup&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;防止 SIGHUP 信号杀死进程&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;&amp;gt; output.log&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;标准输出重定向到日志文件&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;2&amp;gt;&amp;amp;1&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;标准错误合并到标准输出&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;&amp;amp;&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;放入后台运行&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;实际示例&#34;&gt;实际示例&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行 MySQL&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup mysql --user&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;root --password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;my_pass &amp;gt; mysql.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行 Python 脚本&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup python3 app.py &amp;gt; app.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行 Java 应用&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup java -jar myapp.jar &amp;gt; myapp.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看-nohup-启动的进程&#34;&gt;查看 nohup 启动的进程&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看输出日志&#34;&gt;查看输出日志&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tail -f output.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六日志分析goaccess&#34;&gt;六、日志分析：Goaccess&#xA;&lt;/h2&gt;&lt;p&gt;用 Goaccess 生成 Nginx 访问日志的可视化报告：&lt;/p&gt;&#xA;&lt;h3 id=&#34;实时-html-报告&#34;&gt;实时 HTML 报告&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;goaccess /var/log/nginx/access.log &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -o /usr/local/nginx/html/report.html &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --real-time-html &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --time-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%H:%M:%S&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --date-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%d/%b/%Y&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --log-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;COMBINED&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;自定义日志格式&#34;&gt;自定义日志格式&#xA;&lt;/h3&gt;&lt;p&gt;如果你的 Nginx 日志格式不是标准 COMBINED，可以用正则自定义：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;goaccess access.log &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -o /usr/local/nginx/html/report.html &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --log-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;~h{, } %^[%d:%t %^] &amp;#34;%r&amp;#34; %s %b &amp;#34;%R&amp;#34; &amp;#34;%u&amp;#34;&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --date-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;%d/%b/%Y &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --time-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;%T&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;~h{, }&lt;/code&gt;：匹配可选协议头&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;%d:%t&lt;/code&gt;：自定义日期时间解析&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;&amp;quot;%r&amp;quot;&lt;/code&gt;：匹配原始请求行&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-速查表&#34;&gt;📋 速查表&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查找进程&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;关键词&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 提取 PID&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;关键词&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 终止进程&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; PID          &lt;span class=&#34;c1&#34;&gt;# 优雅终止&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 PID       &lt;span class=&#34;c1&#34;&gt;# 强制终止&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup &lt;span class=&#34;nb&#34;&gt;command&lt;/span&gt; &amp;gt; output.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看日志&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tail -f output.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;希望这篇文章对你有帮助！如果觉得有用，欢迎分享给需要的朋友。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item><item>
-            <title>使用Logrotate归档日志</title>
-            <link>https://jonnynan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</link>
-            <pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</guid>
-            <description>&lt;p&gt;aliases:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;/posts/2019-08-15-使用Logrotate归档日志/&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;创建tomcat的配置文件&#34;&gt;创建tomcat的配置文件&#xA;&lt;/h2&gt;&lt;p&gt;vim /etc/logrotate.d/tomcat&lt;/p&gt;&#xA;&lt;p&gt;内容：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;/application/tomcat/logs/catalina.out &amp;amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;amp;#125;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数&lt;/p&gt;&#xA;&lt;p&gt;关于每个参数的作用我们可以查看全局文件cat /etc/logrotate.conf 我们可以把配置文件写在/etc/logrotate.conf里面或者放在/etc/logrotate.d下面&lt;/p&gt;&#xA;&lt;h2 id=&#34;参数解释&#34;&gt;参数解释&#xA;&lt;/h2&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;不常用的参数&#34;&gt;不常用的参数&#xA;&lt;/h2&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除&lt;/p&gt;&#xA;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;#%e6%b5%8b%e8%af%95&#34; &gt;&lt;/a&gt;测试&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;调试 （d = debug）参数为配置文件，不指定则执行全局配置文件&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;logrotate -d /etc/logrotate.d/tomcat.conf&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;强制执行（-f = force），可以配合-v(-v =verbose）使用，注意调试信息默认携带-v；&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;logrotate -v -f /etc/logrotate.d/tomcat.conf&lt;/p&gt;&#xA;&lt;p&gt;配合crontab定时器即可实现每天备份当天日志并压缩归档了。&lt;/p&gt;&#xA;</description>
-        </item><item>
-            <title>git系列之安装并创建版本库</title>
-            <link>https://jonnynan.github.io/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/</link>
-            <pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/</guid>
-            <description>&lt;p&gt;aliases:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;/posts/2019-08-12-git系列之安装并创建版本库/&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;git的安装&#34;&gt;git的安装&#xA;&lt;/h2&gt;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;windows安装无脑下一步即可&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;linux：&#xA;ubuntu :&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ sudo apt install git&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;arch:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ sudo pacman -S git&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;&#xA;&lt;li&gt;macos:&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1brew install git&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;&#xA;&lt;li&gt;linux和macos 也可以源码编译安装。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;git安装后的配置&#34;&gt;git安装后的配置&#xA;&lt;/h2&gt;&lt;ul&gt;&#xA;&lt;li&gt;Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git config --global user.name &amp;#34;Your Name&amp;#34;$ git config --global user.email &amp;#34;email@example.com&amp;#34;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址&lt;/p&gt;&#xA;&lt;h2 id=&#34;git创建版本库&#34;&gt;git创建版本库&#xA;&lt;/h2&gt;&lt;p&gt;什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。&lt;/p&gt;&#xA;&lt;p&gt;找一个空目录执行下面命令：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git init&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。&lt;/p&gt;&#xA;&lt;p&gt;如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。&lt;/p&gt;&#xA;&lt;p&gt;也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。&lt;/p&gt;&#xA;&lt;h2 id=&#34;把文件添加到版本库&#34;&gt;把文件添加到版本库&#xA;&lt;/h2&gt;&lt;p&gt;首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。&lt;/p&gt;&#xA;&lt;p&gt;比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.&lt;/p&gt;&#xA;&lt;p&gt;现在新建一个文件：readme.txt,内容如下：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;Git is a version control system.Git is free software.&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。&lt;/p&gt;&#xA;&lt;p&gt;将一个文件放到git仓库只需2步：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;第一步，用命令git add告诉Git，把文件添加到仓库：&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git add readme.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;&#xA;&lt;li&gt;第二步，用命令git commit告诉Git，把文件提交到仓库：&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git commit -m &amp;#34;wrote a readme file&amp;#34;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。&lt;/p&gt;&#xA;&lt;p&gt;嫌麻烦不想输入-m “xxx”行不行？确实有办法可以这么干，但是强烈不建议你这么干，因为输入说明对自己对别人阅读都很重要。&lt;/p&gt;&#xA;&lt;p&gt;git commit命令执行成功后会告诉你，1 file changed：1个文件被改动（我们新添加的readme.txt文件）；2 insertions：插入了两行内容（readme.txt有两行内容）。&lt;/p&gt;&#xA;&lt;h2 id=&#34;为什么git添加文件要两步走&#34;&gt;为什么git添加文件要两步走？&#xA;&lt;/h2&gt;&lt;p&gt;因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git add file1.txt$ git add file2.txt file3.txt$ git commit -m &amp;#34;add 3 files.&amp;#34;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;小结&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;初始化一个Git仓库，使用git init命令。&lt;/p&gt;&#xA;&lt;p&gt;添加文件到Git仓库，分两步：&lt;/p&gt;&#xA;&lt;p&gt;使用命令git add &amp;lt;file&amp;gt;，注意，可反复多次使用，添加多个文件；使用命令git commit -m &amp;lt;message&amp;gt;，完成。&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>运维 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E8%BF%90%E7%BB%B4/</link><description>Recent content in 运维 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml"/><item><title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title><link>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;测试工程师不应该把时间花在&amp;quot;装环境&amp;quot;、“等部署”、“手动提 Bug&amp;quot;上。AI Agent 可以把这些杂活全部自动化，让你专注在真正有价值的事上。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h2 id="背景测试工程师的日常痛点"&gt;背景：测试工程师的日常痛点
+&lt;/h2&gt;&lt;p&gt;作为一个在物流科技部门做测试/全栈的工程师，我日常的工作流大概是这样的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;需要一套测试环境 → 找运维开虚拟机（排队等半天）&lt;/li&gt;
+&lt;li&gt;虚拟机好了 → SSH 上去装环境、拉代码、配服务&lt;/li&gt;
+&lt;li&gt;环境就绪 → 触发 Jenkins 构建、部署&lt;/li&gt;
+&lt;li&gt;跑完测试 → 发现 Bug → 打开缺陷管理平台，手动填一大堆字段&lt;/li&gt;
+&lt;li&gt;修完复测 → 再部署、再验证、再关 Bug&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这套流程下来，真正用在「测试」上的时间可能不到 40%，剩下全是环境搭建、等部署、填表。尤其是跨版本回归测试，每个版本都要重复一遍。&lt;/p&gt;
+&lt;p&gt;我一直在想：能不能把 AI 引入这条链路，让它帮我干这些重复劳动？&lt;/p&gt;
+&lt;h2 id="方案用一个-ai-agent-串联整个工作流"&gt;方案：用一个 AI Agent 串联整个工作流
+&lt;/h2&gt;&lt;p&gt;最终方案是用一个开源的 AI Agent 框架，通过自然语言对话触发一整套自动化操作：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;说一句话 → 创建虚拟机 → 配置环境 → 触发构建 → 发现 Bug 自动提交&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;不用切窗口，不用等审批，不用手动填表。整个链路一个人、一句话搞定。&lt;/p&gt;
+&lt;h2 id="一esxi-自动创建虚拟机"&gt;一、ESXi 自动创建虚拟机
+&lt;/h2&gt;&lt;h3 id="痛点"&gt;痛点
+&lt;/h3&gt;&lt;p&gt;以前每次要测试环境，流程是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;登录 vSphere Client&lt;/li&gt;
+&lt;li&gt;找到合适的模板&lt;/li&gt;
+&lt;li&gt;右键 → 从模板克隆&lt;/li&gt;
+&lt;li&gt;改名字、改 IP、改配置&lt;/li&gt;
+&lt;li&gt;开机 → 等 → SSH 上去装环境&lt;/li&gt;
+&lt;li&gt;整个流程 15-30 分钟，如果模板有问题甚至更长&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解决"&gt;解决
+&lt;/h3&gt;&lt;p&gt;通过 ESXi API + PowerCLI 脚本，AI Agent 可以直接创建和配置虚拟机：&lt;/p&gt;
+&lt;p&gt;我对 Agent 说：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;帮我创建一台测试虚拟机，2C4G，用 ubuntu22 模板，
+名字叫 test-env-v1.5.3，IP 分配 192.168.x.x
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Agent 在后台执行：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 简化的伪代码逻辑
+vm = clone_from_template(
+ template=&amp;quot;ubuntu22-template&amp;quot;,
+ name=&amp;quot;test-env-v1.5.3&amp;quot;,
+ cpus=2,
+ memory_gb=4,
+ network=&amp;quot;VM Network&amp;quot;,
+ ip=&amp;quot;192.168.x.x&amp;quot;
+)
+power_on(vm)
+wait_for_ssh(vm)
+configure_env(vm) # 自动装 Docker、拉代码、配服务
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;**效果：**从 30 分钟缩短到 5 分钟。而且我可以一边喝咖啡一边等，Agent 创建完会主动通知我。&lt;/p&gt;
+&lt;h3 id="踩坑"&gt;踩坑
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;vSAN 流量和管理流量走了同一张网卡，创建虚拟机时 IO 争抢严重。最终给 vSAN 分了独立 VMkernel 适配器，用 VLAN 隔离解决了&lt;/li&gt;
+&lt;li&gt;IP 地址池管理要注意回收，不然创建多了 IP 冲突&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="二jenkins-自动化构建与部署"&gt;二、Jenkins 自动化构建与部署
+&lt;/h2&gt;&lt;h3 id="痛点-1"&gt;痛点
+&lt;/h3&gt;&lt;p&gt;以前触发构建的流程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;打开 Jenkins 网页&lt;/li&gt;
+&lt;li&gt;找到对应的 Job&lt;/li&gt;
+&lt;li&gt;填参数（分支名、环境、构建号等）&lt;/li&gt;
+&lt;li&gt;点构建&lt;/li&gt;
+&lt;li&gt;刷页面等结果&lt;/li&gt;
+&lt;li&gt;构建失败了 → 查日志 → 定位问题&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解决-1"&gt;解决
+&lt;/h3&gt;&lt;p&gt;Jenkins 提供 REST API 和 CLI，Agent 可以直接调用：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 使用 Jenkins CLI 触发构建
+java -jar jenkins-cli.jar -s http://jenkins-server:8080/ \
+ -auth admin:API_TOKEN \
+ build my-project \
+ -p BRANCH=release/v1.5.3 \
+ -p ENV=test \
+ -p BUILD_NUM=127
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;更进一步的玩法 —— 我只需要对 Agent 说：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;触发 v1.5.3 的测试环境构建
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Agent 自动完成：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;调用 Jenkins API 触发构建&lt;/li&gt;
+&lt;li&gt;轮询构建状态&lt;/li&gt;
+&lt;li&gt;构建完成后通知我结果&lt;/li&gt;
+&lt;li&gt;如果失败了，自动拉取日志摘要，告诉我哪个 stage 出了什么错&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;**效果：**不用开浏览器，不用记住 Job 名字和参数。一句话触发，结果主动推送。&lt;/p&gt;
+&lt;h3 id="实战构建失败自动分析"&gt;实战：构建失败自动分析
+&lt;/h3&gt;&lt;p&gt;这是我觉得最有价值的功能之一。Agent 拿到构建日志后，能自动分析失败原因：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;❌ 构建 #127 失败
+📍 失败阶段：接口测试
+🔍 原因：UserService 接口响应超时（timeout 10s）
+📊 最近 5 次构建：3 次超时，1 次成功，1 次其他错误
+💡 建议：检查数据库连接池配置，可能连接数不够
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以前我需要自己翻几百行日志找原因，现在 Agent 10 秒钟就给我摘要。&lt;/p&gt;
+&lt;h2 id="三自动提交-bug-到缺陷管理平台"&gt;三、自动提交 Bug 到缺陷管理平台
+&lt;/h2&gt;&lt;h3 id="痛点-2"&gt;痛点
+&lt;/h3&gt;&lt;p&gt;提 Bug 是测试工程师最繁琐的工作之一：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;截图、录屏&lt;/li&gt;
+&lt;li&gt;写标题、描述、复现步骤&lt;/li&gt;
+&lt;li&gt;选择模块、严重程度、优先级&lt;/li&gt;
+&lt;li&gt;指派给对应的开发&lt;/li&gt;
+&lt;li&gt;关联测试用例和版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一个 Bug 填下来 5-10 分钟，回归测试一轮能提 20+ 个 Bug，光填表就两小时没了。&lt;/p&gt;
+&lt;h3 id="解决-2"&gt;解决
+&lt;/h3&gt;&lt;p&gt;Agent 通过缺陷管理平台的 API 自动提交：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;刚才那个构建失败，帮我提个 Bug，
+标题用&amp;quot;v1.5.3 用户服务接口超时&amp;quot;，
+指派给后端组
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Agent 自动组装 Bug 信息：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;内容（自动生成）&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;标题&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;v1.5.3 用户服务接口超时&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;严重程度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;严重（P1）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;模块&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;用户服务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;指派&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;后端组负责人&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;复现步骤&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;自动从构建日志和测试报告提取&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;环境信息&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;test-env-v1.5.3 / Ubuntu 22.04&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;关联构建&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Jenkins #127&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;日志附件&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;失败日志 + 堆栈信息&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;**效果：**提 Bug 从 10 分钟降到 30 秒。而且格式规范、信息完整，开发不会来找我补信息。&lt;/p&gt;
+&lt;h2 id="四全链路串联一个实战场景"&gt;四、全链路串联：一个实战场景
+&lt;/h2&gt;&lt;p&gt;把这些能力串起来，实际工作流是这样的：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;我：帮我把 v1.5.3 部署到测试环境，跑完回归测试后把问题都提了
+
+Agent：好的，开始执行：
+ ✅ 创建测试虚拟机 test-env-v1.5.3（2C4G）
+ ✅ 配置环境并拉取代码
+ ✅ 触发 Jenkins 构建 #127
+ ✅ 构建成功，部署完成
+ ✅ 启动自动化测试（45 条用例）
+ ⚠️ 3 条用例失败，2 条跳过
+ ✅ 已提交 3 个 Bug 到缺陷管理平台：
+ - #BUG-1052 用户服务接口超时（P1）→ 指派后端组
+ - #BUG-1053 订单列表分页异常（P2）→ 指派前端组 
+ - #BUG-1054 物流轨迹数据重复（P3）→ 指派后端组
+
+ 完整报告已发送到你的飞书。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以前这个流程我需要：找运维（可能跨天）→ 创建虚拟机 → 部署 → 测试 → 提 Bug → 发通知。&lt;strong&gt;可能要 2-3 天。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;现在一句话，&lt;strong&gt;1 小时内完成&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h2 id="五技术架构"&gt;五、技术架构
+&lt;/h2&gt;&lt;p&gt;整体架构并不复杂：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────┐
+│ 飞书/终端 │ ← 自然语言输入
+└──────┬──────┘
+ │
+┌──────▼──────┐
+│ AI Agent │ ← 理解意图、编排任务
+│ (OpenClaw) │
+└──┬──┬──┬───┘
+ │ │ │
+ │ │ └─── 缺陷管理 API ──→ 提交/管理 Bug
+ │ └───── Jenkins CLI/API ──→ 构建/部署
+ └──────── ESXi/PowerCLI ──→ 虚拟机管理
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;核心思路：AI Agent 不直接&amp;quot;做&amp;quot;事，而是&lt;strong&gt;调用已有的工具和 API&lt;/strong&gt; 。Jenkins、ESXi、缺陷管理平台都有成熟的 API，Agent 只是把它们串起来。&lt;/p&gt;
+&lt;h2 id="六实际效果与数据"&gt;六、实际效果与数据
+&lt;/h2&gt;&lt;p&gt;用了两三个月后的对比：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;环节&lt;/th&gt;
+ &lt;th&gt;改造前&lt;/th&gt;
+ &lt;th&gt;改造后&lt;/th&gt;
+ &lt;th&gt;提升&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;申请测试环境&lt;/td&gt;
+ &lt;td&gt;0.5-1 天&lt;/td&gt;
+ &lt;td&gt;5 分钟&lt;/td&gt;
+ &lt;td&gt;90%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;环境配置&lt;/td&gt;
+ &lt;td&gt;30-60 分钟&lt;/td&gt;
+ &lt;td&gt;自动完成&lt;/td&gt;
+ &lt;td&gt;95%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;触发构建部署&lt;/td&gt;
+ &lt;td&gt;5-10 分钟&lt;/td&gt;
+ &lt;td&gt;1 句话&lt;/td&gt;
+ &lt;td&gt;80%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;构建失败分析&lt;/td&gt;
+ &lt;td&gt;15-30 分钟翻日志&lt;/td&gt;
+ &lt;td&gt;10 秒出摘要&lt;/td&gt;
+ &lt;td&gt;95%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;提 Bug&lt;/td&gt;
+ &lt;td&gt;5-10 分钟/个&lt;/td&gt;
+ &lt;td&gt;30 秒/个&lt;/td&gt;
+ &lt;td&gt;90%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;版本回归全流程&lt;/td&gt;
+ &lt;td&gt;2-3 天&lt;/td&gt;
+ &lt;td&gt;1-2 小时&lt;/td&gt;
+ &lt;td&gt;85%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最关键的提升不是效率，而是&lt;strong&gt;注意力&lt;/strong&gt; 。我不需要再在环境、部署、填表这些低价值工作上分心，可以把精力放在测试策略设计、复杂场景分析这些真正需要人的地方。&lt;/p&gt;
+&lt;h2 id="七踩坑与经验"&gt;七、踩坑与经验
+&lt;/h2&gt;&lt;h3 id="1-api-权限要最小化原则"&gt;1. API 权限要最小化原则
+&lt;/h3&gt;&lt;p&gt;Agent 有权限调用 Jenkins、ESXi、缺陷管理平台，意味着它有能力&amp;quot;搞破坏”。务必：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;给 Agent 用独立的 API Token，权限严格限制&lt;/li&gt;
+&lt;li&gt;生产环境操作必须二次确认&lt;/li&gt;
+&lt;li&gt;高危操作（删除 VM、回滚等）走审批流程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-容错与重试很重要"&gt;2. 容错与重试很重要
+&lt;/h3&gt;&lt;p&gt;真实环境不稳定：网络抖动、API 超时、资源不足。Agent 需要有合理的重试策略和错误处理，不能一个 API 失败就整个流程挂掉。&lt;/p&gt;
+&lt;h3 id="3-人机协作不是人机替代"&gt;3. 人机协作，不是人机替代
+&lt;/h3&gt;&lt;p&gt;AI Agent 不是要替代测试工程师，而是接管机械性的重复工作。测试设计、业务理解、风险评估这些还是人的核心价值。Agent 是&amp;quot;副驾驶&amp;quot;，不是&amp;quot;自动驾驶&amp;quot;。&lt;/p&gt;
+&lt;h2 id="八总结"&gt;八、总结
+&lt;/h2&gt;&lt;p&gt;AI Agent 在测试运维领域的价值不是&amp;quot;写代码&amp;quot;或&amp;quot;跑脚本&amp;quot;，而是&lt;strong&gt;把散落在各个系统中的能力通过自然语言串联起来&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;关键是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;API 化&lt;/strong&gt; ：确保 Jenkins、ESXi、缺陷管理平台都有可用的 API&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;标准化&lt;/strong&gt; ：环境模板、构建参数、Bug 模板都要有标准&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;逐步自动化&lt;/strong&gt; ：先自动化最痛的点（比如提 Bug），再逐步扩展&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;对于中小团队来说，不需要上复杂的 AI 平台，一个开源 Agent 框架 + 几个 API 脚本就能大幅提效。最重要的不是工具，是想清楚&lt;strong&gt;哪些环节值得自动化&lt;/strong&gt; 。&lt;/p&gt;</description></item><item><title>Docker 常用命令速查手册</title><link>https://jasper-nan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;Docker 命令又多又杂，这篇按使用场景整理，覆盖 90% 的日常操作。建议收藏，用到时直接查。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一镜像管理"&gt;一、镜像管理
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 搜索镜像
+docker search nginx
+
+# 拉取镜像
+docker pull nginx:latest
+docker pull python:3.11-slim
+
+# 查看本地镜像
+docker images
+docker image ls
+
+# 删除镜像
+docker rmi nginx:latest
+
+# 清理悬空镜像（无标签的）
+docker image prune
+
+# 查看镜像详情（层信息、大小）
+docker history nginx:latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二容器生命周期"&gt;二、容器生命周期
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 创建并运行容器
+docker run -d --name my-nginx -p 80:80 nginx
+
+# -d 后台运行
+# --name 命名
+# -p 端口映射（宿主机:容器）
+# -v 数据卷挂载
+# -e 环境变量
+# --restart 重启策略
+
+# 查看运行中的容器
+docker ps
+
+# 查看所有容器（包括已停止的）
+docker ps -a
+
+# 启动 / 停止 / 重启
+docker start my-nginx
+docker stop my-nginx
+docker restart my-nginx
+
+# 删除容器
+docker rm my-nginx
+
+# 强制删除运行中的容器
+docker rm -f my-nginx
+
+# 进入容器
+docker exec -it my-nginx /bin/bash
+docker exec -it my-nginx /bin/sh # Alpine 镜像用 sh
+
+# 查看容器日志
+docker logs my-nginx
+docker logs -f my-nginx # 实时跟踪
+docker logs --tail 100 my-nginx # 最后100行
+
+# 查看容器资源占用
+docker stats
+docker stats my-nginx
+
+# 查看容器详情（IP、挂载等）
+docker inspect my-nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三docker-run-常用参数"&gt;三、docker run 常用参数
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;docker run -d \
+ --name myapp \
+ -p 8080:80 \
+ -v /data/app:/app/data \
+ -e TZ=Asia/Shanghai \
+ -e MYSQL_ROOT_PASSWORD=123456 \
+ --restart unless-stopped \
+ --network my-net \
+ nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;th&gt;示例&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;后台运行&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-p&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;端口映射&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-p 8080:80&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-v&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;挂载数据卷&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-v /host/path:/container/path&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-e&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;环境变量&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-e MYSQL_ROOT_PASSWORD=xxx&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--name&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;容器名称&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;--name myapp&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--restart&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;重启策略&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;no / on-failure / always / unless-stopped&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--network&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;指定网络&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;--network my-net&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-v $(pwd):/app&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;挂载当前目录&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--rm&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;容器停止后自动删除&lt;/td&gt;
+ &lt;td&gt;适合一次性任务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="四数据卷管理"&gt;四、数据卷管理
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 创建数据卷
+docker volume create mydata
+
+# 查看数据卷列表
+docker volume ls
+
+# 查看数据卷详情
+docker volume inspect mydata
+
+# 删除数据卷
+docker volume rm mydata
+
+# 清理未使用的数据卷
+docker volume prune
+&lt;/code&gt;&lt;/pre&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;持久化数据一定要用 &lt;code&gt;-v&lt;/code&gt; 挂载，否则容器删除后数据就丢了。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="五网络管理"&gt;五、网络管理
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 创建网络
+docker network create my-net
+
+# 查看网络列表
+docker network ls
+
+# 容器加入网络（同一网络内可用容器名互访）
+docker network connect my-net my-nginx
+
+# 断开网络
+docker network disconnect my-net my-nginx
+
+# 删除网络
+docker network rm my-net
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="六docker-compose"&gt;六、Docker Compose
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 启动所有服务
+docker compose up -d
+
+# 停止所有服务
+docker compose down
+
+# 停止并删除数据卷
+docker compose down -v
+
+# 查看服务状态
+docker compose ps
+
+# 查看日志
+docker compose logs -f
+
+# 重启某个服务
+docker compose restart nginx
+
+# 重新构建并启动
+docker compose up -d --build
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="docker-composeyml-示例"&gt;docker-compose.yml 示例
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;version: '3.8'
+services:
+ nginx:
+ image: nginx:latest
+ ports:
+ - &amp;quot;80:80&amp;quot;
+ volumes:
+ - ./html:/usr/share/nginx/html
+ restart: unless-stopped
+
+ mysql:
+ image: mysql:8.0
+ environment:
+ MYSQL_ROOT_PASSWORD: 123456
+ MYSQL_DATABASE: myapp
+ volumes:
+ - mysql-data:/var/lib/mysql
+ restart: unless-stopped
+
+volumes:
+ mysql-data:
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="七镜像构建"&gt;七、镜像构建
+&lt;/h2&gt;&lt;h3 id="dockerfile-示例"&gt;Dockerfile 示例
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD [&amp;quot;python&amp;quot;, &amp;quot;app.py&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="构建与推送"&gt;构建与推送
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 构建镜像
+docker build -t myapp:1.0 .
+
+# 查看构建历史
+docker history myapp:1.0
+
+# 打标签
+docker tag myapp:1.0 myregistry/myapp:1.0
+
+# 推送到仓库
+docker push myregistry/myapp:1.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="八清理命令"&gt;八、清理命令
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 一键清理（停止的容器、未使用的网络、悬空镜像、构建缓存）
+docker system prune
+
+# 深度清理（包括未使用的数据卷）⚠️ 慎用
+docker system prune -a --volumes
+
+# 查看磁盘占用
+docker system df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="九实用技巧"&gt;九、实用技巧
+&lt;/h2&gt;&lt;h3 id="查看容器内进程"&gt;查看容器内进程
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;docker top my-nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="在容器和宿主机之间复制文件"&gt;在容器和宿主机之间复制文件
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 从容器复制到宿主机
+docker cp my-nginx:/etc/nginx/nginx.conf ./nginx.conf
+
+# 从宿主机复制到容器
+docker cp ./nginx.conf my-nginx:/etc/nginx/nginx.conf
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="查看容器端口映射"&gt;查看容器端口映射
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;docker port my-nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="导出和导入镜像"&gt;导出和导入镜像
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;docker save -o myapp.tar myapp:1.0
+docker load -i myapp.tar
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="查看容器实时资源"&gt;查看容器实时资源
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;docker stats --no-stream # 只显示一次
+docker stats my-nginx # 指定容器
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;收藏这篇，Docker 命令不用死记，用到的时候来查就行。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Jenkins CI/CD 从入门到实战：自动化部署不再难</title><link>https://jasper-nan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;Jenkins 虽然老了，但仍然是企业里用得最多的 CI/CD 工具。掌握 Jenkins Pipeline 是全栈/测试工程师的加分项。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一安装-jenkins"&gt;一、安装 Jenkins
+&lt;/h2&gt;&lt;h3 id="docker-一键安装推荐"&gt;Docker 一键安装（推荐）
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;docker run -d \
+ --name jenkins \
+ -p 8080:8080 \
+ -p 50000:50000 \
+ -v jenkins_home:/var/jenkins_home \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ --restart unless-stopped \
+ jenkins/jenkins:lts
+&lt;/code&gt;&lt;/pre&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;挂载 docker.sock 是为了在 Pipeline 里能用 Docker。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h3 id="初始化"&gt;初始化
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;访问 &lt;code&gt;http://your-ip:8080&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;查看初始密码：&lt;code&gt;docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装推荐插件&lt;/li&gt;
+&lt;li&gt;创建管理员账户&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="推荐安装的插件"&gt;推荐安装的插件
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;插件&lt;/th&gt;
+ &lt;th&gt;用途&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Git&lt;/td&gt;
+ &lt;td&gt;代码拉取&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pipeline&lt;/td&gt;
+ &lt;td&gt;流水线定义&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Docker Pipeline&lt;/td&gt;
+ &lt;td&gt;在 Pipeline 中使用 Docker&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Credentials&lt;/td&gt;
+ &lt;td&gt;凭证管理&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Blue Ocean&lt;/td&gt;
+ &lt;td&gt;可视化 Pipeline（已弃用但好看）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Chinese Localization&lt;/td&gt;
+ &lt;td&gt;中文界面&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="二基础概念"&gt;二、基础概念
+&lt;/h2&gt;&lt;h3 id="jenkins-核心术语"&gt;Jenkins 核心术语
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;术语&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Job&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;一个构建任务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Pipeline&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;多阶段流水线（推荐方式）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Stage&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;流水线的一个阶段&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Step&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;阶段中的一个具体操作&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Node / Agent&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;执行构建的机器&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Workspace&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;构建的工作目录&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="pipeline-vs-传统-job"&gt;Pipeline vs 传统 Job
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;传统 Freestyle Job：&lt;/strong&gt; 在网页上点按钮配置，适合简单任务，但不方便版本管理。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Pipeline：&lt;/strong&gt; 用代码（Jenkinsfile）定义流程，提交到代码仓库，&lt;strong&gt;推荐使用。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="三pipeline-实战"&gt;三、Pipeline 实战
+&lt;/h2&gt;&lt;h3 id="jenkinsfile-示例python-项目"&gt;Jenkinsfile 示例：Python 项目
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;pipeline {
+ agent any
+ 
+ environment {
+ PYTHON_VERSION = '3.11'
+ }
+ 
+ stages {
+ stage('拉取代码') {
+ steps {
+ git 'https://github.com/yourname/yourproject.git'
+ }
+ }
+ 
+ stage('安装依赖') {
+ steps {
+ sh 'pip install -r requirements.txt'
+ }
+ }
+ 
+ stage('代码检查') {
+ steps {
+ sh 'flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics'
+ }
+ }
+ 
+ stage('运行测试') {
+ steps {
+ sh 'pytest tests/ -v --junitxml=report.xml'
+ }
+ post {
+ always {
+ junit 'report.xml'
+ }
+ }
+ }
+ 
+ stage('构建镜像') {
+ steps {
+ sh 'docker build -t myapp:${BUILD_NUMBER} .'
+ }
+ }
+ 
+ stage('部署') {
+ steps {
+ sh 'docker stop myapp || true'
+ sh 'docker rm myapp || true'
+ sh 'docker run -d --name myapp -p 8000:8000 myapp:${BUILD_NUMBER}'
+ }
+ }
+ }
+ 
+ post {
+ success {
+ echo '✅ 部署成功！'
+ }
+ failure {
+ echo '❌ 部署失败，请检查日志。'
+ }
+ always {
+ cleanWs()
+ }
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="jenkinsfile-示例前端项目"&gt;Jenkinsfile 示例：前端项目
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;pipeline {
+ agent any
+ 
+ stages {
+ stage('安装依赖') {
+ steps {
+ sh 'npm install'
+ }
+ }
+ 
+ stage('代码检查') {
+ steps {
+ sh 'npm run lint'
+ }
+ }
+ 
+ stage('构建') {
+ steps {
+ sh 'npm run build'
+ }
+ }
+ 
+ stage('部署到 Nginx') {
+ steps {
+ sh 'docker cp dist/ nginx-container:/usr/share/nginx/html/'
+ }
+ }
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="四常用操作"&gt;四、常用操作
+&lt;/h2&gt;&lt;h3 id="凭证管理"&gt;凭证管理
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;// 使用 Git 凭证
+checkout([
+ $class: 'GitSCM',
+ branches: [[name: 'main']],
+ userRemoteConfigs: [[
+ url: 'https://github.com/yourname/project.git',
+ credentialsId: 'git-credentials'
+ ]]
+])
+
+// 使用 SSH 密钥
+withCredentials([sshUserPrivateKey(
+ credentialsId: 'ssh-key',
+ keyFileVariable: 'SSH_KEY'
+)]) {
+ sh &amp;quot;ssh -i $SSH_KEY user@server 'deploy.sh'&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="参数化构建"&gt;参数化构建
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;pipeline {
+ agent any
+ parameters {
+ string(name: 'BRANCH', defaultValue: 'main', description: '构建分支')
+ choice(name: 'ENV', choices: ['dev', 'staging', 'prod'], description: '部署环境')
+ booleanParam(name: 'SKIP_TESTS', defaultValue: false, description: '跳过测试')
+ }
+ 
+ stages {
+ stage('拉取代码') {
+ steps {
+ git branch: params.BRANCH, url: 'https://github.com/yourname/project.git'
+ }
+ }
+ 
+ stage('测试') {
+ when {
+ expression { !params.SKIP_TESTS }
+ }
+ steps {
+ sh 'pytest tests/'
+ }
+ }
+ 
+ stage('部署') {
+ steps {
+ echo &amp;quot;部署到 ${params.ENV} 环境&amp;quot;
+ }
+ }
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="定时构建"&gt;定时构建
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;// Poll SCM：每 5 分钟检查一次代码变更
+triggers {
+ pollSCM('H/5 * * * *')
+}
+
+// 定时构建：每天上午 10 点
+triggers {
+ cron('H 10 * * *')
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="五多节点agent配置"&gt;五、多节点（Agent）配置
+&lt;/h2&gt;&lt;p&gt;如果你有多台机器：&lt;/p&gt;
+&lt;h3 id="添加-agent"&gt;添加 Agent
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Manage Jenkins&lt;/strong&gt; → &lt;strong&gt;Nodes&lt;/strong&gt; → &lt;strong&gt;New Node&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;设置节点名称、工作目录&lt;/li&gt;
+&lt;li&gt;选择连接方式（SSH）&lt;/li&gt;
+&lt;li&gt;配置 SSH 凭证&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="在-pipeline-中指定节点"&gt;在 Pipeline 中指定节点
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;pipeline {
+ agent none
+ 
+ stages {
+ stage('构建') {
+ agent { label 'build-server' }
+ steps {
+ sh 'make build'
+ }
+ }
+ 
+ stage('测试') {
+ agent { label 'test-server' }
+ steps {
+ sh 'make test'
+ }
+ }
+ 
+ stage('部署') {
+ agent { label 'prod-server' }
+ steps {
+ sh 'make deploy'
+ }
+ }
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="六webhook-自动触发"&gt;六、Webhook 自动触发
+&lt;/h2&gt;&lt;h3 id="github--gitlab-集成"&gt;GitHub / GitLab 集成
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;Jenkins 安装插件：&lt;code&gt;Generic Webhook Trigger&lt;/code&gt; 或 &lt;code&gt;GitLab Plugin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;在 Jenkins Job 中配置 Webhook URL&lt;/li&gt;
+&lt;li&gt;在 GitHub/GitLab 仓库设置中添加 Webhook&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre&gt;&lt;code&gt;triggers {
+ GenericTrigger(
+ genericVariables: [[key: 'ref', value: '$.ref']],
+ causeString: 'Triggered by push',
+ printContributedVariables: true,
+ printPostContent: true
+ )
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="七实用技巧"&gt;七、实用技巧
+&lt;/h2&gt;&lt;h3 id="并行构建"&gt;并行构建
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;stage('并行测试') {
+ parallel {
+ stage('单元测试') {
+ steps { sh 'pytest tests/unit/' }
+ }
+ stage('集成测试') {
+ steps { sh 'pytest tests/integration/' }
+ }
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="构建超时"&gt;构建超时
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;stage('测试') {
+ options {
+ timeout(time: 30, unit: 'MINUTES')
+ }
+ steps {
+ sh 'pytest tests/'
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="构建通知"&gt;构建通知
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;post {
+ success {
+ // 飞书/钉钉/企业微信通知
+ sh 'curl -X POST &amp;quot;$WEBHOOK_URL&amp;quot; -H &amp;quot;Content-Type: application/json&amp;quot; -d \'{&amp;quot;msg_type&amp;quot;:&amp;quot;text&amp;quot;,&amp;quot;content&amp;quot;:{&amp;quot;text&amp;quot;:&amp;quot;✅ 构建成功: $JOB_NAME #${BUILD_NUMBER}&amp;quot;}}\''
+ }
+ failure {
+ sh 'curl -X POST &amp;quot;$WEBHOOK_URL&amp;quot; -H &amp;quot;Content-Type: application/json&amp;quot; -d \'{&amp;quot;msg_type&amp;quot;:&amp;quot;text&amp;quot;,&amp;quot;content&amp;quot;:{&amp;quot;text&amp;quot;:&amp;quot;❌ 构建失败: $JOB_NAME #${BUILD_NUMBER}&amp;quot;}}\''
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="八jenkins-维护"&gt;八、Jenkins 维护
+&lt;/h2&gt;&lt;h3 id="清理旧构建"&gt;清理旧构建
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;// Pipeline 中配置
+options {
+ buildDiscarder(logRotator(numToKeepStr: '10'))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="备份与恢复"&gt;备份与恢复
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 备份（Docker 方式）
+docker run --rm -v jenkins_home:/var/jenkins_home -v $(pwd):/backup \
+ busybox tar czf /backup/jenkins-backup.tar.gz /var/jenkins_home
+
+# 恢复
+docker run --rm -v jenkins_home:/var/jenkins_home -v $(pwd):/backup \
+ busybox tar xzf /backup/jenkins-backup.tar.gz -C /
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;Jenkins 虽然界面不够现代，但功能强大、插件丰富、社区成熟。学会写 Pipeline，你就掌握了 CI/CD 的核心能力。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Linux 进程管理实战：从查找、过滤到终止</title><link>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一查找进程ps"&gt;一、查找进程：ps
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;ps&lt;/code&gt;（Process Status）是最常用的进程查看命令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 列出所有进程的详细信息
+ps -ef
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出字段说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;含义&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;UID&lt;/td&gt;
+ &lt;td&gt;进程所属用户&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PID&lt;/td&gt;
+ &lt;td&gt;进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PPID&lt;/td&gt;
+ &lt;td&gt;父进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;STIME&lt;/td&gt;
+ &lt;td&gt;启动时间&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;CMD&lt;/td&gt;
+ &lt;td&gt;启动命令&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="常用组合"&gt;常用组合
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 查看所有进程（BSD 风格，更直观）
+ps aux
+
+# 按内存使用排序（Top 10）
+ps aux --sort=-%mem | head -10
+
+# 按 CPU 使用排序（Top 10）
+ps aux --sort=-%cpu | head -10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二过滤进程grep"&gt;二、过滤进程：grep
+&lt;/h2&gt;&lt;p&gt;在进程列表中精确匹配目标：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;关键字&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;⚠️ 注意：&lt;code&gt;grep&lt;/code&gt; 本身也会出现在结果中，因为命令行参数中包含&amp;quot;关键字&amp;quot;。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;过滤掉 grep 自身：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三提取进程号awk"&gt;三、提取进程号：awk
+&lt;/h2&gt;&lt;p&gt;拿到 PID 后经常需要做进一步操作（比如 kill），用 &lt;code&gt;awk&lt;/code&gt; 提取：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep | awk '{print $2}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;awk '{print $2}'&lt;/code&gt;：提取每行的第二个字段，即 PID&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四终止进程kill"&gt;四、终止进程：kill
+&lt;/h2&gt;&lt;h3 id="优雅终止"&gt;优雅终止
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;kill PID
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;发送 &lt;code&gt;SIGTERM&lt;/code&gt;（15）信号，进程可以自行清理资源后退出。&lt;/p&gt;
+&lt;h3 id="强制终止"&gt;强制终止
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;kill -9 PID
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;发送 &lt;code&gt;SIGKILL&lt;/code&gt;（9）信号，进程无法捕获，立即被系统终止。&lt;strong&gt;慎用&lt;/strong&gt; ，可能导致数据丢失。&lt;/p&gt;
+&lt;h3 id="终止一组进程"&gt;终止一组进程
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 终止所有 java 进程
+kill -9 $(ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep | awk '{print $2}')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="五程序后台运行nohup"&gt;五、程序后台运行：nohup
+&lt;/h2&gt;&lt;p&gt;SSH 登录服务器启动程序后，关闭终端进程就死了。用 &lt;code&gt;nohup&lt;/code&gt; 解决：&lt;/p&gt;
+&lt;h3 id="基本格式"&gt;基本格式
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;nohup &amp;lt;command&amp;gt; &amp;gt; output.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;拆解说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;部分&lt;/th&gt;
+ &lt;th&gt;作用&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;nohup&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;防止 SIGHUP 信号杀死进程&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;&amp;gt; output.log&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;标准输出重定向到日志文件&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;2&amp;gt;&amp;amp;1&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;标准错误合并到标准输出&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;&amp;amp;&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;放入后台运行&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="实际示例"&gt;实际示例
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 后台运行 MySQL
+nohup mysql --user=root --password=my_pass &amp;gt; mysql.log 2&amp;gt;&amp;amp;1 &amp;amp;
+
+# 后台运行 Python 脚本
+nohup python3 app.py &amp;gt; app.log 2&amp;gt;&amp;amp;1 &amp;amp;
+
+# 后台运行 Java 应用
+nohup java -jar myapp.jar &amp;gt; myapp.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="查看-nohup-启动的进程"&gt;查看 nohup 启动的进程
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;ps aux | grep &amp;quot;app.py&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="查看输出日志"&gt;查看输出日志
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;tail -f output.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="六日志分析goaccess"&gt;六、日志分析：Goaccess
+&lt;/h2&gt;&lt;p&gt;用 Goaccess 生成 Nginx 访问日志的可视化报告：&lt;/p&gt;
+&lt;h3 id="实时-html-报告"&gt;实时 HTML 报告
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;goaccess /var/log/nginx/access.log \
+ -o /usr/local/nginx/html/report.html \
+ --real-time-html \
+ --time-format='%H:%M:%S' \
+ --date-format='%d/%b/%Y' \
+ --log-format=COMBINED
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="自定义日志格式"&gt;自定义日志格式
+&lt;/h3&gt;&lt;p&gt;如果你的 Nginx 日志格式不是标准 COMBINED，可以用正则自定义：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;goaccess access.log \
+ -o /usr/local/nginx/html/report.html \
+ --log-format='~h{, } %^[%d:%t %^] &amp;quot;%r&amp;quot; %s %b &amp;quot;%R&amp;quot; &amp;quot;%u&amp;quot;' \
+ --date-format=%d/%b/%Y \
+ --time-format=%T
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;~h{, }&lt;/code&gt;：匹配可选协议头&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;%d:%t&lt;/code&gt;：自定义日期时间解析&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;%r&amp;quot;&lt;/code&gt;：匹配原始请求行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="-速查表"&gt;📋 速查表
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 查找进程
+ps -ef | grep &amp;quot;关键词&amp;quot; | grep -v grep
+
+# 提取 PID
+ps -ef | grep &amp;quot;关键词&amp;quot; | grep -v grep | awk '{print $2}'
+
+# 终止进程
+kill PID # 优雅终止
+kill -9 PID # 强制终止
+
+# 后台运行
+nohup command &amp;gt; output.log 2&amp;gt;&amp;amp;1 &amp;amp;
+
+# 查看日志
+tail -f output.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;希望这篇文章对你有帮助！如果觉得有用，欢迎分享给需要的朋友。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>使用Logrotate归档日志</title><link>https://jasper-nan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</link><pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-15-使用Logrotate归档日志/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="创建tomcat的配置文件"&gt;创建tomcat的配置文件
+&lt;/h2&gt;&lt;p&gt;vim /etc/logrotate.d/tomcat&lt;/p&gt;
+&lt;p&gt;内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/application/tomcat/logs/catalina.out &amp;amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数&lt;/p&gt;
+&lt;p&gt;关于每个参数的作用我们可以查看全局文件cat /etc/logrotate.conf 我们可以把配置文件写在/etc/logrotate.conf里面或者放在/etc/logrotate.d下面&lt;/p&gt;
+&lt;h2 id="参数解释"&gt;参数解释
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="不常用的参数"&gt;不常用的参数
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除&lt;/p&gt;
+&lt;p&gt;测试&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调试 （d = debug）参数为配置文件，不指定则执行全局配置文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;logrotate -d /etc/logrotate.d/tomcat.conf&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;强制执行（-f = force），可以配合-v(-v =verbose）使用，注意调试信息默认携带-v；&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;logrotate -v -f /etc/logrotate.d/tomcat.conf&lt;/p&gt;
+&lt;p&gt;配合crontab定时器即可实现每天备份当天日志并压缩归档了。&lt;/p&gt;</description></item><item><title>git系列之安装并创建版本库</title><link>https://jasper-nan.github.io/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/</link><pubDate>Mon, 12 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-12-git系列之安装并创建版本库/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="git的安装"&gt;git的安装
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;windows安装无脑下一步即可&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linux： ubuntu :&lt;/p&gt;
+&lt;p&gt;$ sudo apt install git&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;arch:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ sudo pacman -S git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;macos:&lt;/p&gt;
+&lt;p&gt;1brew install git&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;linux和macos 也可以源码编译安装。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="git安装后的配置"&gt;git安装后的配置
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Git是分布式版本控制系统，所以，每个机器都必须自报家门：你的名字和Email地址。&lt;/p&gt;
+&lt;p&gt;$ git config &amp;ndash;global user.name &amp;ldquo;Your Name&amp;rdquo;$ git config &amp;ndash;global user.email &amp;ldquo;&lt;a class="link" href="mailto:email@example.com" &gt;email@example.com&lt;/a&gt;&amp;rdquo;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注意git config命令的–global参数，用了这个参数，表示你这台机器上所有的Git仓库都会使用这个配置，当然也可以对某个仓库指定不同的用户名和Email地址&lt;/p&gt;
+&lt;h2 id="git创建版本库"&gt;git创建版本库
+&lt;/h2&gt;&lt;p&gt;什么是版本库呢？版本库又名仓库，英文名repository，你可以简单理解成一个目录，这个目录里面的所有文件都可以被Git管理起来，每个文件的修改、删除，Git都能跟踪，以便任何时刻都可以追踪历史，或者在将来某个时刻可以“还原”。&lt;/p&gt;
+&lt;p&gt;找一个空目录执行下面命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git init
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Git就把仓库建好了，而且告诉你是一个空的仓库（empty Git repository），细心的读者可以发现当前目录下多了一个.git的目录，这个目录是Git来跟踪管理版本库的，修改或删除此文件夹内容会造成git仓库被破坏。&lt;/p&gt;
+&lt;p&gt;如果你没有看到.git目录，那是因为这个目录默认是隐藏的，用ls -ah命令就可以看见。&lt;/p&gt;
+&lt;p&gt;也不一定必须在空目录下创建Git仓库，选择一个已经有东西的目录也是可以的。不过，不建议你使用自己正在开发的公司项目来学习Git，否则造成的一切后果概不负责。&lt;/p&gt;
+&lt;h2 id="把文件添加到版本库"&gt;把文件添加到版本库
+&lt;/h2&gt;&lt;p&gt;首先这里再明确一下，所有的版本控制系统，其实只能跟踪文本文件的改动，比如TXT文件，网页，所有的程序代码等等，Git也不例外。版本控制系统可以告诉你每次的改动，比如在第5行加了一个单词“Linux”，在第8行删了一个单词“Windows”。而图片、视频这些二进制文件，虽然也能由版本控制系统管理，但没法跟踪文件的变化，只能把二进制文件每次改动串起来，也就是只知道图片从100KB改成了120KB，但到底改了啥，版本控制系统不知道，也没法知道。&lt;/p&gt;
+&lt;p&gt;比如，Microsoft的Word格式是二进制格式，因此，版本控制系统是没法跟踪Word文件的改动的.&lt;/p&gt;
+&lt;p&gt;现在新建一个文件：readme.txt,内容如下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Git is a version control system.Git is free software.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;此文件一定要放在git仓库的目录下，子目录下也可。否则git再厉害也找不到此文件。&lt;/p&gt;
+&lt;p&gt;将一个文件放到git仓库只需2步：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;第一步，用命令git add告诉Git，把文件添加到仓库：&lt;/p&gt;
+&lt;p&gt;$ git add readme.txt&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;第二步，用命令git commit告诉Git，把文件提交到仓库：&lt;/p&gt;
+&lt;p&gt;$ git commit -m &amp;ldquo;wrote a readme file&amp;rdquo;[master (root-commit) eaadf4e] wrote a readme file 1 file changed, 2 insertions(+) create mode 100644 readme.txt&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录。&lt;/p&gt;
+&lt;p&gt;嫌麻烦不想输入-m “xxx”行不行？确实有办法可以这么干，但是强烈不建议你这么干，因为输入说明对自己对别人阅读都很重要。&lt;/p&gt;
+&lt;p&gt;git commit命令执行成功后会告诉你，1 file changed：1个文件被改动（我们新添加的readme.txt文件）；2 insertions：插入了两行内容（readme.txt有两行内容）。&lt;/p&gt;
+&lt;h2 id="为什么git添加文件要两步走"&gt;为什么git添加文件要两步走？
+&lt;/h2&gt;&lt;p&gt;因为commit可以一次提交很多文件，所以你可以多次add不同的文件，比如：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git add file1.txt$ git add file2.txt file3.txt$ git commit -m &amp;quot;add 3 files.&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="小结"&gt;小结
+&lt;/h2&gt;&lt;p&gt;初始化一个Git仓库，使用git init命令。&lt;/p&gt;
+&lt;p&gt;添加文件到Git仓库，分两步：&lt;/p&gt;
+&lt;p&gt;使用命令git add &lt;!-- raw HTML omitted --&gt;，注意，可反复多次使用，添加多个文件；使用命令git commit -m &lt;!-- raw HTML omitted --&gt;，完成。&lt;/p&gt;</description></item></channel></rss>

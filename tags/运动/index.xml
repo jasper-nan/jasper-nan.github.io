@@ -1,15 +1,222 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>运动 on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/%E8%BF%90%E5%8A%A8/</link>
-        <description>Recent content in 运动 on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/%E8%BF%90%E5%8A%A8/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>佳明 Forerunner 255 使用心得：跑步数据到底怎么看</title>
-            <link>https://jonnynan.github.io/post/%E4%BD%B3%E6%98%8E255%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/%E4%BD%B3%E6%98%8E255%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;佳明255是很多跑者的入门首选，但买回来之后，各种数据看着头晕。这篇文章整理了日常使用中最实用的功能和数据解读。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一值得用的核心功能&#34;&gt;一、值得用的核心功能&#xA;&lt;/h2&gt;&lt;h3 id=&#34;1-训练状态training-readiness&#34;&gt;1. 训练状态（Training Readiness）&#xA;&lt;/h3&gt;&lt;p&gt;佳明255的杀手级功能。综合你的睡眠、HRV、训练负荷，告诉你今天适合什么强度的训练：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;低&lt;/strong&gt; → 休息或轻松跑&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;中&lt;/strong&gt; → 适度训练&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;高&lt;/strong&gt; → 可以上强度&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;不要无视它。状态低的时候硬跑，反而适得其反。&lt;/p&gt;&#xA;&lt;h3 id=&#34;2-hrv-状态心率变异性&#34;&gt;2. HRV 状态（心率变异性）&#xA;&lt;/h3&gt;&lt;p&gt;HRV 是衡量身体恢复程度的指标：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;HRV 偏高&lt;/strong&gt; → 身体恢复良好&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;HRV 突然下降&lt;/strong&gt; → 可能疲劳、睡眠不好、快要生病&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;建议每天早上同一时间佩戴测量，&lt;strong&gt;7天以上才有参考价值&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h3 id=&#34;3-body-battery身体电量&#34;&gt;3. Body Battery（身体电量）&#xA;&lt;/h3&gt;&lt;p&gt;像手机电量一样显示你的精力值（0-100）：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;早上满电 → 今天状态好&lt;/li&gt;&#xA;&lt;li&gt;上午掉到40以下 → 可能昨晚没睡好或训练过度&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;根据电量安排训练强度，比主观感觉更准。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二跑步数据解读&#34;&gt;二、跑步数据解读&#xA;&lt;/h2&gt;&lt;h3 id=&#34;配速pace&#34;&gt;配速（Pace）&#xA;&lt;/h3&gt;&lt;p&gt;最基础的指标。不同目标配速参考：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;目标&lt;/th&gt;&#xA;          &lt;th&gt;5km 配速&lt;/th&gt;&#xA;          &lt;th&gt;10km 配速&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;入门&lt;/td&gt;&#xA;          &lt;td&gt;6:30-7:00&lt;/td&gt;&#xA;          &lt;td&gt;7:00-7:30&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;中等&lt;/td&gt;&#xA;          &lt;td&gt;5:30-6:00&lt;/td&gt;&#xA;          &lt;td&gt;6:00-6:30&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;进阶&lt;/td&gt;&#xA;          &lt;td&gt;4:30-5:00&lt;/td&gt;&#xA;          &lt;td&gt;5:00-5:30&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;心率区间&#34;&gt;心率区间&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;比配速更重要的指标。&lt;/strong&gt; 跑步要控制心率，不要盲目追速度：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;区间&lt;/th&gt;&#xA;          &lt;th&gt;心率（参考）&lt;/th&gt;&#xA;          &lt;th&gt;训练目的&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Z1 热身&lt;/td&gt;&#xA;          &lt;td&gt;&amp;lt;130&lt;/td&gt;&#xA;          &lt;td&gt;恢复跑&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Z2 有氧&lt;/td&gt;&#xA;          &lt;td&gt;130-150&lt;/td&gt;&#xA;          &lt;td&gt;&lt;strong&gt;基础有氧（80%的训练在这）&lt;/strong&gt;&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Z3 节奏&lt;/td&gt;&#xA;          &lt;td&gt;150-165&lt;/td&gt;&#xA;          &lt;td&gt;乳酸阈值训练&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Z4 无氧&lt;/td&gt;&#xA;          &lt;td&gt;165-180&lt;/td&gt;&#xA;          &lt;td&gt;间歇跑&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Z5 极限&lt;/td&gt;&#xA;          &lt;td&gt;&amp;gt;180&lt;/td&gt;&#xA;          &lt;td&gt;冲刺（很短）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;记住：&lt;strong&gt;慢就是快。&lt;/strong&gt; 大部分时间待在 Z2，才是有效训练。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;步频cadence&#34;&gt;步频（Cadence）&#xA;&lt;/h3&gt;&lt;p&gt;理想步频：&lt;strong&gt;170-180 步/分钟&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;步频太低（&amp;lt;160）意味着步幅太大，容易受伤。提高步频比提高步幅更安全。&lt;/p&gt;&#xA;&lt;h3 id=&#34;跑步功率running-power需配件&#34;&gt;跑步功率（Running Power，需配件）&#xA;&lt;/h3&gt;&lt;p&gt;比心率更实时地反映你的输出强度，不受天气、地形、咖啡因影响。进阶跑者值得关注。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三日常使用技巧&#34;&gt;三、日常使用技巧&#xA;&lt;/h2&gt;&lt;h3 id=&#34;充电&#34;&gt;充电&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;日常模式：约 14 天&lt;/li&gt;&#xA;&lt;li&gt;GPS 模式：约 26 小时&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;习惯&lt;/strong&gt;：洗澡时充电，基本不断电&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;睡眠监测&#34;&gt;睡眠监测&#xA;&lt;/h3&gt;&lt;p&gt;戴着睡觉即可。佳明的睡眠分析比手机靠谱，能区分深睡、浅睡、REM。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;小技巧：&lt;/strong&gt; 如果手表显示睡眠时长明显偏短，可能是表带太松，稍微收紧一点。&lt;/p&gt;&#xA;&lt;h3 id=&#34;训练计划&#34;&gt;训练计划&#xA;&lt;/h3&gt;&lt;p&gt;Garmin Connect 里内置了很多训练计划：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;5km 入门/进阶&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;10km 计划&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;半马计划&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;选一个适合自己的，每周跟着练，比瞎跑效果好得多。&lt;/p&gt;&#xA;&lt;h3 id=&#34;与手机同步&#34;&gt;与手机同步&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;自动同步活动到 Garmin Connect&lt;/li&gt;&#xA;&lt;li&gt;连接微信运动、Strava 等第三方平台&lt;/li&gt;&#xA;&lt;li&gt;接收手机通知（消息、电话）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四适合新手的训练节奏&#34;&gt;四、适合新手的训练节奏&#xA;&lt;/h2&gt;&lt;p&gt;如果你刚开始跑步或刚买佳明：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;周&lt;/th&gt;&#xA;          &lt;th&gt;训练内容&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;1-2&lt;/td&gt;&#xA;          &lt;td&gt;每次跑 3-5km，心率控制在 Z2，不追速度&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;3-4&lt;/td&gt;&#xA;          &lt;td&gt;尝试 5km，记录配速&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;5-8&lt;/td&gt;&#xA;          &lt;td&gt;加入一次间歇跑（400m x 6 组）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;9-12&lt;/td&gt;&#xA;          &lt;td&gt;挑战 10km&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;核心原则：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;每周跑 3 次，休息 4 天&lt;/li&gt;&#xA;&lt;li&gt;80% 的跑量在 Z2（能边跑边聊天的配速）&lt;/li&gt;&#xA;&lt;li&gt;20% 的时间做速度训练&lt;/li&gt;&#xA;&lt;li&gt;体重大的先减重再上量，保护膝盖&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五佳明255-vs-其他跑表&#34;&gt;五、佳明255 vs 其他跑表&#xA;&lt;/h2&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;功能&lt;/th&gt;&#xA;          &lt;th&gt;佳明255&lt;/th&gt;&#xA;          &lt;th&gt;华为GT4&lt;/th&gt;&#xA;          &lt;th&gt;苹果Watch&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;GPS精度&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;续航&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;训练功能&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;生态&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐&lt;/td&gt;&#xA;          &lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;价格&lt;/td&gt;&#xA;          &lt;td&gt;~2000&lt;/td&gt;&#xA;          &lt;td&gt;~1500&lt;/td&gt;&#xA;          &lt;td&gt;~3000+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt; 认真跑步选佳明，日常健康监测选华为，生态全家桶选苹果。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六常用操作速查&#34;&gt;六、常用操作速查&#xA;&lt;/h2&gt;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;长按左上键    → 进入/退出菜单&#xA;长按右上键    → 开始/停止运动&#xA;轻触屏幕       → 翻页查看数据&#xA;五键同时长按  → 重启手表&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;跑步最重要的是坚持，不是速度。戴好佳明，跑好每一步。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>运动 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E8%BF%90%E5%8A%A8/</link><description>Recent content in 运动 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E8%BF%90%E5%8A%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>佳明 Forerunner 255 使用心得：跑步数据到底怎么看</title><link>https://jasper-nan.github.io/post/%E4%BD%B3%E6%98%8E255%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E4%BD%B3%E6%98%8E255%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;佳明255是很多跑者的入门首选，但买回来之后，各种数据看着头晕。这篇文章整理了日常使用中最实用的功能和数据解读。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一值得用的核心功能"&gt;一、值得用的核心功能
+&lt;/h2&gt;&lt;h3 id="1-训练状态training-readiness"&gt;1. 训练状态（Training Readiness）
+&lt;/h3&gt;&lt;p&gt;佳明255的杀手级功能。综合你的睡眠、HRV、训练负荷，告诉你今天适合什么强度的训练：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;低&lt;/strong&gt; → 休息或轻松跑&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;中&lt;/strong&gt; → 适度训练&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高&lt;/strong&gt; → 可以上强度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不要无视它。状态低的时候硬跑，反而适得其反。&lt;/p&gt;
+&lt;h3 id="2-hrv-状态心率变异性"&gt;2. HRV 状态（心率变异性）
+&lt;/h3&gt;&lt;p&gt;HRV 是衡量身体恢复程度的指标：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;HRV 偏高&lt;/strong&gt; → 身体恢复良好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;HRV 突然下降&lt;/strong&gt; → 可能疲劳、睡眠不好、快要生病&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;建议每天早上同一时间佩戴测量，&lt;strong&gt;7天以上才有参考价值&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h3 id="3-body-battery身体电量"&gt;3. Body Battery（身体电量）
+&lt;/h3&gt;&lt;p&gt;像手机电量一样显示你的精力值（0-100）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;早上满电 → 今天状态好&lt;/li&gt;
+&lt;li&gt;上午掉到40以下 → 可能昨晚没睡好或训练过度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据电量安排训练强度，比主观感觉更准。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二跑步数据解读"&gt;二、跑步数据解读
+&lt;/h2&gt;&lt;h3 id="配速pace"&gt;配速（Pace）
+&lt;/h3&gt;&lt;p&gt;最基础的指标。不同目标配速参考：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;目标&lt;/th&gt;
+ &lt;th&gt;5km 配速&lt;/th&gt;
+ &lt;th&gt;10km 配速&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;入门&lt;/td&gt;
+ &lt;td&gt;6:30-7:00&lt;/td&gt;
+ &lt;td&gt;7:00-7:30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;中等&lt;/td&gt;
+ &lt;td&gt;5:30-6:00&lt;/td&gt;
+ &lt;td&gt;6:00-6:30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;进阶&lt;/td&gt;
+ &lt;td&gt;4:30-5:00&lt;/td&gt;
+ &lt;td&gt;5:00-5:30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="心率区间"&gt;心率区间
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;比配速更重要的指标。&lt;/strong&gt; 跑步要控制心率，不要盲目追速度：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;区间&lt;/th&gt;
+ &lt;th&gt;心率（参考）&lt;/th&gt;
+ &lt;th&gt;训练目的&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z1 热身&lt;/td&gt;
+ &lt;td&gt;&amp;lt;130&lt;/td&gt;
+ &lt;td&gt;恢复跑&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z2 有氧&lt;/td&gt;
+ &lt;td&gt;130-150&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;基础有氧（80%的训练在这）&lt;/strong&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z3 节奏&lt;/td&gt;
+ &lt;td&gt;150-165&lt;/td&gt;
+ &lt;td&gt;乳酸阈值训练&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z4 无氧&lt;/td&gt;
+ &lt;td&gt;165-180&lt;/td&gt;
+ &lt;td&gt;间歇跑&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z5 极限&lt;/td&gt;
+ &lt;td&gt;&amp;gt;180&lt;/td&gt;
+ &lt;td&gt;冲刺（很短）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;记住：&lt;strong&gt;慢就是快。&lt;/strong&gt; 大部分时间待在 Z2，才是有效训练。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h3 id="步频cadence"&gt;步频（Cadence）
+&lt;/h3&gt;&lt;p&gt;理想步频：&lt;strong&gt;170-180 步/分钟&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;步频太低（&amp;lt;160）意味着步幅太大，容易受伤。提高步频比提高步幅更安全。&lt;/p&gt;
+&lt;h3 id="跑步功率running-power需配件"&gt;跑步功率（Running Power，需配件）
+&lt;/h3&gt;&lt;p&gt;比心率更实时地反映你的输出强度，不受天气、地形、咖啡因影响。进阶跑者值得关注。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="三日常使用技巧"&gt;三、日常使用技巧
+&lt;/h2&gt;&lt;h3 id="充电"&gt;充电
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;日常模式：约 14 天&lt;/li&gt;
+&lt;li&gt;GPS 模式：约 26 小时&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;习惯&lt;/strong&gt; ：洗澡时充电，基本不断电&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="睡眠监测"&gt;睡眠监测
+&lt;/h3&gt;&lt;p&gt;戴着睡觉即可。佳明的睡眠分析比手机靠谱，能区分深睡、浅睡、REM。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;小技巧：&lt;/strong&gt; 如果手表显示睡眠时长明显偏短，可能是表带太松，稍微收紧一点。&lt;/p&gt;
+&lt;h3 id="训练计划"&gt;训练计划
+&lt;/h3&gt;&lt;p&gt;Garmin Connect 里内置了很多训练计划：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;5km 入门/进阶&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;10km 计划&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;半马计划&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;选一个适合自己的，每周跟着练，比瞎跑效果好得多。&lt;/p&gt;
+&lt;h3 id="与手机同步"&gt;与手机同步
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;自动同步活动到 Garmin Connect&lt;/li&gt;
+&lt;li&gt;连接微信运动、Strava 等第三方平台&lt;/li&gt;
+&lt;li&gt;接收手机通知（消息、电话）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四适合新手的训练节奏"&gt;四、适合新手的训练节奏
+&lt;/h2&gt;&lt;p&gt;如果你刚开始跑步或刚买佳明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;周&lt;/th&gt;
+ &lt;th&gt;训练内容&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;1-2&lt;/td&gt;
+ &lt;td&gt;每次跑 3-5km，心率控制在 Z2，不追速度&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;3-4&lt;/td&gt;
+ &lt;td&gt;尝试 5km，记录配速&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;5-8&lt;/td&gt;
+ &lt;td&gt;加入一次间歇跑（400m x 6 组）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;9-12&lt;/td&gt;
+ &lt;td&gt;挑战 10km&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;核心原则：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;每周跑 3 次，休息 4 天&lt;/li&gt;
+&lt;li&gt;80% 的跑量在 Z2（能边跑边聊天的配速）&lt;/li&gt;
+&lt;li&gt;20% 的时间做速度训练&lt;/li&gt;
+&lt;li&gt;体重大的先减重再上量，保护膝盖&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="五佳明255-vs-其他跑表"&gt;五、佳明255 vs 其他跑表
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;功能&lt;/th&gt;
+ &lt;th&gt;佳明255&lt;/th&gt;
+ &lt;th&gt;华为GT4&lt;/th&gt;
+ &lt;th&gt;苹果Watch&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GPS精度&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;续航&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;训练功能&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;生态&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐&lt;/td&gt;
+ &lt;td&gt;⭐⭐⭐⭐&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;价格&lt;/td&gt;
+ &lt;td&gt;~2000&lt;/td&gt;
+ &lt;td&gt;~1500&lt;/td&gt;
+ &lt;td&gt;~3000+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt; 认真跑步选佳明，日常健康监测选华为，生态全家桶选苹果。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="六常用操作速查"&gt;六、常用操作速查
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;长按左上键 → 进入/退出菜单
+长按右上键 → 开始/停止运动
+轻触屏幕 → 翻页查看数据
+五键同时长按 → 重启手表
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;跑步最重要的是坚持，不是速度。戴好佳明，跑好每一步。&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

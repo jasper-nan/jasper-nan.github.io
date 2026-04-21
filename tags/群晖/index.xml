@@ -1,21 +1,530 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>群晖 on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/%E7%BE%A4%E6%99%96/</link>
-        <description>Recent content in 群晖 on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/%E7%BE%A4%E6%99%96/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>群晖 Synology NAS 新手入门完全指南</title>
-            <link>https://jonnynan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;如果你刚入手了一台群晖 NAS，或者正在考虑入手，这篇文章就是为你准备的。从硬件安装到进阶玩法，一步步带你上手。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;-一收到设备后做什么&#34;&gt;📦 一、收到设备后做什么&#xA;&lt;/h2&gt;&lt;h3 id=&#34;11-硬件检查&#34;&gt;1.1 硬件检查&#xA;&lt;/h3&gt;&lt;p&gt;确认包装内配件齐全：主机、电源线、网线、硬盘笼螺丝。&lt;/p&gt;&#xA;&lt;p&gt;群晖主机不含硬盘，需自购。推荐：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;希捷酷狼 IronWolf&lt;/strong&gt; — NAS 专用盘，CMR 技术&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;西数红盘 Plus&lt;/strong&gt; — 同样是 NAS 专用&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;12-安装硬盘&#34;&gt;1.2 安装硬盘&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;关机并拔掉电源线&lt;/li&gt;&#xA;&lt;li&gt;抽出硬盘架，固定硬盘（3.5 寸用侧面螺丝，2.5 寸用底部螺丝）&lt;/li&gt;&#xA;&lt;li&gt;推回硬盘架，接上电源线和网线&lt;/li&gt;&#xA;&lt;li&gt;开机，等待指示灯变为&lt;strong&gt;绿色常亮&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;13-初始化设置&#34;&gt;1.3 初始化设置&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;在电脑访问 &lt;code&gt;find.synology.com&lt;/code&gt; 或 &lt;code&gt;http://NAS内网IP:5000&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;按向导完成 DSM 系统安装&lt;/li&gt;&#xA;&lt;li&gt;设置管理员账户和&lt;strong&gt;强密码&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;选择&amp;quot;自动更新&amp;quot;保持系统最新&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-二存储池规划shr-新手推荐&#34;&gt;💾 二、存储池规划（SHR 新手推荐）&#xA;&lt;/h2&gt;&lt;h3 id=&#34;什么是-shr&#34;&gt;什么是 SHR？&#xA;&lt;/h3&gt;&lt;p&gt;SHR（Synology Hybrid RAID）是群晖自研的智能 RAID，比传统 RAID 更灵活，硬盘利用率更高。&lt;/p&gt;&#xA;&lt;h3 id=&#34;硬盘组合建议&#34;&gt;硬盘组合建议&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;硬盘数&lt;/th&gt;&#xA;          &lt;th&gt;推荐模式&lt;/th&gt;&#xA;          &lt;th&gt;说明&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;1 块&lt;/td&gt;&#xA;          &lt;td&gt;Basic&lt;/td&gt;&#xA;          &lt;td&gt;无冗余，但灵活&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;2 块&lt;/td&gt;&#xA;          &lt;td&gt;SHR-1（推荐）&lt;/td&gt;&#xA;          &lt;td&gt;1 块硬盘容错&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;3 块+&lt;/td&gt;&#xA;          &lt;td&gt;SHR-1&lt;/td&gt;&#xA;          &lt;td&gt;1 块硬盘容错&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;4 块+&lt;/td&gt;&#xA;          &lt;td&gt;SHR-2&lt;/td&gt;&#xA;          &lt;td&gt;2 块硬盘容错（安全性更高）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;⚠️&#xA;&lt;strong&gt;新手千万别组 RAID0！&lt;/strong&gt; 一块硬盘损坏 = 所有数据全丢。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;创建存储池步骤&#34;&gt;创建存储池步骤&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;进入&lt;strong&gt;存储管理器&lt;/strong&gt; → &lt;strong&gt;存储池&lt;/strong&gt; → &lt;strong&gt;新增&lt;/strong&gt;&lt;/li&gt;&#xA;&lt;li&gt;选择 SHR（自动模式）&lt;/li&gt;&#xA;&lt;li&gt;选择要加入的硬盘&lt;/li&gt;&#xA;&lt;li&gt;完成初始化&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-三安全设置必做&#34;&gt;🔐 三、安全设置（必做！）&#xA;&lt;/h2&gt;&lt;h3 id=&#34;31-开启防火墙&#34;&gt;3.1 开启防火墙&#xA;&lt;/h3&gt;&lt;p&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;安全性&lt;/code&gt; → &lt;code&gt;防火墙&lt;/code&gt; → &lt;code&gt;编辑规则&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;只开放必要端口，禁用 DMZ。&lt;/p&gt;&#xA;&lt;h3 id=&#34;32-禁用-admin-账户&#34;&gt;3.2 禁用 Admin 账户&#xA;&lt;/h3&gt;&lt;p&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;用户与群组&lt;/code&gt; → &lt;code&gt;本地用户&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;新建日常使用账户并赋予管理员权限，&lt;strong&gt;禁用默认 admin 账户&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h3 id=&#34;33-开启两步验证2fa&#34;&gt;3.3 开启两步验证（2FA）&#xA;&lt;/h3&gt;&lt;p&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;用户与群组&lt;/code&gt; → &lt;code&gt;账户&lt;/code&gt; → &lt;code&gt;两步验证&lt;/code&gt;&lt;/p&gt;&#xA;&lt;p&gt;下载 Google Authenticator 或 Authy App 绑定。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-四核心功能使用&#34;&gt;📁 四、核心功能使用&#xA;&lt;/h2&gt;&lt;h3 id=&#34;41-file-station文件管理器&#34;&gt;4.1 File Station（文件管理器）&#xA;&lt;/h3&gt;&lt;p&gt;网页端直接管理文件，支持拖拽上传/下载，可创建共享链接。&lt;/p&gt;&#xA;&lt;h3 id=&#34;42-drive私有云盘-强烈推荐&#34;&gt;4.2 Drive（私有云盘）⭐ 强烈推荐&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;同步文件到电脑/手机（类似 OneDrive）&lt;/li&gt;&#xA;&lt;li&gt;支持多人协作编辑&lt;/li&gt;&#xA;&lt;li&gt;版本历史（误删可恢复）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;客户端支持：Windows / Mac / iOS / Android&lt;/p&gt;&#xA;&lt;h3 id=&#34;43-photo-station--moments照片备份&#34;&gt;4.3 Photo Station / Moments（照片备份）&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;手机安装 Synology Photos App&lt;/li&gt;&#xA;&lt;li&gt;开启自动备份照片到 NAS&lt;/li&gt;&#xA;&lt;li&gt;从此解放手机存储空间&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;44-download-station下载机&#34;&gt;4.4 Download Station（下载机）&#xA;&lt;/h3&gt;&lt;p&gt;集成 PT / BT / 磁力链下载，配合私有云盘直接管理下载文件。&lt;/p&gt;&#xA;&lt;h3 id=&#34;45-surveillance-station监控录像&#34;&gt;4.5 Surveillance Station（监控录像）&#xA;&lt;/h3&gt;&lt;p&gt;接入摄像头后支持移动侦测、录像回放。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-五docker-入门进阶&#34;&gt;🐳 五、Docker 入门（进阶）&#xA;&lt;/h2&gt;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;💡&#xA;等熟悉基础操作后再折腾，新手阶段可以先跳过此章节。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;docker-能做什么&#34;&gt;Docker 能做什么？&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;跑 PT 下载工具（qBittorrent、Transmission）&lt;/li&gt;&#xA;&lt;li&gt;HomeAssistant 智能家居&lt;/li&gt;&#xA;&lt;li&gt;Jellyfin / Emby 影视库&lt;/li&gt;&#xA;&lt;li&gt;Nginx 反向代理&lt;/li&gt;&#xA;&lt;li&gt;各种自动化脚本工具&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;基础概念&#34;&gt;基础概念&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;概念&lt;/th&gt;&#xA;          &lt;th&gt;解释&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;镜像（Image）&lt;/td&gt;&#xA;          &lt;td&gt;应用的模板&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;容器（Container）&lt;/td&gt;&#xA;          &lt;td&gt;运行起来的实例&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;端口映射&lt;/td&gt;&#xA;          &lt;td&gt;容器端口 → 主机端口&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;卷（Volume）&lt;/td&gt;&#xA;          &lt;td&gt;容器数据的持久化存储&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;推荐新手先安装&#34;&gt;推荐新手先安装&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;安装 &lt;code&gt;Container Manager&lt;/code&gt; 套件&lt;/li&gt;&#xA;&lt;li&gt;安装 &lt;strong&gt;Portainer&lt;/strong&gt;（可视化管理 Docker）&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-六远程访问设置&#34;&gt;🌐 六、远程访问设置&#xA;&lt;/h2&gt;&lt;h3 id=&#34;61-内网访问&#34;&gt;6.1 内网访问&#xA;&lt;/h3&gt;&lt;p&gt;直接用 NAS 的内网 IP 访问，如 &lt;code&gt;http://192.168.1.100:5000&lt;/code&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;62-外网访问--quickconnect适合新手&#34;&gt;6.2 外网访问 — QuickConnect（适合新手）&#xA;&lt;/h3&gt;&lt;ol&gt;&#xA;&lt;li&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;外部访问&lt;/code&gt; → &lt;code&gt;QuickConnect&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;注册 Synology 账号&lt;/li&gt;&#xA;&lt;li&gt;获取专属 QuickConnect ID&lt;/li&gt;&#xA;&lt;li&gt;之后用 &lt;code&gt;https://你的ID.quickconnect.to&lt;/code&gt; 随时随地访问&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;✅ 优点：无需设置路由器端口转发&lt;/li&gt;&#xA;&lt;li&gt;⚠️ 缺点：速度比内网稍慢&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;63-外网访问--ddns--端口转发更专业&#34;&gt;6.3 外网访问 — DDNS + 端口转发（更专业）&#xA;&lt;/h3&gt;&lt;p&gt;申请公网 IP → 设置路由器端口转发 → 使用群晖内置 DDNS 或花生壳服务。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-七数据备份建议&#34;&gt;🛡️ 七、数据备份建议&#xA;&lt;/h2&gt;&lt;h3 id=&#34;3-2-1-备份原则&#34;&gt;3-2-1 备份原则&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;3&lt;/strong&gt; 份数据副本&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;2&lt;/strong&gt; 种不同存储介质（如 NAS + 外接硬盘）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt; 份异地备份（云端或另一台 NAS）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;群晖内置备份工具&#34;&gt;群晖内置备份工具&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;Hyper Backup&lt;/strong&gt;：备份到本地/外接硬盘/另一台 NAS/云端&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Snapshot Replication&lt;/strong&gt;：快照备份（需配合 Btrfs 文件系统）&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-八新手学习路径&#34;&gt;📚 八、新手学习路径&#xA;&lt;/h2&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;时间&lt;/th&gt;&#xA;          &lt;th&gt;任务&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;第 1 天&lt;/td&gt;&#xA;          &lt;td&gt;完成初始化、存储池创建、基础安全设置&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;第 2 天&lt;/td&gt;&#xA;          &lt;td&gt;体验 File Station、Drive 文件同步&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;第 3 天&lt;/td&gt;&#xA;          &lt;td&gt;Photo Station 照片备份&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;第 4 天&lt;/td&gt;&#xA;          &lt;td&gt;开启 QuickConnect 远程访问&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;第 5 天+&lt;/td&gt;&#xA;          &lt;td&gt;学习 Docker，折腾更多玩法&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-常见问题&#34;&gt;⚠️ 常见问题&#xA;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Q：硬盘发出异响怎么办？&lt;/strong&gt;&#xA;立刻关机备份数据，可能硬盘即将损坏。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Q：忘记管理员密码怎么办？&lt;/strong&gt;&#xA;重置 NAS（按住 reset 键 4 秒），但会丢失数据。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Q：NAS 能 24 小时开着吗？&lt;/strong&gt;&#xA;可以，群晖设计为 7×24 小时运行。注意散热和定期检查硬盘健康。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;Q：能装 Windows 虚拟机吗？&lt;/strong&gt;&#xA;可以，安装 &lt;code&gt;Virtual Machine Manager&lt;/code&gt; 套件，分配 CPU/内存资源即可。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-推荐学习资源&#34;&gt;📖 推荐学习资源&#xA;&lt;/h2&gt;&lt;ul&gt;&#xA;&lt;li&gt;群晖官方帮助中心：&lt;a class=&#34;link&#34; href=&#34;https://www.synology.com/zh-cn/knowledgebase&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;synology.com/zh-cn/knowledgebase&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;少数派 — 搜索&amp;quot;群晖&amp;quot;有大量教程&lt;/li&gt;&#xA;&lt;li&gt;恩山无线论坛 — 群晖板块干货很多&lt;/li&gt;&#xA;&lt;li&gt;B 站 — 搜索&amp;quot;群晖NAS入门&amp;quot;有中文视频教程&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;如果这篇文章对你有帮助，欢迎请我喝杯咖啡 ☕&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item><item>
-            <title>飞牛 NAS vs 群晖 DSM：真实使用对比，哪个更适合你？</title>
-            <link>https://jonnynan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;群晖 DSM 是 NAS 界的老大哥，飞牛（fnOS）是近年崛起的国产新秀。两个系统我都深度使用过，这篇从实际体验出发帮你对比。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一系统定位&#34;&gt;一、系统定位&#xA;&lt;/h2&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖 DSM&lt;/th&gt;&#xA;          &lt;th&gt;飞牛 fnOS&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;性质&lt;/td&gt;&#xA;          &lt;td&gt;商业闭源&lt;/td&gt;&#xA;          &lt;td&gt;国产开源免费&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;硬件&lt;/td&gt;&#xA;          &lt;td&gt;群晖自家的 NAS&lt;/td&gt;&#xA;          &lt;td&gt;支持主流 x86 硬件（也支持部分 ARM）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;价格&lt;/td&gt;&#xA;          &lt;td&gt;NAS 硬件贵 + 软件免费&lt;/td&gt;&#xA;          &lt;td&gt;软件免费，硬件自选&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;适合人群&lt;/td&gt;&#xA;          &lt;td&gt;不想折腾、预算充足&lt;/td&gt;&#xA;          &lt;td&gt;喜欢折腾、追求性价比&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;核心区别：&lt;/strong&gt; 群晖卖的是&amp;quot;整套方案&amp;quot;，飞牛提供的是&amp;quot;免费系统 + 你自己选硬件&amp;quot;。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二核心功能对比&#34;&gt;二、核心功能对比&#xA;&lt;/h2&gt;&lt;h3 id=&#34;文件管理&#34;&gt;文件管理&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;功能&lt;/th&gt;&#xA;          &lt;th&gt;群晖&lt;/th&gt;&#xA;          &lt;th&gt;飞牛&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Web 文件管理&lt;/td&gt;&#xA;          &lt;td&gt;File Station ✅&lt;/td&gt;&#xA;          &lt;td&gt;文件管理器 ✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;SMB/CIFS 共享&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;NFS&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;WebDAV&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;回收站&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;文件去重&lt;/td&gt;&#xA;          &lt;td&gt;✅（需Btrfs）&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;体验差距不大，都能满足日常需求。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;docker&#34;&gt;Docker&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖&lt;/th&gt;&#xA;          &lt;th&gt;飞牛&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;GUI 管理器&lt;/td&gt;&#xA;          &lt;td&gt;Container Manager ✅&lt;/td&gt;&#xA;          &lt;td&gt;Docker 管理器 ✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Portainer 支持&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Compose 支持&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;资源限制设置&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;平手。&lt;/strong&gt; 两个系统对 Docker 的支持都很完善。&lt;/p&gt;&#xA;&lt;h3 id=&#34;照片管理&#34;&gt;照片管理&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖 Synology Photos&lt;/th&gt;&#xA;          &lt;th&gt;飞牛相册&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;AI 人脸识别&lt;/td&gt;&#xA;          &lt;td&gt;✅ 收费（需高级许可）&lt;/td&gt;&#xA;          &lt;td&gt;✅ 免费&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;时间线浏览&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;手机自动备份&lt;/td&gt;&#xA;          &lt;td&gt;✅ Synology Photos App&lt;/td&gt;&#xA;          &lt;td&gt;✅ 飞牛 App&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;共享相册&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;飞牛的 AI 相册免费是一大优势。&lt;/strong&gt; 群晖的人脸识别需要购买高级许可（约 500 元/台/永久）。&lt;/p&gt;&#xA;&lt;h3 id=&#34;影音中心&#34;&gt;影音中心&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖&lt;/th&gt;&#xA;          &lt;th&gt;飞牛&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Video Station&lt;/td&gt;&#xA;          &lt;td&gt;✅ 但功能一般&lt;/td&gt;&#xA;          &lt;td&gt;内置影音中心&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Jellyfin/Emby 支持&lt;/td&gt;&#xA;          &lt;td&gt;✅ Docker 安装&lt;/td&gt;&#xA;          &lt;td&gt;✅ Docker 安装&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;硬件转码&lt;/td&gt;&#xA;          &lt;td&gt;✅ 部分型号&lt;/td&gt;&#xA;          &lt;td&gt;✅ 需要支持核显的 CPU&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;在线刮削&lt;/td&gt;&#xA;          &lt;td&gt;群晖原生较弱&lt;/td&gt;&#xA;          &lt;td&gt;飞牛集成更好&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;影音党建议两个都上 Jellyfin/Emby，原生的都不够打。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三易用性对比&#34;&gt;三、易用性对比&#xA;&lt;/h2&gt;&lt;h3 id=&#34;安装&#34;&gt;安装&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：开箱即用，引导式安装，小白友好&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：需要自己准备 U 盘引导安装，稍微折腾&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;界面&#34;&gt;界面&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：更像传统操作系统，功能入口多，初看有点乱但习惯了很顺手&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：界面更现代，操作更简洁&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;套件生态&#34;&gt;套件生态&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：套件中心丰富，第三方套件多（Active Backup、Drive、Snapshot Replication 等企业级功能）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：内置功能够用，第三方生态还在发展，社区逐渐壮大&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;更新维护&#34;&gt;更新维护&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：OTA 更新稳定，大版本升级有明确路径&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：更新较频繁，社区活跃，偶尔有小 bug 但修复快&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四性能与扩展&#34;&gt;四、性能与扩展&#xA;&lt;/h2&gt;&lt;h3 id=&#34;硬件选择&#34;&gt;硬件选择&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;群晖：&lt;/strong&gt; 买什么就是什么，CPU/内存固定，扩展有限。好处是不用选，坏处是性价比低。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;飞牛：&lt;/strong&gt; 自己选硬件，灵活性极高：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;配置&lt;/th&gt;&#xA;          &lt;th&gt;群晖同性能型号&lt;/th&gt;&#xA;          &lt;th&gt;飞牛自组&lt;/th&gt;&#xA;          &lt;th&gt;价格对比&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;4盘位 + N100&lt;/td&gt;&#xA;          &lt;td&gt;DS423+&lt;/td&gt;&#xA;          &lt;td&gt;N100 迷你主机 + 4盘位&lt;/td&gt;&#xA;          &lt;td&gt;~3000 vs ~1500&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;8盘位 + J4125&lt;/td&gt;&#xA;          &lt;td&gt;DS1821+&lt;/td&gt;&#xA;          &lt;td&gt;J4125 准系统 + 8盘位&lt;/td&gt;&#xA;          &lt;td&gt;~8000 vs ~2500&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;飞牛方案的价格通常是群晖的 &lt;strong&gt;1/2 到 1/3&lt;/strong&gt;。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;虚拟机&#34;&gt;虚拟机&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：Virtual Machine Manager（需较强 CPU，额外占用资源）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：原生支持更好，对硬件直通支持更灵活&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五优缺点总结&#34;&gt;五、优缺点总结&#xA;&lt;/h2&gt;&lt;h3 id=&#34;群晖-dsm&#34;&gt;群晖 DSM&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;稳定可靠，久经考验&lt;/li&gt;&#xA;&lt;li&gt;套件生态成熟&lt;/li&gt;&#xA;&lt;li&gt;企业级功能（Active Backup、Snapshot Replication）&lt;/li&gt;&#xA;&lt;li&gt;文档和社区资源丰富&lt;/li&gt;&#xA;&lt;li&gt;手机 App 体验好&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;硬件贵，性价比低&lt;/li&gt;&#xA;&lt;li&gt;高级功能需要额外付费（许可证）&lt;/li&gt;&#xA;&lt;li&gt;硬件性能落后于同价位自组&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;飞牛-fnos&#34;&gt;飞牛 fnOS&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;免费开源&lt;/li&gt;&#xA;&lt;li&gt;硬件自由选择，性价比高&lt;/li&gt;&#xA;&lt;li&gt;AI 相册免费&lt;/li&gt;&#xA;&lt;li&gt;国产系统，社区活跃&lt;/li&gt;&#xA;&lt;li&gt;界面现代，操作简洁&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;需要一定动手能力&lt;/li&gt;&#xA;&lt;li&gt;套件生态还在完善中&lt;/li&gt;&#xA;&lt;li&gt;文档不如群晖全面&lt;/li&gt;&#xA;&lt;li&gt;企业级功能不如群晖&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六怎么选&#34;&gt;六、怎么选？&#xA;&lt;/h2&gt;&lt;h3 id=&#34;选群晖如果&#34;&gt;选群晖，如果：&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;预算充足，不想折腾硬件&lt;/li&gt;&#xA;&lt;li&gt;需要企业级备份方案&lt;/li&gt;&#xA;&lt;li&gt;追求开箱即用的稳定体验&lt;/li&gt;&#xA;&lt;li&gt;公司/团队使用&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;选飞牛如果&#34;&gt;选飞牛，如果：&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;追求性价比&lt;/li&gt;&#xA;&lt;li&gt;喜欢折腾，享受 DIY 的乐趣&lt;/li&gt;&#xA;&lt;li&gt;已经有闲置硬件想利用&lt;/li&gt;&#xA;&lt;li&gt;看重 AI 相册等免费功能&lt;/li&gt;&#xA;&lt;li&gt;支持国产开源&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;我的选择两个都要-&#34;&gt;我的选择：两个都要 ✅&#xA;&lt;/h3&gt;&lt;p&gt;如果你有两台 NAS（比如一台 8 盘位 + 一台 4 盘位），可以一台跑群晖负责重要数据备份，另一台跑飞牛负责影音、Docker 和实验性玩法。&lt;strong&gt;两全其美。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;NAS 的本质是数据安全。不管选哪个，&lt;strong&gt;3-2-1 备份原则&lt;/strong&gt;一定要遵守：3份副本、2种介质、1份异地。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>群晖 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E7%BE%A4%E6%99%96/</link><description>Recent content in 群晖 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E7%BE%A4%E6%99%96/index.xml" rel="self" type="application/rss+xml"/><item><title>飞牛 NAS vs 群晖 DSM：真实使用对比，哪个更适合你？</title><link>https://jasper-nan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;群晖 DSM 是 NAS 界的老大哥，飞牛（fnOS）是近年崛起的国产新秀。两个系统我都深度使用过，这篇从实际体验出发帮你对比。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一系统定位"&gt;一、系统定位
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖 DSM&lt;/th&gt;
+ &lt;th&gt;飞牛 fnOS&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;性质&lt;/td&gt;
+ &lt;td&gt;商业闭源&lt;/td&gt;
+ &lt;td&gt;国产开源免费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;硬件&lt;/td&gt;
+ &lt;td&gt;群晖自家的 NAS&lt;/td&gt;
+ &lt;td&gt;支持主流 x86 硬件（也支持部分 ARM）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;价格&lt;/td&gt;
+ &lt;td&gt;NAS 硬件贵 + 软件免费&lt;/td&gt;
+ &lt;td&gt;软件免费，硬件自选&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;适合人群&lt;/td&gt;
+ &lt;td&gt;不想折腾、预算充足&lt;/td&gt;
+ &lt;td&gt;喜欢折腾、追求性价比&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;核心区别：&lt;/strong&gt; 群晖卖的是&amp;quot;整套方案&amp;quot;，飞牛提供的是&amp;quot;免费系统 + 你自己选硬件&amp;quot;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二核心功能对比"&gt;二、核心功能对比
+&lt;/h2&gt;&lt;h3 id="文件管理"&gt;文件管理
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;功能&lt;/th&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Web 文件管理&lt;/td&gt;
+ &lt;td&gt;File Station ✅&lt;/td&gt;
+ &lt;td&gt;文件管理器 ✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SMB/CIFS 共享&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;NFS&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;WebDAV&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;回收站&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;文件去重&lt;/td&gt;
+ &lt;td&gt;✅（需Btrfs）&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;体验差距不大，都能满足日常需求。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="docker"&gt;Docker
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GUI 管理器&lt;/td&gt;
+ &lt;td&gt;Container Manager ✅&lt;/td&gt;
+ &lt;td&gt;Docker 管理器 ✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Portainer 支持&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Compose 支持&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;资源限制设置&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;平手。&lt;/strong&gt; 两个系统对 Docker 的支持都很完善。&lt;/p&gt;
+&lt;h3 id="照片管理"&gt;照片管理
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖 Synology Photos&lt;/th&gt;
+ &lt;th&gt;飞牛相册&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;AI 人脸识别&lt;/td&gt;
+ &lt;td&gt;✅ 收费（需高级许可）&lt;/td&gt;
+ &lt;td&gt;✅ 免费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;时间线浏览&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;手机自动备份&lt;/td&gt;
+ &lt;td&gt;✅ Synology Photos App&lt;/td&gt;
+ &lt;td&gt;✅ 飞牛 App&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;共享相册&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;飞牛的 AI 相册免费是一大优势。&lt;/strong&gt; 群晖的人脸识别需要购买高级许可（约 500 元/台/永久）。&lt;/p&gt;
+&lt;h3 id="影音中心"&gt;影音中心
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Video Station&lt;/td&gt;
+ &lt;td&gt;✅ 但功能一般&lt;/td&gt;
+ &lt;td&gt;内置影音中心&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Jellyfin/Emby 支持&lt;/td&gt;
+ &lt;td&gt;✅ Docker 安装&lt;/td&gt;
+ &lt;td&gt;✅ Docker 安装&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;硬件转码&lt;/td&gt;
+ &lt;td&gt;✅ 部分型号&lt;/td&gt;
+ &lt;td&gt;✅ 需要支持核显的 CPU&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;在线刮削&lt;/td&gt;
+ &lt;td&gt;群晖原生较弱&lt;/td&gt;
+ &lt;td&gt;飞牛集成更好&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;影音党建议两个都上 Jellyfin/Emby，原生的都不够打。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="三易用性对比"&gt;三、易用性对比
+&lt;/h2&gt;&lt;h3 id="安装"&gt;安装
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：开箱即用，引导式安装，小白友好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：需要自己准备 U 盘引导安装，稍微折腾&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="界面"&gt;界面
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：更像传统操作系统，功能入口多，初看有点乱但习惯了很顺手&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：界面更现代，操作更简洁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="套件生态"&gt;套件生态
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：套件中心丰富，第三方套件多（Active Backup、Drive、Snapshot Replication 等企业级功能）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：内置功能够用，第三方生态还在发展，社区逐渐壮大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="更新维护"&gt;更新维护
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：OTA 更新稳定，大版本升级有明确路径&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：更新较频繁，社区活跃，偶尔有小 bug 但修复快&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四性能与扩展"&gt;四、性能与扩展
+&lt;/h2&gt;&lt;h3 id="硬件选择"&gt;硬件选择
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;群晖：&lt;/strong&gt; 买什么就是什么，CPU/内存固定，扩展有限。好处是不用选，坏处是性价比低。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;飞牛：&lt;/strong&gt; 自己选硬件，灵活性极高：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;配置&lt;/th&gt;
+ &lt;th&gt;群晖同性能型号&lt;/th&gt;
+ &lt;th&gt;飞牛自组&lt;/th&gt;
+ &lt;th&gt;价格对比&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;4盘位 + N100&lt;/td&gt;
+ &lt;td&gt;DS423+&lt;/td&gt;
+ &lt;td&gt;N100 迷你主机 + 4盘位&lt;/td&gt;
+ &lt;td&gt;~3000 vs ~1500&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;8盘位 + J4125&lt;/td&gt;
+ &lt;td&gt;DS1821+&lt;/td&gt;
+ &lt;td&gt;J4125 准系统 + 8盘位&lt;/td&gt;
+ &lt;td&gt;~8000 vs ~2500&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;飞牛方案的价格通常是群晖的 &lt;strong&gt;1/2 到 1/3&lt;/strong&gt; 。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h3 id="虚拟机"&gt;虚拟机
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：Virtual Machine Manager（需较强 CPU，额外占用资源）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：原生支持更好，对硬件直通支持更灵活&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="五优缺点总结"&gt;五、优缺点总结
+&lt;/h2&gt;&lt;h3 id="群晖-dsm"&gt;群晖 DSM
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;稳定可靠，久经考验&lt;/li&gt;
+&lt;li&gt;套件生态成熟&lt;/li&gt;
+&lt;li&gt;企业级功能（Active Backup、Snapshot Replication）&lt;/li&gt;
+&lt;li&gt;文档和社区资源丰富&lt;/li&gt;
+&lt;li&gt;手机 App 体验好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;硬件贵，性价比低&lt;/li&gt;
+&lt;li&gt;高级功能需要额外付费（许可证）&lt;/li&gt;
+&lt;li&gt;硬件性能落后于同价位自组&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="飞牛-fnos"&gt;飞牛 fnOS
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;免费开源&lt;/li&gt;
+&lt;li&gt;硬件自由选择，性价比高&lt;/li&gt;
+&lt;li&gt;AI 相册免费&lt;/li&gt;
+&lt;li&gt;国产系统，社区活跃&lt;/li&gt;
+&lt;li&gt;界面现代，操作简洁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要一定动手能力&lt;/li&gt;
+&lt;li&gt;套件生态还在完善中&lt;/li&gt;
+&lt;li&gt;文档不如群晖全面&lt;/li&gt;
+&lt;li&gt;企业级功能不如群晖&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="六怎么选"&gt;六、怎么选？
+&lt;/h2&gt;&lt;h3 id="选群晖如果"&gt;选群晖，如果：
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;预算充足，不想折腾硬件&lt;/li&gt;
+&lt;li&gt;需要企业级备份方案&lt;/li&gt;
+&lt;li&gt;追求开箱即用的稳定体验&lt;/li&gt;
+&lt;li&gt;公司/团队使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="选飞牛如果"&gt;选飞牛，如果：
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;追求性价比&lt;/li&gt;
+&lt;li&gt;喜欢折腾，享受 DIY 的乐趣&lt;/li&gt;
+&lt;li&gt;已经有闲置硬件想利用&lt;/li&gt;
+&lt;li&gt;看重 AI 相册等免费功能&lt;/li&gt;
+&lt;li&gt;支持国产开源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="我的选择两个都要-"&gt;我的选择：两个都要 ✅
+&lt;/h3&gt;&lt;p&gt;如果你有两台 NAS（比如一台 8 盘位 + 一台 4 盘位），可以一台跑群晖负责重要数据备份，另一台跑飞牛负责影音、Docker 和实验性玩法。&lt;strong&gt;两全其美。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;NAS 的本质是数据安全。不管选哪个，&lt;strong&gt;3-2-1 备份原则&lt;/strong&gt; 一定要遵守：3份副本、2种介质、1份异地。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>群晖 Synology NAS 新手入门完全指南</title><link>https://jasper-nan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;如果你刚入手了一台群晖 NAS，或者正在考虑入手，这篇文章就是为你准备的。从硬件安装到进阶玩法，一步步带你上手。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h2 id="-一收到设备后做什么"&gt;📦 一、收到设备后做什么
+&lt;/h2&gt;&lt;h3 id="11-硬件检查"&gt;1.1 硬件检查
+&lt;/h3&gt;&lt;p&gt;确认包装内配件齐全：主机、电源线、网线、硬盘笼螺丝。&lt;/p&gt;
+&lt;p&gt;群晖主机不含硬盘，需自购。推荐：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;希捷酷狼 IronWolf&lt;/strong&gt; — NAS 专用盘，CMR 技术&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;西数红盘 Plus&lt;/strong&gt; — 同样是 NAS 专用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="12-安装硬盘"&gt;1.2 安装硬盘
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;关机并拔掉电源线&lt;/li&gt;
+&lt;li&gt;抽出硬盘架，固定硬盘（3.5 寸用侧面螺丝，2.5 寸用底部螺丝）&lt;/li&gt;
+&lt;li&gt;推回硬盘架，接上电源线和网线&lt;/li&gt;
+&lt;li&gt;开机，等待指示灯变为&lt;strong&gt;绿色常亮&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="13-初始化设置"&gt;1.3 初始化设置
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;在电脑访问 &lt;code&gt;find.synology.com&lt;/code&gt; 或 &lt;code&gt;http://NAS内网IP:5000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;按向导完成 DSM 系统安装&lt;/li&gt;
+&lt;li&gt;设置管理员账户和&lt;strong&gt;强密码&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;选择&amp;quot;自动更新&amp;quot;保持系统最新&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="-二存储池规划shr-新手推荐"&gt;💾 二、存储池规划（SHR 新手推荐）
+&lt;/h2&gt;&lt;h3 id="什么是-shr"&gt;什么是 SHR？
+&lt;/h3&gt;&lt;p&gt;SHR（Synology Hybrid RAID）是群晖自研的智能 RAID，比传统 RAID 更灵活，硬盘利用率更高。&lt;/p&gt;
+&lt;h3 id="硬盘组合建议"&gt;硬盘组合建议
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;硬盘数&lt;/th&gt;
+ &lt;th&gt;推荐模式&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;1 块&lt;/td&gt;
+ &lt;td&gt;Basic&lt;/td&gt;
+ &lt;td&gt;无冗余，但灵活&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;2 块&lt;/td&gt;
+ &lt;td&gt;SHR-1（推荐）&lt;/td&gt;
+ &lt;td&gt;1 块硬盘容错&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;3 块+&lt;/td&gt;
+ &lt;td&gt;SHR-1&lt;/td&gt;
+ &lt;td&gt;1 块硬盘容错&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;4 块+&lt;/td&gt;
+ &lt;td&gt;SHR-2&lt;/td&gt;
+ &lt;td&gt;2 块硬盘容错（安全性更高）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;⚠️ &lt;strong&gt;新手千万别组 RAID0！&lt;/strong&gt; 一块硬盘损坏 = 所有数据全丢。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h3 id="创建存储池步骤"&gt;创建存储池步骤
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;进入&lt;strong&gt;存储管理器&lt;/strong&gt; → &lt;strong&gt;存储池&lt;/strong&gt; → &lt;strong&gt;新增&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;选择 SHR（自动模式）&lt;/li&gt;
+&lt;li&gt;选择要加入的硬盘&lt;/li&gt;
+&lt;li&gt;完成初始化&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="-三安全设置必做"&gt;🔐 三、安全设置（必做！）
+&lt;/h2&gt;&lt;h3 id="31-开启防火墙"&gt;3.1 开启防火墙
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;安全性&lt;/code&gt; → &lt;code&gt;防火墙&lt;/code&gt; → &lt;code&gt;编辑规则&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;只开放必要端口，禁用 DMZ。&lt;/p&gt;
+&lt;h3 id="32-禁用-admin-账户"&gt;3.2 禁用 Admin 账户
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;用户与群组&lt;/code&gt; → &lt;code&gt;本地用户&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;新建日常使用账户并赋予管理员权限，&lt;strong&gt;禁用默认 admin 账户&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h3 id="33-开启两步验证2fa"&gt;3.3 开启两步验证（2FA）
+&lt;/h3&gt;&lt;p&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;用户与群组&lt;/code&gt; → &lt;code&gt;账户&lt;/code&gt; → &lt;code&gt;两步验证&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;下载 Google Authenticator 或 Authy App 绑定。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="-四核心功能使用"&gt;📁 四、核心功能使用
+&lt;/h2&gt;&lt;h3 id="41-file-station文件管理器"&gt;4.1 File Station（文件管理器）
+&lt;/h3&gt;&lt;p&gt;网页端直接管理文件，支持拖拽上传/下载，可创建共享链接。&lt;/p&gt;
+&lt;h3 id="42-drive私有云盘-强烈推荐"&gt;4.2 Drive（私有云盘）⭐ 强烈推荐
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;同步文件到电脑/手机（类似 OneDrive）&lt;/li&gt;
+&lt;li&gt;支持多人协作编辑&lt;/li&gt;
+&lt;li&gt;版本历史（误删可恢复）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;客户端支持：Windows / Mac / iOS / Android&lt;/p&gt;
+&lt;h3 id="43-photo-station--moments照片备份"&gt;4.3 Photo Station / Moments（照片备份）
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;手机安装 Synology Photos App&lt;/li&gt;
+&lt;li&gt;开启自动备份照片到 NAS&lt;/li&gt;
+&lt;li&gt;从此解放手机存储空间&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="44-download-station下载机"&gt;4.4 Download Station（下载机）
+&lt;/h3&gt;&lt;p&gt;集成 PT / BT / 磁力链下载，配合私有云盘直接管理下载文件。&lt;/p&gt;
+&lt;h3 id="45-surveillance-station监控录像"&gt;4.5 Surveillance Station（监控录像）
+&lt;/h3&gt;&lt;p&gt;接入摄像头后支持移动侦测、录像回放。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="-五docker-入门进阶"&gt;🐳 五、Docker 入门（进阶）
+&lt;/h2&gt;
+ &lt;blockquote&gt;
+ &lt;p&gt;💡 等熟悉基础操作后再折腾，新手阶段可以先跳过此章节。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h3 id="docker-能做什么"&gt;Docker 能做什么？
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;跑 PT 下载工具（qBittorrent、Transmission）&lt;/li&gt;
+&lt;li&gt;HomeAssistant 智能家居&lt;/li&gt;
+&lt;li&gt;Jellyfin / Emby 影视库&lt;/li&gt;
+&lt;li&gt;Nginx 反向代理&lt;/li&gt;
+&lt;li&gt;各种自动化脚本工具&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="基础概念"&gt;基础概念
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;概念&lt;/th&gt;
+ &lt;th&gt;解释&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;镜像（Image）&lt;/td&gt;
+ &lt;td&gt;应用的模板&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;容器（Container）&lt;/td&gt;
+ &lt;td&gt;运行起来的实例&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;端口映射&lt;/td&gt;
+ &lt;td&gt;容器端口 → 主机端口&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;卷（Volume）&lt;/td&gt;
+ &lt;td&gt;容器数据的持久化存储&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="推荐新手先安装"&gt;推荐新手先安装
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;安装 &lt;code&gt;Container Manager&lt;/code&gt; 套件&lt;/li&gt;
+&lt;li&gt;安装 &lt;strong&gt;Portainer&lt;/strong&gt; （可视化管理 Docker）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="-六远程访问设置"&gt;🌐 六、远程访问设置
+&lt;/h2&gt;&lt;h3 id="61-内网访问"&gt;6.1 内网访问
+&lt;/h3&gt;&lt;p&gt;直接用 NAS 的内网 IP 访问，如 &lt;code&gt;http://192.168.1.100:5000&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id="62-外网访问--quickconnect适合新手"&gt;6.2 外网访问 — QuickConnect（适合新手）
+&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;控制面板&lt;/code&gt; → &lt;code&gt;外部访问&lt;/code&gt; → &lt;code&gt;QuickConnect&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;注册 Synology 账号&lt;/li&gt;
+&lt;li&gt;获取专属 QuickConnect ID&lt;/li&gt;
+&lt;li&gt;之后用 &lt;code&gt;https://你的ID.quickconnect.to&lt;/code&gt; 随时随地访问&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;✅ 优点：无需设置路由器端口转发&lt;/li&gt;
+&lt;li&gt;⚠️ 缺点：速度比内网稍慢&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="63-外网访问--ddns--端口转发更专业"&gt;6.3 外网访问 — DDNS + 端口转发（更专业）
+&lt;/h3&gt;&lt;p&gt;申请公网 IP → 设置路由器端口转发 → 使用群晖内置 DDNS 或花生壳服务。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="-七数据备份建议"&gt;🛡️ 七、数据备份建议
+&lt;/h2&gt;&lt;h3 id="3-2-1-备份原则"&gt;3-2-1 备份原则
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;3&lt;/strong&gt; 份数据副本&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;2&lt;/strong&gt; 种不同存储介质（如 NAS + 外接硬盘）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;1&lt;/strong&gt; 份异地备份（云端或另一台 NAS）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="群晖内置备份工具"&gt;群晖内置备份工具
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Hyper Backup&lt;/strong&gt; ：备份到本地/外接硬盘/另一台 NAS/云端&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Snapshot Replication&lt;/strong&gt; ：快照备份（需配合 Btrfs 文件系统）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="-八新手学习路径"&gt;📚 八、新手学习路径
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;时间&lt;/th&gt;
+ &lt;th&gt;任务&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;第 1 天&lt;/td&gt;
+ &lt;td&gt;完成初始化、存储池创建、基础安全设置&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;第 2 天&lt;/td&gt;
+ &lt;td&gt;体验 File Station、Drive 文件同步&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;第 3 天&lt;/td&gt;
+ &lt;td&gt;Photo Station 照片备份&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;第 4 天&lt;/td&gt;
+ &lt;td&gt;开启 QuickConnect 远程访问&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;第 5 天+&lt;/td&gt;
+ &lt;td&gt;学习 Docker，折腾更多玩法&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="-常见问题"&gt;⚠️ 常见问题
+&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Q：硬盘发出异响怎么办？&lt;/strong&gt; 立刻关机备份数据，可能硬盘即将损坏。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Q：忘记管理员密码怎么办？&lt;/strong&gt; 重置 NAS（按住 reset 键 4 秒），但会丢失数据。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Q：NAS 能 24 小时开着吗？&lt;/strong&gt; 可以，群晖设计为 7×24 小时运行。注意散热和定期检查硬盘健康。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Q：能装 Windows 虚拟机吗？&lt;/strong&gt; 可以，安装 &lt;code&gt;Virtual Machine Manager&lt;/code&gt; 套件，分配 CPU/内存资源即可。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="-推荐学习资源"&gt;📖 推荐学习资源
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;群晖官方帮助中心：&lt;a class="link" href="https://www.synology.com/zh-cn/knowledgebase" target="_blank" rel="noopener"
+ &gt;synology.com/zh-cn/knowledgebase&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;少数派 — 搜索&amp;quot;群晖&amp;quot;有大量教程&lt;/li&gt;
+&lt;li&gt;恩山无线论坛 — 群晖板块干货很多&lt;/li&gt;
+&lt;li&gt;B 站 — 搜索&amp;quot;群晖NAS入门&amp;quot;有中文视频教程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;如果这篇文章对你有帮助，欢迎请我喝杯咖啡 ☕&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

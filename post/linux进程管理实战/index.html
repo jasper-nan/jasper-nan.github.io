@@ -1,509 +1,67 @@
-<!DOCTYPE html>
-<html lang="zh-cn" dir="ltr">
-    <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="日常开发中经常需要管理服务器进程，这篇文章覆盖 ps、grep、awk、kill、nohup 的实战用法。">
-<title>Linux 进程管理实战：从查找、过滤到终止</title>
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="一、查找进程：ps （Process Status）是最常用的进程查看命令"><title>Linux 进程管理实战：从查找、过滤到终止</title><link rel=canonical href=https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="Linux 进程管理实战：从查找、过滤到终止"><meta property='og:description' content="一、查找进程：ps （Process Status）是最常用的进程查看命令"><meta property='og:url' content='https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/'><meta property='og:site_name' content="Jasper's Blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='Linux'><meta property='article:tag' content='运维'><meta property='article:published_time' content='2026-03-25T00:00:00+00:00'><meta property='article:modified_time' content='2026-03-25T00:00:00+00:00'><meta name=twitter:title content="Linux 进程管理实战：从查找、过滤到终止"><meta name=twitter:description content="一、查找进程：ps （Process Status）是最常用的进程查看命令"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>Jasper's Blog</a></h1><h2 class=site-description>致良知</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>首页</span></a></li><li><a href=/post/><span>文章</span></a></li><li><a href=/tags/><span>标签</span></a></li><li><a href=/categories/><span>分类</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/>Linux 进程管理实战：从查找、过滤到终止</a></h2><h3 class=article-subtitle>一、查找进程：ps （Process Status）是最常用的进程查看命令</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-03-25T00:00:00Z>Wednesday, March 25, 2026</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><section class=article-content><blockquote><p>在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。</p></blockquote><hr><h2 id=一查找进程ps>一、查找进程：ps</h2><p><code>ps</code>（Process Status）是最常用的进程查看命令。</p><pre><code># 列出所有进程的详细信息
+ps -ef
+</code></pre><p>输出字段说明：</p><div class=table-wrapper><table><thead><tr><th>字段</th><th>含义</th></tr></thead><tbody><tr><td>UID</td><td>进程所属用户</td></tr><tr><td>PID</td><td>进程号</td></tr><tr><td>PPID</td><td>父进程号</td></tr><tr><td>STIME</td><td>启动时间</td></tr><tr><td>CMD</td><td>启动命令</td></tr></tbody></table></div><h3 id=常用组合>常用组合</h3><pre><code># 查看所有进程（BSD 风格，更直观）
+ps aux
 
+# 按内存使用排序（Top 10）
+ps aux --sort=-%mem | head -10
 
-<link rel="canonical" href="https://jonnynan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+# 按 CPU 使用排序（Top 10）
+ps aux --sort=-%cpu | head -10
+</code></pre><hr><h2 id=二过滤进程grep>二、过滤进程：grep</h2><p>在进程列表中精确匹配目标：</p><pre><code>ps -ef | grep &quot;关键字&quot;
+</code></pre><blockquote><p>⚠️ 注意：<code>grep</code> 本身也会出现在结果中，因为命令行参数中包含"关键字"。</p></blockquote><p><strong>过滤掉 grep 自身：</strong></p><pre><code>ps -ef | grep &quot;java&quot; | grep -v grep
+</code></pre><hr><h2 id=三提取进程号awk>三、提取进程号：awk</h2><p>拿到 PID 后经常需要做进一步操作（比如 kill），用 <code>awk</code> 提取：</p><pre><code>ps -ef | grep &quot;java&quot; | grep -v grep | awk '{print $2}'
+</code></pre><ul><li><code>awk '{print $2}'</code>：提取每行的第二个字段，即 PID</li></ul><hr><h2 id=四终止进程kill>四、终止进程：kill</h2><h3 id=优雅终止>优雅终止</h3><pre><code>kill PID
+</code></pre><p>发送 <code>SIGTERM</code>（15）信号，进程可以自行清理资源后退出。</p><h3 id=强制终止>强制终止</h3><pre><code>kill -9 PID
+</code></pre><p>发送 <code>SIGKILL</code>（9）信号，进程无法捕获，立即被系统终止。<strong>慎用</strong> ，可能导致数据丢失。</p><h3 id=终止一组进程>终止一组进程</h3><pre><code># 终止所有 java 进程
+kill -9 $(ps -ef | grep &quot;java&quot; | grep -v grep | awk '{print $2}')
+</code></pre><hr><h2 id=五程序后台运行nohup>五、程序后台运行：nohup</h2><p>SSH 登录服务器启动程序后，关闭终端进程就死了。用 <code>nohup</code> 解决：</p><h3 id=基本格式>基本格式</h3><pre><code>nohup &lt;command&gt; &gt; output.log 2&gt;&amp;1 &amp;
+</code></pre><p>拆解说明：</p><div class=table-wrapper><table><thead><tr><th>部分</th><th>作用</th></tr></thead><tbody><tr><td><code>nohup</code></td><td>防止 SIGHUP 信号杀死进程</td></tr><tr><td><code>> output.log</code></td><td>标准输出重定向到日志文件</td></tr><tr><td><code>2>&amp;1</code></td><td>标准错误合并到标准输出</td></tr><tr><td><code>&</code></td><td>放入后台运行</td></tr></tbody></table></div><h3 id=实际示例>实际示例</h3><pre><code># 后台运行 MySQL
+nohup mysql --user=root --password=my_pass &gt; mysql.log 2&gt;&amp;1 &amp;
 
+# 后台运行 Python 脚本
+nohup python3 app.py &gt; app.log 2&gt;&amp;1 &amp;
 
-<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="Linux 进程管理实战：从查找、过滤到终止">
-<meta property='og:description' content="日常开发中经常需要管理服务器进程，这篇文章覆盖 ps、grep、awk、kill、nohup 的实战用法。">
-<meta property='og:url' content='https://jonnynan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/'>
-<meta property='og:site_name' content='Jasper&#39;s Blog'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='Linux' /><meta property='article:tag' content='运维' /><meta property='article:published_time' content='2026-03-25T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-25T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="Linux 进程管理实战：从查找、过滤到终止">
-<meta name="twitter:description" content="日常开发中经常需要管理服务器进程，这篇文章覆盖 ps、grep、awk、kill、nohup 的实战用法。">
-    </head>
-    <body class="
-    article-page
-    ">
-    <script>
-        (function() {
-            const colorSchemeKey = 'StackColorScheme';
-            if(!localStorage.getItem(colorSchemeKey)){
-                localStorage.setItem(colorSchemeKey, "auto");
-            }
-        })();
-    </script><script>
-    (function() {
-        const colorSchemeKey = 'StackColorScheme';
-        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
-        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+# 后台运行 Java 应用
+nohup java -jar myapp.jar &gt; myapp.log 2&gt;&amp;1 &amp;
+</code></pre><h3 id=查看-nohup-启动的进程>查看 nohup 启动的进程</h3><pre><code>ps aux | grep &quot;app.py&quot;
+</code></pre><h3 id=查看输出日志>查看输出日志</h3><pre><code>tail -f output.log
+</code></pre><hr><h2 id=六日志分析goaccess>六、日志分析：Goaccess</h2><p>用 Goaccess 生成 Nginx 访问日志的可视化报告：</p><h3 id=实时-html-报告>实时 HTML 报告</h3><pre><code>goaccess /var/log/nginx/access.log \
+  -o /usr/local/nginx/html/report.html \
+  --real-time-html \
+  --time-format='%H:%M:%S' \
+  --date-format='%d/%b/%Y' \
+  --log-format=COMBINED
+</code></pre><h3 id=自定义日志格式>自定义日志格式</h3><p>如果你的 Nginx 日志格式不是标准 COMBINED，可以用正则自定义：</p><pre><code>goaccess access.log \
+  -o /usr/local/nginx/html/report.html \
+  --log-format='~h{, } %^[%d:%t %^] &quot;%r&quot; %s %b &quot;%R&quot; &quot;%u&quot;' \
+  --date-format=%d/%b/%Y \
+  --time-format=%T
+</code></pre><ul><li><code>~h{, }</code>：匹配可选协议头</li><li><code>%d:%t</code>：自定义日期时间解析</li><li><code>"%r"</code>：匹配原始请求行</li></ul><hr><h2 id=-速查表>📋 速查表</h2><pre><code># 查找进程
+ps -ef | grep &quot;关键词&quot; | grep -v grep
 
-        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
-            
+# 提取 PID
+ps -ef | grep &quot;关键词&quot; | grep -v grep | awk '{print $2}'
 
-            document.documentElement.dataset.scheme = 'dark';
-        } else {
-            document.documentElement.dataset.scheme = 'light';
-        }
-    })();
-</script>
-<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
-    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </button>
+# 终止进程
+kill PID          # 优雅终止
+kill -9 PID       # 强制终止
 
-    <header>
-        
-        
-        <div class="site-meta">
-            <h1 class="site-name"><a href="/">Jasper&#39;s Blog</a></h1>
-            <h2 class="site-description">致良知</h2>
-        </div>
-    </header><ol class="menu" id="main-menu">
-        
-        
-        
-        <li >
-            <a href='/' >
-                
-                <span>首页</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/post/' >
-                
-                <span>文章</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/tags/' >
-                
-                <span>标签</span>
-            </a>
-        </li>
-        
-        
-        <li >
-            <a href='/about/' >
-                
-                <span>关于</span>
-            </a>
-        </li>
-        
-        <li class="menu-bottom-section">
-            <ol class="menu">
+# 后台运行
+nohup command &gt; output.log 2&gt;&amp;1 &amp;
 
-                
-                    <li id="dark-mode-toggle">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="8" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="16" cy="12" r="2" />
-  <rect x="2" y="6" width="20" height="12" rx="6" />
-</svg>
-
-
-
-                        <span>Dark Mode</span>
-                    </li>
-                
-            </ol>
-        </li>
-    </ol>
-</aside>
-
-    
-
-            <main class="main full-width">
-    <article class="main-article">
-    <header class="article-header">
-
-    <div class="article-details">
-    
-
-    <div class="article-title-wrapper">
-        <h2 class="article-title">
-            <a href="/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/">Linux 进程管理实战：从查找、过滤到终止</a>
-        </h2>
-        
-    
-        
-        <h3 class="article-subtitle">
-            日常开发中经常需要管理服务器进程，这篇文章覆盖 ps、grep、awk、kill、nohup 的实战用法。
-        </h3>
-        
-    </div>
-
-    
-    
-    
-    
-    
-    
-    
-    <footer class="article-meta">
-        
-            <div class="inline-meta">
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
-  <circle cx="18" cy="18" r="4" />
-  <path d="M15 3v4" />
-  <path d="M7 3v4" />
-  <path d="M3 11h16" />
-  <path d="M18 16.496v1.504l1 1" />
-</svg>
-                    <time class="article-time--published" datetime='2026-03-25T00:00:00Z'>Wednesday, March 25, 2026</time>
-                
-
-                
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z"/>
-  <circle cx="12" cy="12" r="9" />
-  <polyline points="12 7 12 12 15 15" />
-</svg>
-
-
-
-                    <time class="article-time--reading">
-                        2 minutes read
-                    </time>
-                
-            </div>
-        
-
-        
-
-        
-    </footer>
-    
-</div>
-
-</header>
-
-    
-
-    <section class="article-content">
-    
-    
-    
-    <blockquote>
-        <p>在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。</p>
-
-    </blockquote>
-<hr>
-<h2 id="一查找进程ps">一、查找进程：ps
-</h2><p><code>ps</code>（Process Status）是最常用的进程查看命令。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 列出所有进程的详细信息</span>
-</span></span><span class="line"><span class="cl">ps -ef
-</span></span></code></pre></div><p>输出字段说明：</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>字段</th>
-          <th>含义</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>UID</td>
-          <td>进程所属用户</td>
-      </tr>
-      <tr>
-          <td>PID</td>
-          <td>进程号</td>
-      </tr>
-      <tr>
-          <td>PPID</td>
-          <td>父进程号</td>
-      </tr>
-      <tr>
-          <td>STIME</td>
-          <td>启动时间</td>
-      </tr>
-      <tr>
-          <td>CMD</td>
-          <td>启动命令</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="常用组合">常用组合
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 查看所有进程（BSD 风格，更直观）</span>
-</span></span><span class="line"><span class="cl">ps aux
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 按内存使用排序（Top 10）</span>
-</span></span><span class="line"><span class="cl">ps aux --sort<span class="o">=</span>-%mem <span class="p">|</span> head -10
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 按 CPU 使用排序（Top 10）</span>
-</span></span><span class="line"><span class="cl">ps aux --sort<span class="o">=</span>-%cpu <span class="p">|</span> head -10
-</span></span></code></pre></div><hr>
-<h2 id="二过滤进程grep">二、过滤进程：grep
-</h2><p>在进程列表中精确匹配目标：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ps -ef <span class="p">|</span> grep <span class="s2">&#34;关键字&#34;</span>
-</span></span></code></pre></div>
-    <blockquote>
-        <p>⚠️ 注意：<code>grep</code> 本身也会出现在结果中，因为命令行参数中包含&quot;关键字&quot;。</p>
-
-    </blockquote>
-<p><strong>过滤掉 grep 自身：</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ps -ef <span class="p">|</span> grep <span class="s2">&#34;java&#34;</span> <span class="p">|</span> grep -v grep
-</span></span></code></pre></div><hr>
-<h2 id="三提取进程号awk">三、提取进程号：awk
-</h2><p>拿到 PID 后经常需要做进一步操作（比如 kill），用 <code>awk</code> 提取：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ps -ef <span class="p">|</span> grep <span class="s2">&#34;java&#34;</span> <span class="p">|</span> grep -v grep <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span>
-</span></span></code></pre></div><ul>
-<li><code>awk '{print $2}'</code>：提取每行的第二个字段，即 PID</li>
-</ul>
-<hr>
-<h2 id="四终止进程kill">四、终止进程：kill
-</h2><h3 id="优雅终止">优雅终止
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">kill</span> PID
-</span></span></code></pre></div><p>发送 <code>SIGTERM</code>（15）信号，进程可以自行清理资源后退出。</p>
-<h3 id="强制终止">强制终止
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">kill</span> -9 PID
-</span></span></code></pre></div><p>发送 <code>SIGKILL</code>（9）信号，进程无法捕获，立即被系统终止。<strong>慎用</strong>，可能导致数据丢失。</p>
-<h3 id="终止一组进程">终止一组进程
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 终止所有 java 进程</span>
-</span></span><span class="line"><span class="cl"><span class="nb">kill</span> -9 <span class="k">$(</span>ps -ef <span class="p">|</span> grep <span class="s2">&#34;java&#34;</span> <span class="p">|</span> grep -v grep <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span><span class="k">)</span>
-</span></span></code></pre></div><hr>
-<h2 id="五程序后台运行nohup">五、程序后台运行：nohup
-</h2><p>SSH 登录服务器启动程序后，关闭终端进程就死了。用 <code>nohup</code> 解决：</p>
-<h3 id="基本格式">基本格式
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nohup &lt;command&gt; &gt; output.log 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
-</span></span></code></pre></div><p>拆解说明：</p>
-<div class="table-wrapper"><table>
-  <thead>
-      <tr>
-          <th>部分</th>
-          <th>作用</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td><code>nohup</code></td>
-          <td>防止 SIGHUP 信号杀死进程</td>
-      </tr>
-      <tr>
-          <td><code>&gt; output.log</code></td>
-          <td>标准输出重定向到日志文件</td>
-      </tr>
-      <tr>
-          <td><code>2&gt;&amp;1</code></td>
-          <td>标准错误合并到标准输出</td>
-      </tr>
-      <tr>
-          <td><code>&amp;</code></td>
-          <td>放入后台运行</td>
-      </tr>
-  </tbody>
-</table></div>
-<h3 id="实际示例">实际示例
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 后台运行 MySQL</span>
-</span></span><span class="line"><span class="cl">nohup mysql --user<span class="o">=</span>root --password<span class="o">=</span>my_pass &gt; mysql.log 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 后台运行 Python 脚本</span>
-</span></span><span class="line"><span class="cl">nohup python3 app.py &gt; app.log 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 后台运行 Java 应用</span>
-</span></span><span class="line"><span class="cl">nohup java -jar myapp.jar &gt; myapp.log 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
-</span></span></code></pre></div><h3 id="查看-nohup-启动的进程">查看 nohup 启动的进程
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">ps aux <span class="p">|</span> grep <span class="s2">&#34;app.py&#34;</span>
-</span></span></code></pre></div><h3 id="查看输出日志">查看输出日志
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">tail -f output.log
-</span></span></code></pre></div><hr>
-<h2 id="六日志分析goaccess">六、日志分析：Goaccess
-</h2><p>用 Goaccess 生成 Nginx 访问日志的可视化报告：</p>
-<h3 id="实时-html-报告">实时 HTML 报告
-</h3><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">goaccess /var/log/nginx/access.log <span class="se">\
-</span></span></span><span class="line"><span class="cl">  -o /usr/local/nginx/html/report.html <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --real-time-html <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --time-format<span class="o">=</span><span class="s1">&#39;%H:%M:%S&#39;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --date-format<span class="o">=</span><span class="s1">&#39;%d/%b/%Y&#39;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --log-format<span class="o">=</span>COMBINED
-</span></span></code></pre></div><h3 id="自定义日志格式">自定义日志格式
-</h3><p>如果你的 Nginx 日志格式不是标准 COMBINED，可以用正则自定义：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">goaccess access.log <span class="se">\
-</span></span></span><span class="line"><span class="cl">  -o /usr/local/nginx/html/report.html <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --log-format<span class="o">=</span><span class="s1">&#39;~h{, } %^[%d:%t %^] &#34;%r&#34; %s %b &#34;%R&#34; &#34;%u&#34;&#39;</span> <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --date-format<span class="o">=</span>%d/%b/%Y <span class="se">\
-</span></span></span><span class="line"><span class="cl">  --time-format<span class="o">=</span>%T
-</span></span></code></pre></div><ul>
-<li><code>~h{, }</code>：匹配可选协议头</li>
-<li><code>%d:%t</code>：自定义日期时间解析</li>
-<li><code>&quot;%r&quot;</code>：匹配原始请求行</li>
-</ul>
-<hr>
-<h2 id="-速查表">📋 速查表
-</h2><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="c1"># 查找进程</span>
-</span></span><span class="line"><span class="cl">ps -ef <span class="p">|</span> grep <span class="s2">&#34;关键词&#34;</span> <span class="p">|</span> grep -v grep
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 提取 PID</span>
-</span></span><span class="line"><span class="cl">ps -ef <span class="p">|</span> grep <span class="s2">&#34;关键词&#34;</span> <span class="p">|</span> grep -v grep <span class="p">|</span> awk <span class="s1">&#39;{print $2}&#39;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 终止进程</span>
-</span></span><span class="line"><span class="cl"><span class="nb">kill</span> PID          <span class="c1"># 优雅终止</span>
-</span></span><span class="line"><span class="cl"><span class="nb">kill</span> -9 PID       <span class="c1"># 强制终止</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 后台运行</span>
-</span></span><span class="line"><span class="cl">nohup <span class="nb">command</span> &gt; output.log 2&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">&amp;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="c1"># 查看日志</span>
-</span></span><span class="line"><span class="cl">tail -f output.log
-</span></span></code></pre></div><hr>
-<p><em>希望这篇文章对你有帮助！如果觉得有用，欢迎分享给需要的朋友。</em></p>
-
-</section>
-
-
-    <footer class="article-meta article-footer">
-    
-    <section class="article-tags">
-        
-            <a href="/tags/linux/">Linux</a>
-        
-            <a href="/tags/%E8%BF%90%E7%BB%B4/">运维</a>
-        
-    </section>
-
-
-    </footer>
-
-
-    
-</article>
-
-    
-
-    
-
-<aside>
-    <h2 class="section-title">Related content</h2>
-    <div class="subsection-list">
-        <div class="article-list--tile">
-            
-                
-<article class="">
-    <a href="/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/">
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Docker 常用命令速查手册</h2>
-        </div>
-    </a>
-</article>
-            
-                
-<article class="">
-    <a href="/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/">
-        
-
-        <div class="article-details">
-            <h2 class="article-title">Jenkins CI/CD 从入门到实战：自动化部署不再难</h2>
-        </div>
-    </a>
-</article>
-            
-                
-<article class="">
-    <a href="/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/">
-        
-
-        <div class="article-details">
-            <h2 class="article-title">使用Logrotate归档日志</h2>
-        </div>
-    </a>
-</article>
-            
-                
-<article class="">
-    <a href="/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/">
-        
-
-        <div class="article-details">
-            <h2 class="article-title">git系列之安装并创建版本库</h2>
-        </div>
-    </a>
-</article>
-            
-        </div>
-    </div>
-</aside>
-
-     
-    
-        
-    
-
-    
-<div style="text-align:center; margin-top:2rem;">
-  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:#f0694f;color:#fff;border:none;padding:12px 36px;border-radius:24px;cursor:pointer;font-size:16px;font-weight:bold;box-shadow:0 2px 8px rgba(240,105,79,0.3);">
-    ☕ 请我喝杯咖啡
-  </button>
-</div>
-
-
-<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
-  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
-    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
-    
-    
-    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
-      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
-      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
-    </div>
-    
-    
-    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
-    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
-    
-    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
-  </div>
-</div>
-
-<script>
-function switchPay(type) {
-  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
-  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
-  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
-  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
-  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
-  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
-}
-</script>
-
-    <footer class="site-footer">
-    <section class="copyright">
-        &copy; 
-        
-            2019 - 
-        
-        2026 Jasper&#39;s Blog
-    </section>
-    
-    <section class="powerby">
-        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
-        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
-    </section>
-</footer>
-
-
-    
-
-
-
-<script type="module">
+# 查看日志
+tail -f output.log
+</code></pre><hr><p><em>希望这篇文章对你有帮助！如果觉得有用，欢迎分享给需要的朋友。</em></p></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/linux/>Linux</a>
+<a href=/tags/%E8%BF%90%E7%BB%B4/>运维</a></section></footer></article><aside><h2 class=section-title></h2><div class=subsection-list><div class=article-list--tile><article><a href=/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/><div class=article-details><h2 class=article-title>Docker 常用命令速查手册</h2></div></a></article><article><a href=/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/><div class=article-details><h2 class=article-title>Jenkins CI/CD 从入门到实战：自动化部署不再难</h2></div></a></article><article><a href=/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/><div class=article-details><h2 class=article-title>使用Logrotate归档日志</h2></div></a></article><article><a href=/post/2019-08-12-git%E7%B3%BB%E5%88%97%E4%B9%8B%E5%AE%89%E8%A3%85%E5%B9%B6%E5%88%9B%E5%BB%BA%E7%89%88%E6%9C%AC%E5%BA%93/><div class=article-details><h2 class=article-title>git系列之安装并创建版本库</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2019 -
+2026 Jasper's Blog</section><section class=powerby><br></section></footer><script type=module>
     import gallery from '\/ts\/gallery.js';
 
     const articleContent = document.querySelector('.article-content');
@@ -527,14 +85,4 @@ function switchPay(type) {
         });
         lightbox.init();
     }
-</script>
-    
-
-            </main>
-        </div>
-        
-<script type="text/javascript" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" defer></script>
-
-
-    </body>
-</html>
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>

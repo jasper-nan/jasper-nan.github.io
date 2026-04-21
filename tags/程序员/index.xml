@@ -1,9 +1,349 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>程序员 on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/</link>
-        <description>Recent content in 程序员 on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/index.xml" rel="self" type="application/rss+xml" /></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>程序员 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/</link><description>Recent content in 程序员 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 21 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E7%A8%8B%E5%BA%8F%E5%91%98/index.xml" rel="self" type="application/rss+xml"/><item><title>32 岁程序员的体检觉醒：高血压后的运动与健康管理</title><link>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;体检前：我还年轻，熬点夜算什么。&lt;br&gt;
+体检后：收缩压 160+，医嘱要求立即服药控制。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;这不是贩卖焦虑，而是一个普通 32 岁程序员的真实觉醒之路。&lt;/p&gt;
+&lt;h2 id="体检报告那串红色数字"&gt;体检报告：那串红色数字
+&lt;/h2&gt;&lt;p&gt;去年例行体检，我像往常一样以为只是走个过场。直到报告上出现一串红色箭头——&lt;strong&gt;收缩压超过 160 mmHg&lt;/strong&gt;，直接跨入高血压一级区间。&lt;/p&gt;
+&lt;p&gt;医生说得很直接：&amp;ldquo;你这血压，不是亚健康，是已经病了。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;我才意识到，过去几年那些&amp;quot;理所当然&amp;quot;的习惯，身体其实都一笔笔记着账：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;久坐 10 小时+&lt;/strong&gt;：除了上厕所和吃饭，基本粘在工位上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;外卖重口味&lt;/strong&gt;：高油高盐，还总觉得&amp;quot;年轻人代谢快&amp;quot;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;报复性熬夜&lt;/strong&gt;：白天被会议和代码切碎，晚上舍不得睡，凌晨一两点是常态&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;零运动&lt;/strong&gt;：上一次正经出汗，可能要追溯到大学体育课&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;程序员这个职业，时薪看着不错，但身体时薪可能正在悄悄透支。&lt;/p&gt;
+&lt;h2 id="先吃药同时改变生活方式"&gt;先吃药，同时改变生活方式
+&lt;/h2&gt;&lt;p&gt;医生开了降压药，同时撂下一句话：&amp;ldquo;药可以帮你控制，但想真正逆转，得靠自己。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;我查了大量资料，也问了几个同样有高血压的朋友。结论是：&lt;strong&gt;原发性高血压一旦确诊，药物控制是底线，生活方式干预才是上限。&lt;/strong&gt; 如果年轻时不把地基打好，后面并发症（心脑肾）的风险会指数级上升。&lt;/p&gt;
+&lt;p&gt;于是我开始了一个为期一年的&amp;quot;身体重建计划&amp;quot;。&lt;/p&gt;
+&lt;h2 id="运动从痛苦任务到每日刚需"&gt;运动：从&amp;quot;痛苦任务&amp;quot;到&amp;quot;每日刚需&amp;quot;
+&lt;/h2&gt;&lt;h3 id="跑步佳明-255-是我的教练"&gt;跑步：佳明 255 是我的教练
+&lt;/h3&gt;&lt;p&gt;最开始跑 1 公里就喘得像条狗。但我发现，只要戴着手表出门，数据本身就有驱动力。&lt;/p&gt;
+&lt;p&gt;我用的 &lt;strong&gt;Garmin Forerunner 255&lt;/strong&gt;，它不会骗我——心率区间、步频、垂直振幅，每一项都在暴露我有多菜。&lt;/p&gt;
+&lt;p&gt;现在的节奏：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;每周 3 次 5 公里&lt;/strong&gt;，配速 6 分左右，不求快，但求心率压在 140 以下&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;周末一次长距离&lt;/strong&gt;，从 3 公里慢慢加到 8 公里，目标是今年完成一次 10 公里&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;关键原则&lt;/strong&gt;：绝不空腹跑、绝不硬撑、压心率比拼配速重要一百倍&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;三个月后，静息心率从 78 降到了 62。这个数据比体重下降更让我有成就感。&lt;/p&gt;
+&lt;h3 id="骑行大行-p8-拯救了通勤时间"&gt;骑行：大行 P8 拯救了通勤时间
+&lt;/h3&gt;&lt;p&gt;跑步对膝盖有一定冲击，我需要一种低冲击的有氧补充。&lt;strong&gt;大行 P8 折叠车&lt;/strong&gt;成了最佳选择。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;单程通勤 30 分钟，正好是有氧心率区间&lt;/li&gt;
+&lt;li&gt;折叠后带进办公室，不怕丢&lt;/li&gt;
+&lt;li&gt;下雨天改坐地铁，灵活无负担&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;现在每周骑行 3–4 次，和跑步交替进行，既保护关节，又保持了有氧总量。&lt;/p&gt;
+&lt;h3 id="羽毛球社交型运动的隐藏价值"&gt;羽毛球：社交型运动的隐藏价值
+&lt;/h3&gt;&lt;p&gt;每周五晚固定一场羽毛球。它不像跑步那么孤独，有对抗、有协作、有输赢，对程序员这种长期 solo 工作的性格是一种很好的调节。&lt;/p&gt;
+&lt;p&gt;更重要的是：&lt;strong&gt;有人约，就不容易鸽。&lt;/strong&gt; 社交压力有时候比自律更管用。&lt;/p&gt;
+&lt;h2 id="饮食不是节食是换思路"&gt;饮食：不是节食，是换思路
+&lt;/h2&gt;&lt;p&gt;我没有搞什么生酮、轻断食，就三条铁律：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;控盐&lt;/strong&gt;：外卖尽量选清淡，家里做菜用限盐勺，每天不超过 5g&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;控糖&lt;/strong&gt;：戒掉含糖饮料，奶茶从每周三杯降到每月一杯&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;多吃原型食物&lt;/strong&gt;：少吃加工食品，蔬菜量翻倍，蛋白质来源以鱼、鸡、蛋、豆腐为主&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;一个意外收获：体重从 78kg 降到了 71kg，腰围小了 8cm。血压也随之稳中有降，医生评估后说可以考虑逐步减药。&lt;/p&gt;
+&lt;h2 id="睡眠比运动更重要"&gt;睡眠：比运动更重要
+&lt;/h2&gt;&lt;p&gt;我曾经以为&amp;quot;运动能抵消熬夜的伤害&amp;quot;，这是最大的幻觉。&lt;/p&gt;
+&lt;p&gt;现在我强制自己：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;23:30 前上床&lt;/strong&gt;，手机放客厅充电&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;睡前 1 小时不看屏幕&lt;/strong&gt;，改看纸质书（最近在读《金钱心理学》和《思考，快与慢》）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;周末不补觉&lt;/strong&gt;，保持规律作息比多睡两小时更有效&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;睡眠质量提升后，白天的代码质量和专注度反而更高了。以前靠咖啡续命，现在靠生物钟。&lt;/p&gt;
+&lt;h2 id="为了谁为了那些需要你的人"&gt;为了谁？为了那些需要你的人
+&lt;/h2&gt;&lt;p&gt;说实话，如果只是为自己，我可能坚持不到现在。&lt;/p&gt;
+&lt;p&gt;但当你上有父母渐老、下有女儿刚满三岁，中间还有家庭的房贷和车贷——你会发现，&lt;strong&gt;健康不再是一个人的事，而是一个家庭的风险管理。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我不是怕死，是怕&amp;quot;本来可以&amp;quot;。怕本来可以通过规律运动避免的脑梗，怕本来可以通过按时服药控制住的并发症，怕在女儿最需要爸爸的时候，我因为年轻时的懒惰而缺席。&lt;/p&gt;
+&lt;p&gt;这大概就是 30 岁之后的觉醒：你开始为爱你的人，主动爱惜自己的身体。&lt;/p&gt;
+&lt;h2 id="给同样忙碌的你三个可执行建议"&gt;给同样忙碌的你：三个可执行建议
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;先体检，别猜&lt;/strong&gt;。很多高血压无症状，不体检根本发现不了。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;买块运动手表&lt;/strong&gt;。数据可视化是最强的外部监督，佳明、高驰、Apple Watch 都可以，关键是戴起来。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;从 5 分钟开始&lt;/strong&gt;。别一上来就发誓每天跑 5 公里，先从每天 5 分钟快走开始，养成习惯再堆量。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="写在最后"&gt;写在最后
+&lt;/h2&gt;&lt;p&gt;32 岁，血压从 160+ 降到稳定控制，体重降了 7kg，完成了人生第一个连续 5 公里、第一个 8 公里。&lt;/p&gt;
+&lt;p&gt;这些数字在 Strava 上可能平平无奇，但对我来说，是从&amp;quot;身体失控&amp;quot;到&amp;quot;重新掌舵&amp;quot;的转折点。&lt;/p&gt;
+&lt;p&gt;程序员习惯用代码控制世界，却常常忘了，&lt;strong&gt;身体才是那个最应该被好好维护的核心系统。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;免责声明：本文仅为个人经验分享，不构成医疗建议。如有血压异常，请务必就医并遵医嘱。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>30岁程序员的理财实操：从月光到每月定投</title><link>https://jasper-nan.github.io/post/30-sui-cheng-xu-yuan-de-li-cai-shi-cao-cong-yue-guang-dao-mei-yue-ding-tou/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/30-sui-cheng-xu-yuan-de-li-cai-shi-cao-cong-yue-guang-dao-mei-yue-ding-tou/</guid><description>&lt;h2 id="前言30岁我终于开始认真对待钱"&gt;前言：30岁，我终于开始认真对待钱
+&lt;/h2&gt;&lt;p&gt;说实话，30岁之前我从来没认真想过理财这回事。&lt;/p&gt;
+&lt;p&gt;不是不懂，是不敢看。&lt;/p&gt;
+&lt;p&gt;每个月工资到手，还完贷款、交完各种账单，能存下来的不多。&amp;ldquo;理财&amp;quot;两个字听起来像是那种有钱人才需要操心的事，我们这种普通工薪族哪有什么财可理？&lt;/p&gt;
+&lt;p&gt;直到2025年，我30岁，女儿刚上幼儿园，老婆也有自己的工作，岳父岳母那边也各有各的难处。我突然意识到：如果我自己不把财务搞清楚，整个家庭就像一艘没有导航的船，随时可能触礁。&lt;/p&gt;
+&lt;p&gt;这篇文章，我想用最接地气的方式，记录我从&amp;quot;糊里糊涂&amp;quot;到&amp;quot;心里有数&amp;quot;的转变过程。没有暴富故事，没有荐股荐基，只有一个普通程序员在某新一线城市的真实财务探索。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="一那个让所有程序员都焦虑的30岁"&gt;一、那个让所有程序员都焦虑的30岁
+&lt;/h2&gt;&lt;p&gt;30岁对程序员来说是个坎，这话一点都不夸张。&lt;/p&gt;
+&lt;p&gt;技术更新快，年轻人一波波涌进来，35岁危机的论调甚嚣尘上。我研究生毕业工作几年后，职级上不去下不来，薪资涨不动，身体倒是一年不如一年——久坐带来的腰酸背痛、熬夜改bug留下的黑眼圈，都在提醒我：你已经不是那个通宵写代码第二天还能接着干的毛头小子了。&lt;/p&gt;
+&lt;p&gt;但真正让我开始思考财务问题的，不是因为年龄焦虑，而是三件事：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一件，孩子上了幼儿园。&lt;/strong&gt; 教育成本一下子飙升，兴趣班、学费、日常开销，每一笔都是真金白银。随着家庭责任的增加，我越来越意识到：如果财务没有规划，会非常被动。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二件，父母的医疗费用。&lt;/strong&gt; 父母年纪渐长，看病吃药的钱只会越来越多。不提前规划，等到事到临头就来不及了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三件，我开始认真读了一本理财书。&lt;/strong&gt; 书架上吃灰很久的《金钱心理学》，随手翻开看了几页，突然被一句话击中：&lt;strong&gt;&amp;ldquo;财富是你看不见的那些钱。&amp;rdquo;&lt;/strong&gt; 意思是，真正有钱的人不是你看到他花了多少，而是他默默存下来、让钱继续为他工作的那一部分。&lt;/p&gt;
+&lt;p&gt;那一刻我决定，不能再稀里糊涂地活了。钱的事，得算清楚。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二资产盘点先把家底翻出来晒一晒"&gt;二、资产盘点：先把家底翻出来晒一晒
+&lt;/h2&gt;&lt;p&gt;理财的第一步，说起来简单做起来难：&lt;strong&gt;把你的钱全部数一遍。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;很多人不敢做这件事，因为怕面对那个数字。但我发现，只要开始认真梳理，反而有一种奇怪的踏实感——至少你知道自己在哪，不用再靠猜测和想象过日子。&lt;/p&gt;
+&lt;p&gt;下面是我的财务清单，数字是最近的真实数据（有些做了适度模糊，但差距不超过10%）。&lt;/p&gt;
+&lt;h3 id="21-资产端"&gt;2.1 资产端
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;资产项&lt;/th&gt;
+ &lt;th&gt;金额&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;自住房（商品房）&lt;/td&gt;
+ &lt;td&gt;~250万&lt;/td&gt;
+ &lt;td&gt;某新一线城市，贷款还剩不少&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;一套写字楼&lt;/td&gt;
+ &lt;td&gt;~50万&lt;/td&gt;
+ &lt;td&gt;出租中，每月有租金收入&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;流动资金（存款+理财）&lt;/td&gt;
+ &lt;td&gt;~12万&lt;/td&gt;
+ &lt;td&gt;含银行理财、货币基金等&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;合计总资产&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;~323万&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="22-负债端"&gt;2.2 负债端
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;负债项&lt;/th&gt;
+ &lt;th&gt;金额&lt;/th&gt;
+ &lt;th&gt;利率&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;交通银行商业房贷&lt;/td&gt;
+ &lt;td&gt;~75万&lt;/td&gt;
+ &lt;td&gt;3.2%&lt;/td&gt;
+ &lt;td&gt;还剩不少年限&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;公积金贷款&lt;/td&gt;
+ &lt;td&gt;~65万&lt;/td&gt;
+ &lt;td&gt;2.6%&lt;/td&gt;
+ &lt;td&gt;利率比商贷低&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;车贷&lt;/td&gt;
+ &lt;td&gt;~8万&lt;/td&gt;
+ &lt;td&gt;~4%&lt;/td&gt;
+ &lt;td&gt;计划近期一次性还清&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;合计总负债&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;~148万&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="23-净资产160万"&gt;2.3 净资产：¥160万
+&lt;/h3&gt;&lt;p&gt;160万的净资产听起来不少，但拆开一看：房子占了绝大多数，真正的流动资产只有12万多。&lt;/p&gt;
+&lt;p&gt;这让我意识到一个很重要的问题：&lt;strong&gt;净资产高不等于财务健康。&lt;/strong&gt; 关键看资产结构——房产占比过高，流动性就差；负债看着不多，但每个月还贷压力其实不小。&lt;/p&gt;
+&lt;h3 id="盘点方法推荐"&gt;盘点方法推荐
+&lt;/h3&gt;&lt;p&gt;我用的是最简单的&lt;strong&gt;Excel表格法&lt;/strong&gt; ：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;开一个Sheet，列：资产/负债、名称、金额、利率/收益率、每月现金流（正或负）&lt;/li&gt;
+&lt;li&gt;每个季度更新一次&lt;/li&gt;
+&lt;li&gt;重点关注两个数字：&lt;strong&gt;月度净现金流&lt;/strong&gt; 和 &lt;strong&gt;流动资产/月支出&lt;/strong&gt; （建议至少保留3-6个月生活费）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;不用搞得特别复杂，核心就一个：&lt;strong&gt;让你对钱在哪、欠谁、每月进多少出多少，有一个清醒的认知。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="三还贷策略怎么还钱更聪明"&gt;三、还贷策略：怎么还钱更聪明？
+&lt;/h2&gt;&lt;p&gt;说到还贷，很多人第一个问题是：&lt;strong&gt;要不要提前还贷？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我之前也在这个问题上纠结了很久。后来想明白了一个道理：&lt;strong&gt;还贷决策的本质是比较机会成本——你手里这笔钱，还掉房贷划算，还是拿去做别的投资划算？&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="31-我的三笔贷款分析"&gt;3.1 我的三笔贷款分析
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;第一笔：公积金贷款，2.6%&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是利率最低的一笔。公积金贷款2.6%的利率，基本跟银行理财收益率差不多，甚至有些时候还不如放货币基金。这种贷款我没有强烈提前还的意愿——留着现金更灵活。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二笔：商业房贷，3.2%&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;比公积金稍高，但也属于偏低水平。我目前的策略是：保持正常月供，不额外提前还。&lt;/p&gt;
+&lt;p&gt;原因有两个：1）手里有现金比少还贷款更重要，万一有急用不至于捉襟见肘；2）3.2%的利率在历史上算偏低水平，考虑到未来可能进入降息周期，这个贷款其实算是&amp;quot;便宜的钱&amp;rdquo;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三笔：车贷，4%左右，近期一次性还清&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是我现在最想处理掉的一笔债。&lt;/p&gt;
+&lt;p&gt;车贷还有~8万，每个月还一点，拖拖拉拉很烦人。更重要的是，我算了一下：一次性还清大概需要7.2万（一次性还款有减免），省下的利息加上心理上的&amp;quot;无债一身轻&amp;quot;，值。&lt;/p&gt;
+&lt;p&gt;还完车贷之后，每个月会多出大概两三千块的现金流，这是我今年最重要的转折点——&lt;strong&gt;从&amp;quot;被债务推着走&amp;quot;到&amp;quot;手里有钱可规划&amp;quot;。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="还贷策略小结"&gt;还贷策略小结
+&lt;/h3&gt;&lt;p&gt;不是所有人、所有贷款都适合提前还。核心逻辑是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;高利率贷款（ &amp;gt;5%）优先还&lt;/strong&gt;，因为很难有稳健投资能稳定跑赢这个利率&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;低利率贷款（ &amp;lt;4%）看现金流&lt;/strong&gt;：如果提前还完手里只剩很少的应急金，建议保留流动性&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;公积金贷款基本不建议提前还&lt;/strong&gt; ，利率太低，资金机会成本更高&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四定投计划沪深300月投2000从4月开始"&gt;四、定投计划：沪深300，月投2000，从4月开始
+&lt;/h2&gt;&lt;p&gt;还完车贷之后，我做的第一个决定是：&lt;strong&gt;开始每月定投沪深300指数基金，2000块。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;很多人可能会问：为什么不先攒够应急基金再投资？&lt;/p&gt;
+&lt;p&gt;好问题。我目前的流动资产是~12万，大致相当于4-6个月的家庭支出。这个数字不算充裕，但也不算危险。考虑到我的收入相对稳定（虽然在互联网行业这个&amp;quot;相对稳定&amp;quot;也要打个问号），我决定边攒应急金边开始定投——每个月2000，不影响日常，也不会因为&amp;quot;等攒够了再说&amp;quot;而一直拖延。&lt;/p&gt;
+&lt;h3 id="为什么选沪深300"&gt;为什么选沪深300？
+&lt;/h3&gt;&lt;p&gt;原因很简单：&lt;strong&gt;我不懂炒股，没时间研究个股，也不相信自己能选到好基金。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;沪深300代表A股最大的300家公司，是中国经济的晴雨表。虽然最近几年A股的表现让很多人失望，但我的逻辑是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;中国经济长期还是会增长的&lt;/strong&gt; ，大公司的平均增速大概率跑赢GDP&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;指数基金费率低&lt;/strong&gt; ，管理费一年0.5%左右，比主动基金划算&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;不需要择时&lt;/strong&gt; ，每月固定金额，跌了买更多份额，涨了买更少份额，天然的&amp;quot;高抛低吸&amp;quot;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;长期坚持&lt;/strong&gt; ，用时间换空间，我不指望三五年翻倍，只求十年后这笔钱能跑赢通胀&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="定投心理建设"&gt;定投心理建设
+&lt;/h3&gt;&lt;p&gt;老实说，定投最难的不是选产品，而是&lt;strong&gt;坚持&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;A股的尿性大家都懂——涨的时候舍不得卖，跌的时候又怀疑人生。我给自己定了几个规矩：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;跌了不慌&lt;/strong&gt; ：定投的意义就是跌的时候摊薄成本，亏钱的时候恰恰是积累筹码最好的时候&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;涨了不贪&lt;/strong&gt; ：设定一个大致合理的止盈目标（比如年化10%），到了就分批卖出，不要想着卖在最高点&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;用闲钱投&lt;/strong&gt; ：这笔钱是三五年不用的闲钱，不是下个月要还信用卡的救命钱，心态完全不同&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;停了也不可惜&lt;/strong&gt; ：如果哪天真的急用钱，定投的部分可以随时赎回，就当是给自己留的后路&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="五保险配置我是怎么把保险都是坑变成该有的要有的"&gt;五、保险配置：我是怎么把&amp;quot;保险都是坑&amp;quot;变成&amp;quot;该有的要有&amp;quot;的
+&lt;/h2&gt;&lt;p&gt;说到保险，我之前也是&amp;quot;保险无用论&amp;quot;的坚定支持者。&lt;/p&gt;
+&lt;p&gt;程序员嘛，年轻、身体好、觉得自己不会出事，买保险就是在交智商税。之前对保险的态度就是&amp;quot;有医保就够了，其他都是智商税&amp;quot;。&lt;/p&gt;
+&lt;p&gt;便宜是便宜，但说实话，这种产品保额低、保障范围有限，真遇上大事根本不够用。&lt;/p&gt;
+&lt;h3 id="51-我现在的保险思路"&gt;5.1 我现在的保险思路
+&lt;/h3&gt;&lt;p&gt;转变发生在亲眼看到身边人因病致贫之后。一个原本还算宽裕的家庭，因为一场大病，几年积蓄消耗殆尽。&lt;/p&gt;
+&lt;p&gt;但医保能报的只是基础部分，很多进口药、特殊治疗不在报销范围内，长期下来对家庭财务的消耗非常大。&lt;/p&gt;
+&lt;p&gt;我开始认真思考：&lt;strong&gt;我的家庭抗风险能力到底有多强？&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;我和老婆：都有社保/医保，万一有一方出意外或重病，收入断了怎么办？&lt;/li&gt;
+&lt;li&gt;女儿：3岁半，正是好奇心旺盛、磕磕碰碰的年纪&lt;/li&gt;
+&lt;li&gt;父母：即将退休，没有商业保险&lt;/li&gt;
+&lt;li&gt;岳父岳母：双方都有基础医保，但保障有限&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;结论是：我们家的保障体系还需要继续完善。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="52-我打算怎么补保险"&gt;5.2 我打算怎么补保险
+&lt;/h3&gt;&lt;p&gt;我不是保险代理人，也不想推荐具体产品（怕被说带货），说说我自己的配置思路：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优先配置的保险（按重要性排序）：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;意外险&lt;/strong&gt; ：一年两三百块，保额100万+，性价比极高，程序员猝死新闻看多了，这个必须有&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;定期寿险&lt;/strong&gt; ：万一我出事，老婆孩子怎么办？定期寿险便宜，保额要覆盖房贷+孩子教育费+5年家庭开支&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;医疗险&lt;/strong&gt; ：有医保不等于看病不花钱，现在很多百万医疗险一年几百块，可以报销医保不报的自费部分&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;重疾险&lt;/strong&gt; ：这个见仁见智，我还在考虑，因为保费相对贵，且要长期缴费&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;父母那辈：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;父母的保险比较尴尬，50多岁开始保费就很高了，而且健康告知很难通过。我目前的打算是：先把自己和老婆的保险配齐，父母那边根据身体情况，能买什么就买什么。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;双方父母：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;父母那边有基础医保，但报销比例有限。我跟他们说过：看病钱紧张就跟我说。但我也不能全包，那样自己家也扛不住。&lt;/p&gt;
+&lt;h3 id="保险的本质"&gt;保险的本质
+&lt;/h3&gt;&lt;p&gt;保险不是投资，不能让你赚钱，但能让你在黑天鹅事件来临时不至于一夜返贫。&lt;strong&gt;买保险的核心逻辑是：用确定的小支出，撬动不确定的大风险。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;一年保费占家庭收入的5%-8%，是一个比较合理的范围。太低了保障不够，太高了影响生活质量。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="六还款账户管理多卡多账户怎么管"&gt;六、还款账户管理：多卡/多账户怎么管
+&lt;/h2&gt;&lt;p&gt;说出来有点丢人，我最高峰的时候管理着7个还款账户。&lt;/p&gt;
+&lt;p&gt;其中真正算信用卡的其实只有中行、平安、招行、交行这几张，其余像车贷卡、公积金卡是绑定的储蓄卡自动扣款，白条是京东信用消费。虽然不是所有都是信用卡，但每个都有还款日，管理起来一样让人头大。最夸张的时候，我差点忘了白条的还款日，差点造成逾期。&lt;/p&gt;
+&lt;p&gt;后来痛定思痛，花了一个下午把信用卡管理彻底理顺了。&lt;/p&gt;
+&lt;h3 id="61-我的还款日分布每月"&gt;6.1 我的还款日分布（每月）
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;日期&lt;/th&gt;
+ &lt;th&gt;卡片&lt;/th&gt;
+ &lt;th&gt;用途&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;2日&lt;/td&gt;
+ &lt;td&gt;平安&lt;/td&gt;
+ &lt;td&gt;备用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;6日&lt;/td&gt;
+ &lt;td&gt;白条&lt;/td&gt;
+ &lt;td&gt;京东购物&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;7日&lt;/td&gt;
+ &lt;td&gt;中行&lt;/td&gt;
+ &lt;td&gt;日常消费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;8日&lt;/td&gt;
+ &lt;td&gt;车贷卡&lt;/td&gt;
+ &lt;td&gt;车贷还款&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;12日&lt;/td&gt;
+ &lt;td&gt;招行&lt;/td&gt;
+ &lt;td&gt;日常消费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;17日&lt;/td&gt;
+ &lt;td&gt;交行&lt;/td&gt;
+ &lt;td&gt;房贷还款&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;20日&lt;/td&gt;
+ &lt;td&gt;公积金卡&lt;/td&gt;
+ &lt;td&gt;公积金还款&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="62-管理技巧"&gt;6.2 管理技巧
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;技巧一：把还款日错开&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;还款日分布在不同时段，核心目的是&lt;strong&gt;不要让还款集中在一个时间段，避免资金压力过大&lt;/strong&gt; 。发工资是几号？尽量让大部分卡片的还款日在工资日后3-5天，给自己留出账期。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;技巧二：全部绑定自动还款&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是最重要的一条。多个还款账户靠人记，肯定有忘的时候。绑定储蓄卡自动还款，虽然可能不是最优的免息账期，但至少不会逾期。&lt;/p&gt;
+&lt;p&gt;逾期一次的代价：利息、滞纳金、征信记录不良。哪个都比&amp;quot;多薅几天免息期&amp;quot;值钱。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;技巧三：善用免息期，但不要依赖它&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;信用卡最长有50天左右的免息期，合理利用确实可以提高资金使用效率。但我后来发现，我根本算不清楚那些账期，反而搞得自己很累。&lt;/p&gt;
+&lt;p&gt;现在的策略：&lt;strong&gt;信用卡就当借记卡用——花多少还多少，不分期，不最低还款，尽量不在免息期上动脑筋。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;技巧四：设置还款提醒&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;虽然绑了自动还款，但每张卡还款日我都会提前2天在手机日历上设提醒。双保险，确保万无一失。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;技巧五：注销多余的卡&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;账户实在太多了，我正在逐步精简不常用的。计划最终保留3张信用卡：一张日常主力，一张备用，一张专门绑定房贷还款，其余还款走储蓄卡自动扣款就行。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="七给同龄程序员的五条真心话"&gt;七、给同龄程序员的五条真心话
+&lt;/h2&gt;&lt;p&gt;写到最后，想跟和我一样、30岁出头、在互联网行业打拼的程序员们聊几句。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一条：别等&amp;quot;有钱了&amp;quot;再开始理财&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我见过太多人说&amp;quot;等我月薪X万再开始理财&amp;quot;——但事实是，收入的增长往往赶不上消费升级。你月薪8千的时候觉得月光，月薪2万的时候可能房贷+养娃花得更多。&lt;/p&gt;
+&lt;p&gt;理财的门槛没有你想象的那么高。&lt;strong&gt;从第一个月的小额定投开始，比永远不开始强100倍。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二条：搞清楚你和家庭的抗风险能力&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;程序员普遍自信，觉得自己不会失业、不会生病、不会出事。但现实是，我们只是普通人，有普通人的脆弱。&lt;/p&gt;
+&lt;p&gt;建议每个人认真算一笔账：&lt;strong&gt;如果明天你失去收入能力，你的家庭能撑多久？&lt;/strong&gt; 这个答案，决定了你应该优先配置什么保险、存够多少应急金。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三条：房子是资产，但不是你财务自由的保证&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;我身边很多同事名下有两套房，但手头流动资金不到5万块。看起来身家几百万，实际上抗风险能力极差。&lt;/p&gt;
+&lt;p&gt;房产流动差，变现周期长。如果自住，它只是你的生活品质，不是真正的&amp;quot;财富&amp;quot;。真正的财富自由，是你不用工作也能维持现有生活的状态——这需要投资、需要被动收入，不是靠多买一套房能解决的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第四条：不要all in，但要开始&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;很多程序员看不上年化4%-6%的稳健收益，觉得自己随便炒个股、买点基金就能翻倍。这种心态，十个有九个会被市场教育。&lt;/p&gt;
+&lt;p&gt;我的建议是：&lt;strong&gt;不要全仓进股市，但也不要完全不理投资。&lt;/strong&gt; 先从宽基指数基金开始，体会市场波动，建立投资纪律，再慢慢扩大能力圈。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第五条：最重要的投资，是让自己更值钱&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;说到底，我们程序员最大的资产不是银行卡里的数字，而是&lt;strong&gt;我们的技能和体能&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;保持技术竞争力、锻炼身体、维持家庭关系——这些事的回报率，可能比任何一只股票、任何一次房产投资都高。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="结语"&gt;结语
+&lt;/h2&gt;&lt;p&gt;写这篇文章，不是想炫耀净资产数字。实际上，大部分资产都在房子上，流动性还需要继续提升。&lt;/p&gt;
+&lt;p&gt;我想说的是：&lt;strong&gt;普通人理财，不需要有多高的智商，不需要懂多少金融术语，只需要把事情想清楚，然后一步一步做。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;从盘点资产开始，搞清楚自己的钱在哪、花在哪、欠了多少。&lt;/p&gt;
+&lt;p&gt;然后规划还贷，先把高利率的还掉，低利率的量力而行。&lt;/p&gt;
+&lt;p&gt;再然后，给自己建立一个简单的投资习惯，定投也好、存定期也好，关键是开始。&lt;/p&gt;
+&lt;p&gt;最后，把该有的保险配上，不要让自己和家庭暴露在无保护的风险中。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;理财不是一夜暴富，是让生活更有掌控感。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;30岁不焦虑是不可能的，但至少可以让焦虑有一个具体的着力点——把那些不确定的数字，变成心里有数的一笔笔账。&lt;/p&gt;
+&lt;p&gt;希望这篇文章，对你有一点点用。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;作者：Jasper，90后，某科技公司全栈开发工程师。一个正在认真理财的普通程序员。&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

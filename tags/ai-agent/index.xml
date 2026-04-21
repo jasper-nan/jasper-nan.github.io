@@ -1,15 +1,1008 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>AI Agent on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/ai-agent/</link>
-        <description>Recent content in AI Agent on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/ai-agent/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title>
-            <link>https://jonnynan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link>
-            <pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;测试工程师不应该把时间花在&amp;quot;装环境&amp;quot;、&amp;ldquo;等部署&amp;rdquo;、&amp;ldquo;手动提 Bug&amp;quot;上。AI Agent 可以把这些杂活全部自动化，让你专注在真正有价值的事上。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;背景测试工程师的日常痛点&#34;&gt;背景：测试工程师的日常痛点&#xA;&lt;/h2&gt;&lt;p&gt;作为一个在物流科技部门做测试/全栈的工程师，我日常的工作流大概是这样的：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;需要一套测试环境 → 找运维开虚拟机（排队等半天）&lt;/li&gt;&#xA;&lt;li&gt;虚拟机好了 → SSH 上去装环境、拉代码、配服务&lt;/li&gt;&#xA;&lt;li&gt;环境就绪 → 触发 Jenkins 构建、部署&lt;/li&gt;&#xA;&lt;li&gt;跑完测试 → 发现 Bug → 打开缺陷管理平台，手动填一大堆字段&lt;/li&gt;&#xA;&lt;li&gt;修完复测 → 再部署、再验证、再关 Bug&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;这套流程下来，真正用在「测试」上的时间可能不到 40%，剩下全是环境搭建、等部署、填表。尤其是跨版本回归测试，每个版本都要重复一遍。&lt;/p&gt;&#xA;&lt;p&gt;我一直在想：能不能把 AI 引入这条链路，让它帮我干这些重复劳动？&lt;/p&gt;&#xA;&lt;h2 id=&#34;方案用一个-ai-agent-串联整个工作流&#34;&gt;方案：用一个 AI Agent 串联整个工作流&#xA;&lt;/h2&gt;&lt;p&gt;最终方案是用一个开源的 AI Agent 框架，通过自然语言对话触发一整套自动化操作：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;说一句话 → 创建虚拟机 → 配置环境 → 触发构建 → 发现 Bug 自动提交&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;不用切窗口，不用等审批，不用手动填表。整个链路一个人、一句话搞定。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一esxi-自动创建虚拟机&#34;&gt;一、ESXi 自动创建虚拟机&#xA;&lt;/h2&gt;&lt;h3 id=&#34;痛点&#34;&gt;痛点&#xA;&lt;/h3&gt;&lt;p&gt;以前每次要测试环境，流程是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;登录 vSphere Client&lt;/li&gt;&#xA;&lt;li&gt;找到合适的模板&lt;/li&gt;&#xA;&lt;li&gt;右键 → 从模板克隆&lt;/li&gt;&#xA;&lt;li&gt;改名字、改 IP、改配置&lt;/li&gt;&#xA;&lt;li&gt;开机 → 等 → SSH 上去装环境&lt;/li&gt;&#xA;&lt;li&gt;整个流程 15-30 分钟，如果模板有问题甚至更长&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;解决&#34;&gt;解决&#xA;&lt;/h3&gt;&lt;p&gt;通过 ESXi API + PowerCLI 脚本，AI Agent 可以直接创建和配置虚拟机：&lt;/p&gt;&#xA;&lt;p&gt;我对 Agent 说：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;帮我创建一台测试虚拟机，2C4G，用 ubuntu22 模板，&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;名字叫 test-env-v1.5.3，IP 分配 192.168.x.x&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Agent 在后台执行：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 简化的伪代码逻辑&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clone_from_template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ubuntu22-template&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;test-env-v1.5.3&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;cpus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;memory_gb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;network&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;VM Network&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;ip&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;192.168.x.x&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;power_on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;wait_for_ssh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;configure_env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# 自动装 Docker、拉代码、配服务&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;**效果：**从 30 分钟缩短到 5 分钟。而且我可以一边喝咖啡一边等，Agent 创建完会主动通知我。&lt;/p&gt;&#xA;&lt;h3 id=&#34;踩坑&#34;&gt;踩坑&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;vSAN 流量和管理流量走了同一张网卡，创建虚拟机时 IO 争抢严重。最终给 vSAN 分了独立 VMkernel 适配器，用 VLAN 隔离解决了&lt;/li&gt;&#xA;&lt;li&gt;IP 地址池管理要注意回收，不然创建多了 IP 冲突&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;二jenkins-自动化构建与部署&#34;&gt;二、Jenkins 自动化构建与部署&#xA;&lt;/h2&gt;&lt;h3 id=&#34;痛点-1&#34;&gt;痛点&#xA;&lt;/h3&gt;&lt;p&gt;以前触发构建的流程：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;打开 Jenkins 网页&lt;/li&gt;&#xA;&lt;li&gt;找到对应的 Job&lt;/li&gt;&#xA;&lt;li&gt;填参数（分支名、环境、构建号等）&lt;/li&gt;&#xA;&lt;li&gt;点构建&lt;/li&gt;&#xA;&lt;li&gt;刷页面等结果&lt;/li&gt;&#xA;&lt;li&gt;构建失败了 → 查日志 → 定位问题&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;解决-1&#34;&gt;解决&#xA;&lt;/h3&gt;&lt;p&gt;Jenkins 提供 REST API 和 CLI，Agent 可以直接调用：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 使用 Jenkins CLI 触发构建&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;java -jar jenkins-cli.jar -s http://jenkins-server:8080/ &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -auth admin:API_TOKEN &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  build my-project &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p &lt;span class=&#34;nv&#34;&gt;BRANCH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;release/v1.5.3 &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p &lt;span class=&#34;nv&#34;&gt;ENV&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p &lt;span class=&#34;nv&#34;&gt;BUILD_NUM&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;更进一步的玩法 —— 我只需要对 Agent 说：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;触发 v1.5.3 的测试环境构建&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Agent 自动完成：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;调用 Jenkins API 触发构建&lt;/li&gt;&#xA;&lt;li&gt;轮询构建状态&lt;/li&gt;&#xA;&lt;li&gt;构建完成后通知我结果&lt;/li&gt;&#xA;&lt;li&gt;如果失败了，自动拉取日志摘要，告诉我哪个 stage 出了什么错&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;**效果：**不用开浏览器，不用记住 Job 名字和参数。一句话触发，结果主动推送。&lt;/p&gt;&#xA;&lt;h3 id=&#34;实战构建失败自动分析&#34;&gt;实战：构建失败自动分析&#xA;&lt;/h3&gt;&lt;p&gt;这是我觉得最有价值的功能之一。Agent 拿到构建日志后，能自动分析失败原因：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;❌ 构建 #127 失败&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;📍 失败阶段：接口测试&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;🔍 原因：UserService 接口响应超时（timeout 10s）&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;📊 最近 5 次构建：3 次超时，1 次成功，1 次其他错误&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;💡 建议：检查数据库连接池配置，可能连接数不够&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以前我需要自己翻几百行日志找原因，现在 Agent 10 秒钟就给我摘要。&lt;/p&gt;&#xA;&lt;h2 id=&#34;三自动提交-bug-到缺陷管理平台&#34;&gt;三、自动提交 Bug 到缺陷管理平台&#xA;&lt;/h2&gt;&lt;h3 id=&#34;痛点-2&#34;&gt;痛点&#xA;&lt;/h3&gt;&lt;p&gt;提 Bug 是测试工程师最繁琐的工作之一：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;截图、录屏&lt;/li&gt;&#xA;&lt;li&gt;写标题、描述、复现步骤&lt;/li&gt;&#xA;&lt;li&gt;选择模块、严重程度、优先级&lt;/li&gt;&#xA;&lt;li&gt;指派给对应的开发&lt;/li&gt;&#xA;&lt;li&gt;关联测试用例和版本&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一个 Bug 填下来 5-10 分钟，回归测试一轮能提 20+ 个 Bug，光填表就两小时没了。&lt;/p&gt;&#xA;&lt;h3 id=&#34;解决-2&#34;&gt;解决&#xA;&lt;/h3&gt;&lt;p&gt;Agent 通过缺陷管理平台的 API 自动提交：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;刚才那个构建失败，帮我提个 Bug，&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;标题用&amp;#34;v1.5.3 用户服务接口超时&amp;#34;，&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;指派给后端组&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Agent 自动组装 Bug 信息：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;字段&lt;/th&gt;&#xA;          &lt;th&gt;内容（自动生成）&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;标题&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;v1.5.3 用户服务接口超时&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;严重程度&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;严重（P1）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;模块&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;用户服务&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;指派&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;后端组负责人&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;复现步骤&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;自动从构建日志和测试报告提取&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;环境信息&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;test-env-v1.5.3 / Ubuntu 22.04&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;关联构建&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Jenkins #127&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;日志附件&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;失败日志 + 堆栈信息&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;**效果：**提 Bug 从 10 分钟降到 30 秒。而且格式规范、信息完整，开发不会来找我补信息。&lt;/p&gt;&#xA;&lt;h2 id=&#34;四全链路串联一个实战场景&#34;&gt;四、全链路串联：一个实战场景&#xA;&lt;/h2&gt;&lt;p&gt;把这些能力串起来，实际工作流是这样的：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;我：帮我把 v1.5.3 部署到测试环境，跑完回归测试后把问题都提了&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Agent：好的，开始执行：&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 创建测试虚拟机 test-env-v1.5.3（2C4G）&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 配置环境并拉取代码&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 触发 Jenkins 构建 #127&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 构建成功，部署完成&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 启动自动化测试（45 条用例）&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ⚠️ 3 条用例失败，2 条跳过&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 已提交 3 个 Bug 到缺陷管理平台：&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     - #BUG-1052 用户服务接口超时（P1）→ 指派后端组&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     - #BUG-1053 订单列表分页异常（P2）→ 指派前端组  &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     - #BUG-1054 物流轨迹数据重复（P3）→ 指派后端组&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  完整报告已发送到你的飞书。&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以前这个流程我需要：找运维（可能跨天）→ 创建虚拟机 → 部署 → 测试 → 提 Bug → 发通知。&lt;strong&gt;可能要 2-3 天。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;现在一句话，&lt;strong&gt;1 小时内完成&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;五技术架构&#34;&gt;五、技术架构&#xA;&lt;/h2&gt;&lt;p&gt;整体架构并不复杂：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;┌─────────────┐&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;│  飞书/终端   │  ← 自然语言输入&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└──────┬──────┘&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;       │&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;┌──────▼──────┐&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;│  AI Agent   │  ← 理解意图、编排任务&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;│  (OpenClaw) │&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└──┬──┬──┬───┘&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   │  │  │&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   │  │  └─── 缺陷管理 API ──→ 提交/管理 Bug&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   │  └───── Jenkins CLI/API ──→ 构建/部署&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   └──────── ESXi/PowerCLI ──→ 虚拟机管理&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;核心思路：AI Agent 不直接&amp;quot;做&amp;quot;事，而是&lt;strong&gt;调用已有的工具和 API&lt;/strong&gt;。Jenkins、ESXi、缺陷管理平台都有成熟的 API，Agent 只是把它们串起来。&lt;/p&gt;&#xA;&lt;h2 id=&#34;六实际效果与数据&#34;&gt;六、实际效果与数据&#xA;&lt;/h2&gt;&lt;p&gt;用了两三个月后的对比：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;环节&lt;/th&gt;&#xA;          &lt;th&gt;改造前&lt;/th&gt;&#xA;          &lt;th&gt;改造后&lt;/th&gt;&#xA;          &lt;th&gt;提升&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;申请测试环境&lt;/td&gt;&#xA;          &lt;td&gt;0.5-1 天&lt;/td&gt;&#xA;          &lt;td&gt;5 分钟&lt;/td&gt;&#xA;          &lt;td&gt;90%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;环境配置&lt;/td&gt;&#xA;          &lt;td&gt;30-60 分钟&lt;/td&gt;&#xA;          &lt;td&gt;自动完成&lt;/td&gt;&#xA;          &lt;td&gt;95%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;触发构建部署&lt;/td&gt;&#xA;          &lt;td&gt;5-10 分钟&lt;/td&gt;&#xA;          &lt;td&gt;1 句话&lt;/td&gt;&#xA;          &lt;td&gt;80%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;构建失败分析&lt;/td&gt;&#xA;          &lt;td&gt;15-30 分钟翻日志&lt;/td&gt;&#xA;          &lt;td&gt;10 秒出摘要&lt;/td&gt;&#xA;          &lt;td&gt;95%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;提 Bug&lt;/td&gt;&#xA;          &lt;td&gt;5-10 分钟/个&lt;/td&gt;&#xA;          &lt;td&gt;30 秒/个&lt;/td&gt;&#xA;          &lt;td&gt;90%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;版本回归全流程&lt;/td&gt;&#xA;          &lt;td&gt;2-3 天&lt;/td&gt;&#xA;          &lt;td&gt;1-2 小时&lt;/td&gt;&#xA;          &lt;td&gt;85%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;最关键的提升不是效率，而是&lt;strong&gt;注意力&lt;/strong&gt;。我不需要再在环境、部署、填表这些低价值工作上分心，可以把精力放在测试策略设计、复杂场景分析这些真正需要人的地方。&lt;/p&gt;&#xA;&lt;h2 id=&#34;七踩坑与经验&#34;&gt;七、踩坑与经验&#xA;&lt;/h2&gt;&lt;h3 id=&#34;1-api-权限要最小化原则&#34;&gt;1. API 权限要最小化原则&#xA;&lt;/h3&gt;&lt;p&gt;Agent 有权限调用 Jenkins、ESXi、缺陷管理平台，意味着它有能力&amp;quot;搞破坏&amp;rdquo;。务必：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;给 Agent 用独立的 API Token，权限严格限制&lt;/li&gt;&#xA;&lt;li&gt;生产环境操作必须二次确认&lt;/li&gt;&#xA;&lt;li&gt;高危操作（删除 VM、回滚等）走审批流程&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;2-容错与重试很重要&#34;&gt;2. 容错与重试很重要&#xA;&lt;/h3&gt;&lt;p&gt;真实环境不稳定：网络抖动、API 超时、资源不足。Agent 需要有合理的重试策略和错误处理，不能一个 API 失败就整个流程挂掉。&lt;/p&gt;&#xA;&lt;h3 id=&#34;3-人机协作不是人机替代&#34;&gt;3. 人机协作，不是人机替代&#xA;&lt;/h3&gt;&lt;p&gt;AI Agent 不是要替代测试工程师，而是接管机械性的重复工作。测试设计、业务理解、风险评估这些还是人的核心价值。Agent 是&amp;quot;副驾驶&amp;quot;，不是&amp;quot;自动驾驶&amp;quot;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;八总结&#34;&gt;八、总结&#xA;&lt;/h2&gt;&lt;p&gt;AI Agent 在测试运维领域的价值不是&amp;quot;写代码&amp;quot;或&amp;quot;跑脚本&amp;quot;，而是&lt;strong&gt;把散落在各个系统中的能力通过自然语言串联起来&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;关键是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;API 化&lt;/strong&gt;：确保 Jenkins、ESXi、缺陷管理平台都有可用的 API&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;标准化&lt;/strong&gt;：环境模板、构建参数、Bug 模板都要有标准&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;逐步自动化&lt;/strong&gt;：先自动化最痛的点（比如提 Bug），再逐步扩展&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;对于中小团队来说，不需要上复杂的 AI 平台，一个开源 Agent 框架 + 几个 API 脚本就能大幅提效。最重要的不是工具，是想清楚&lt;strong&gt;哪些环节值得自动化&lt;/strong&gt;。&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>AI Agent on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/ai-agent/</link><description>Recent content in AI Agent on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/ai-agent/index.xml" rel="self" type="application/rss+xml"/><item><title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title><link>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;测试工程师不应该把时间花在&amp;quot;装环境&amp;quot;、“等部署”、“手动提 Bug&amp;quot;上。AI Agent 可以把这些杂活全部自动化，让你专注在真正有价值的事上。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h2 id="背景测试工程师的日常痛点"&gt;背景：测试工程师的日常痛点
+&lt;/h2&gt;&lt;p&gt;作为一个在物流科技部门做测试/全栈的工程师，我日常的工作流大概是这样的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;需要一套测试环境 → 找运维开虚拟机（排队等半天）&lt;/li&gt;
+&lt;li&gt;虚拟机好了 → SSH 上去装环境、拉代码、配服务&lt;/li&gt;
+&lt;li&gt;环境就绪 → 触发 Jenkins 构建、部署&lt;/li&gt;
+&lt;li&gt;跑完测试 → 发现 Bug → 打开缺陷管理平台，手动填一大堆字段&lt;/li&gt;
+&lt;li&gt;修完复测 → 再部署、再验证、再关 Bug&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这套流程下来，真正用在「测试」上的时间可能不到 40%，剩下全是环境搭建、等部署、填表。尤其是跨版本回归测试，每个版本都要重复一遍。&lt;/p&gt;
+&lt;p&gt;我一直在想：能不能把 AI 引入这条链路，让它帮我干这些重复劳动？&lt;/p&gt;
+&lt;h2 id="方案用一个-ai-agent-串联整个工作流"&gt;方案：用一个 AI Agent 串联整个工作流
+&lt;/h2&gt;&lt;p&gt;最终方案是用一个开源的 AI Agent 框架，通过自然语言对话触发一整套自动化操作：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;说一句话 → 创建虚拟机 → 配置环境 → 触发构建 → 发现 Bug 自动提交&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;不用切窗口，不用等审批，不用手动填表。整个链路一个人、一句话搞定。&lt;/p&gt;
+&lt;h2 id="一esxi-自动创建虚拟机"&gt;一、ESXi 自动创建虚拟机
+&lt;/h2&gt;&lt;h3 id="痛点"&gt;痛点
+&lt;/h3&gt;&lt;p&gt;以前每次要测试环境，流程是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;登录 vSphere Client&lt;/li&gt;
+&lt;li&gt;找到合适的模板&lt;/li&gt;
+&lt;li&gt;右键 → 从模板克隆&lt;/li&gt;
+&lt;li&gt;改名字、改 IP、改配置&lt;/li&gt;
+&lt;li&gt;开机 → 等 → SSH 上去装环境&lt;/li&gt;
+&lt;li&gt;整个流程 15-30 分钟，如果模板有问题甚至更长&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解决"&gt;解决
+&lt;/h3&gt;&lt;p&gt;通过 ESXi API + PowerCLI 脚本，AI Agent 可以直接创建和配置虚拟机：&lt;/p&gt;
+&lt;p&gt;我对 Agent 说：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;帮我创建一台测试虚拟机，2C4G，用 ubuntu22 模板，
+名字叫 test-env-v1.5.3，IP 分配 192.168.x.x
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Agent 在后台执行：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 简化的伪代码逻辑
+vm = clone_from_template(
+ template=&amp;quot;ubuntu22-template&amp;quot;,
+ name=&amp;quot;test-env-v1.5.3&amp;quot;,
+ cpus=2,
+ memory_gb=4,
+ network=&amp;quot;VM Network&amp;quot;,
+ ip=&amp;quot;192.168.x.x&amp;quot;
+)
+power_on(vm)
+wait_for_ssh(vm)
+configure_env(vm) # 自动装 Docker、拉代码、配服务
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;**效果：**从 30 分钟缩短到 5 分钟。而且我可以一边喝咖啡一边等，Agent 创建完会主动通知我。&lt;/p&gt;
+&lt;h3 id="踩坑"&gt;踩坑
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;vSAN 流量和管理流量走了同一张网卡，创建虚拟机时 IO 争抢严重。最终给 vSAN 分了独立 VMkernel 适配器，用 VLAN 隔离解决了&lt;/li&gt;
+&lt;li&gt;IP 地址池管理要注意回收，不然创建多了 IP 冲突&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="二jenkins-自动化构建与部署"&gt;二、Jenkins 自动化构建与部署
+&lt;/h2&gt;&lt;h3 id="痛点-1"&gt;痛点
+&lt;/h3&gt;&lt;p&gt;以前触发构建的流程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;打开 Jenkins 网页&lt;/li&gt;
+&lt;li&gt;找到对应的 Job&lt;/li&gt;
+&lt;li&gt;填参数（分支名、环境、构建号等）&lt;/li&gt;
+&lt;li&gt;点构建&lt;/li&gt;
+&lt;li&gt;刷页面等结果&lt;/li&gt;
+&lt;li&gt;构建失败了 → 查日志 → 定位问题&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解决-1"&gt;解决
+&lt;/h3&gt;&lt;p&gt;Jenkins 提供 REST API 和 CLI，Agent 可以直接调用：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 使用 Jenkins CLI 触发构建
+java -jar jenkins-cli.jar -s http://jenkins-server:8080/ \
+ -auth admin:API_TOKEN \
+ build my-project \
+ -p BRANCH=release/v1.5.3 \
+ -p ENV=test \
+ -p BUILD_NUM=127
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;更进一步的玩法 —— 我只需要对 Agent 说：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;触发 v1.5.3 的测试环境构建
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Agent 自动完成：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;调用 Jenkins API 触发构建&lt;/li&gt;
+&lt;li&gt;轮询构建状态&lt;/li&gt;
+&lt;li&gt;构建完成后通知我结果&lt;/li&gt;
+&lt;li&gt;如果失败了，自动拉取日志摘要，告诉我哪个 stage 出了什么错&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;**效果：**不用开浏览器，不用记住 Job 名字和参数。一句话触发，结果主动推送。&lt;/p&gt;
+&lt;h3 id="实战构建失败自动分析"&gt;实战：构建失败自动分析
+&lt;/h3&gt;&lt;p&gt;这是我觉得最有价值的功能之一。Agent 拿到构建日志后，能自动分析失败原因：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;❌ 构建 #127 失败
+📍 失败阶段：接口测试
+🔍 原因：UserService 接口响应超时（timeout 10s）
+📊 最近 5 次构建：3 次超时，1 次成功，1 次其他错误
+💡 建议：检查数据库连接池配置，可能连接数不够
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以前我需要自己翻几百行日志找原因，现在 Agent 10 秒钟就给我摘要。&lt;/p&gt;
+&lt;h2 id="三自动提交-bug-到缺陷管理平台"&gt;三、自动提交 Bug 到缺陷管理平台
+&lt;/h2&gt;&lt;h3 id="痛点-2"&gt;痛点
+&lt;/h3&gt;&lt;p&gt;提 Bug 是测试工程师最繁琐的工作之一：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;截图、录屏&lt;/li&gt;
+&lt;li&gt;写标题、描述、复现步骤&lt;/li&gt;
+&lt;li&gt;选择模块、严重程度、优先级&lt;/li&gt;
+&lt;li&gt;指派给对应的开发&lt;/li&gt;
+&lt;li&gt;关联测试用例和版本&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;一个 Bug 填下来 5-10 分钟，回归测试一轮能提 20+ 个 Bug，光填表就两小时没了。&lt;/p&gt;
+&lt;h3 id="解决-2"&gt;解决
+&lt;/h3&gt;&lt;p&gt;Agent 通过缺陷管理平台的 API 自动提交：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;刚才那个构建失败，帮我提个 Bug，
+标题用&amp;quot;v1.5.3 用户服务接口超时&amp;quot;，
+指派给后端组
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Agent 自动组装 Bug 信息：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;内容（自动生成）&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;标题&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;v1.5.3 用户服务接口超时&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;严重程度&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;严重（P1）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;模块&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;用户服务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;指派&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;后端组负责人&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;复现步骤&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;自动从构建日志和测试报告提取&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;环境信息&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;test-env-v1.5.3 / Ubuntu 22.04&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;关联构建&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Jenkins #127&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;日志附件&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;失败日志 + 堆栈信息&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;**效果：**提 Bug 从 10 分钟降到 30 秒。而且格式规范、信息完整，开发不会来找我补信息。&lt;/p&gt;
+&lt;h2 id="四全链路串联一个实战场景"&gt;四、全链路串联：一个实战场景
+&lt;/h2&gt;&lt;p&gt;把这些能力串起来，实际工作流是这样的：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;我：帮我把 v1.5.3 部署到测试环境，跑完回归测试后把问题都提了
+
+Agent：好的，开始执行：
+ ✅ 创建测试虚拟机 test-env-v1.5.3（2C4G）
+ ✅ 配置环境并拉取代码
+ ✅ 触发 Jenkins 构建 #127
+ ✅ 构建成功，部署完成
+ ✅ 启动自动化测试（45 条用例）
+ ⚠️ 3 条用例失败，2 条跳过
+ ✅ 已提交 3 个 Bug 到缺陷管理平台：
+ - #BUG-1052 用户服务接口超时（P1）→ 指派后端组
+ - #BUG-1053 订单列表分页异常（P2）→ 指派前端组 
+ - #BUG-1054 物流轨迹数据重复（P3）→ 指派后端组
+
+ 完整报告已发送到你的飞书。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;以前这个流程我需要：找运维（可能跨天）→ 创建虚拟机 → 部署 → 测试 → 提 Bug → 发通知。&lt;strong&gt;可能要 2-3 天。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;现在一句话，&lt;strong&gt;1 小时内完成&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h2 id="五技术架构"&gt;五、技术架构
+&lt;/h2&gt;&lt;p&gt;整体架构并不复杂：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────────┐
+│ 飞书/终端 │ ← 自然语言输入
+└──────┬──────┘
+ │
+┌──────▼──────┐
+│ AI Agent │ ← 理解意图、编排任务
+│ (OpenClaw) │
+└──┬──┬──┬───┘
+ │ │ │
+ │ │ └─── 缺陷管理 API ──→ 提交/管理 Bug
+ │ └───── Jenkins CLI/API ──→ 构建/部署
+ └──────── ESXi/PowerCLI ──→ 虚拟机管理
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;核心思路：AI Agent 不直接&amp;quot;做&amp;quot;事，而是&lt;strong&gt;调用已有的工具和 API&lt;/strong&gt; 。Jenkins、ESXi、缺陷管理平台都有成熟的 API，Agent 只是把它们串起来。&lt;/p&gt;
+&lt;h2 id="六实际效果与数据"&gt;六、实际效果与数据
+&lt;/h2&gt;&lt;p&gt;用了两三个月后的对比：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;环节&lt;/th&gt;
+ &lt;th&gt;改造前&lt;/th&gt;
+ &lt;th&gt;改造后&lt;/th&gt;
+ &lt;th&gt;提升&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;申请测试环境&lt;/td&gt;
+ &lt;td&gt;0.5-1 天&lt;/td&gt;
+ &lt;td&gt;5 分钟&lt;/td&gt;
+ &lt;td&gt;90%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;环境配置&lt;/td&gt;
+ &lt;td&gt;30-60 分钟&lt;/td&gt;
+ &lt;td&gt;自动完成&lt;/td&gt;
+ &lt;td&gt;95%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;触发构建部署&lt;/td&gt;
+ &lt;td&gt;5-10 分钟&lt;/td&gt;
+ &lt;td&gt;1 句话&lt;/td&gt;
+ &lt;td&gt;80%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;构建失败分析&lt;/td&gt;
+ &lt;td&gt;15-30 分钟翻日志&lt;/td&gt;
+ &lt;td&gt;10 秒出摘要&lt;/td&gt;
+ &lt;td&gt;95%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;提 Bug&lt;/td&gt;
+ &lt;td&gt;5-10 分钟/个&lt;/td&gt;
+ &lt;td&gt;30 秒/个&lt;/td&gt;
+ &lt;td&gt;90%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;版本回归全流程&lt;/td&gt;
+ &lt;td&gt;2-3 天&lt;/td&gt;
+ &lt;td&gt;1-2 小时&lt;/td&gt;
+ &lt;td&gt;85%+&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最关键的提升不是效率，而是&lt;strong&gt;注意力&lt;/strong&gt; 。我不需要再在环境、部署、填表这些低价值工作上分心，可以把精力放在测试策略设计、复杂场景分析这些真正需要人的地方。&lt;/p&gt;
+&lt;h2 id="七踩坑与经验"&gt;七、踩坑与经验
+&lt;/h2&gt;&lt;h3 id="1-api-权限要最小化原则"&gt;1. API 权限要最小化原则
+&lt;/h3&gt;&lt;p&gt;Agent 有权限调用 Jenkins、ESXi、缺陷管理平台，意味着它有能力&amp;quot;搞破坏”。务必：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;给 Agent 用独立的 API Token，权限严格限制&lt;/li&gt;
+&lt;li&gt;生产环境操作必须二次确认&lt;/li&gt;
+&lt;li&gt;高危操作（删除 VM、回滚等）走审批流程&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-容错与重试很重要"&gt;2. 容错与重试很重要
+&lt;/h3&gt;&lt;p&gt;真实环境不稳定：网络抖动、API 超时、资源不足。Agent 需要有合理的重试策略和错误处理，不能一个 API 失败就整个流程挂掉。&lt;/p&gt;
+&lt;h3 id="3-人机协作不是人机替代"&gt;3. 人机协作，不是人机替代
+&lt;/h3&gt;&lt;p&gt;AI Agent 不是要替代测试工程师，而是接管机械性的重复工作。测试设计、业务理解、风险评估这些还是人的核心价值。Agent 是&amp;quot;副驾驶&amp;quot;，不是&amp;quot;自动驾驶&amp;quot;。&lt;/p&gt;
+&lt;h2 id="八总结"&gt;八、总结
+&lt;/h2&gt;&lt;p&gt;AI Agent 在测试运维领域的价值不是&amp;quot;写代码&amp;quot;或&amp;quot;跑脚本&amp;quot;，而是&lt;strong&gt;把散落在各个系统中的能力通过自然语言串联起来&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;关键是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;API 化&lt;/strong&gt; ：确保 Jenkins、ESXi、缺陷管理平台都有可用的 API&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;标准化&lt;/strong&gt; ：环境模板、构建参数、Bug 模板都要有标准&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;逐步自动化&lt;/strong&gt; ：先自动化最痛的点（比如提 Bug），再逐步扩展&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;对于中小团队来说，不需要上复杂的 AI 平台，一个开源 Agent 框架 + 几个 API 脚本就能大幅提效。最重要的不是工具，是想清楚&lt;strong&gt;哪些环节值得自动化&lt;/strong&gt; 。&lt;/p&gt;</description></item><item><title>AI Agent 开发实战笔记：技术选型与架构思考</title><link>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</guid><description>&lt;h2 id="前言为什么-ai-agent-值得关注"&gt;前言：为什么 AI Agent 值得关注
+&lt;/h2&gt;&lt;p&gt;最近公司计划在总部启动一个 AI Agent 相关的开发项目，我作为参与者之一，需要提前做技术调研和储备。&lt;/p&gt;
+&lt;p&gt;说实话，半年前我对 AI Agent 的理解还停留在&amp;quot;套壳聊天机器人&amp;quot;的层面。但深入研究之后发现，Agent 和传统的&amp;quot;调 API 返回结果&amp;quot;完全不是一回事——它关乎&lt;strong&gt;规划、记忆、工具调用、多步推理&lt;/strong&gt; ，是让 AI 从&amp;quot;能对话&amp;quot;进化到&amp;quot;能干活&amp;quot;的关键一步。&lt;/p&gt;
+&lt;p&gt;这篇文章记录了我调研过程中对主流技术框架的理解和对比，希望能给同样在关注这个方向的朋友一些参考。不保证全对，但保证真实。&lt;/p&gt;
+&lt;h2 id="一什么是-ai-agent"&gt;一、什么是 AI Agent？
+&lt;/h2&gt;&lt;p&gt;先简单定义一下：&lt;strong&gt;AI Agent = 大模型 + 规划能力 + 工具调用 + 记忆系统&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通的大模型调用是：&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;用户提问 → 模型回答 → 结束&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;Agent 是：&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;用户提出目标 → Agent 拆解任务 → 选择工具 → 执行操作 → 观察结果 → 调整策略 → 返回最终结果&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;区别在于 Agent 有&amp;quot;自主性&amp;quot;——它不只是回答问题，而是&lt;strong&gt;完成任务&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;举个具体例子：你说&amp;quot;帮我查一下明天北京到上海的机票并订最便宜的&amp;quot;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;普通 ChatBot&lt;/strong&gt; ：只能告诉你怎么查，或者给你一个链接&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Agent&lt;/strong&gt; ：自己去调用航班查询 API → 筛选结果 → 调用订票接口 → 返回确认信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是 Agent 的核心价值：&lt;strong&gt;把自然语言意图转化为具体的行动序列&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h2 id="二核心技术栈拆解"&gt;二、核心技术栈拆解
+&lt;/h2&gt;&lt;p&gt;开发一个 Agent，本质上要解决四个问题：&lt;/p&gt;
+&lt;h3 id="21-大模型大脑"&gt;2.1 大模型（大脑）
+&lt;/h3&gt;&lt;p&gt;模型是 Agent 的推理引擎，当前（2026年3月）主流选择：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;模型&lt;/th&gt;
+ &lt;th&gt;特点&lt;/th&gt;
+ &lt;th&gt;适用场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GPT-5.4&lt;/td&gt;
+ &lt;td&gt;OpenAI 最新旗舰，原生计算机操控，105万 token 上下文&lt;/td&gt;
+ &lt;td&gt;对质量要求最高的企业级应用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Claude Opus 4.6&lt;/td&gt;
+ &lt;td&gt;SWE-Bench 领先，100万 token 上下文，多 Agent 并行协作&lt;/td&gt;
+ &lt;td&gt;复杂代码工程、长文档处理&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Gemini 3.1 Pro&lt;/td&gt;
+ &lt;td&gt;综合基准最强，原生多模态，Google 生态深度集成，性价比高&lt;/td&gt;
+ &lt;td&gt;多模态场景、Google Workspace 联动&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek V4&lt;/td&gt;
+ &lt;td&gt;开源可私有化部署，MoE 架构，推理能力强&lt;/td&gt;
+ &lt;td&gt;数据安全要求高、成本敏感&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GLM-5&lt;/td&gt;
+ &lt;td&gt;智谱旗舰，744B MoE，中文能力和 Agent 能力突出&lt;/td&gt;
+ &lt;td&gt;中文场景、国内合规要求&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5&lt;/td&gt;
+ &lt;td&gt;首个原生多模态开源权重模型，Agent 导向设计&lt;/td&gt;
+ &lt;td&gt;私有化部署、定制微调&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Llama 4&lt;/td&gt;
+ &lt;td&gt;Meta 开源，Agent 能力原生支持，完全自主部署&lt;/td&gt;
+ &lt;td&gt;对供应商零依赖的开源方案&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;选型建议&lt;/strong&gt; ：如果是企业内部使用，优先考虑支持私有化部署的模型（DeepSeek V4、Qwen 3.5、Llama 4），数据不出域更安全。如果是对外产品，GPT-5.4、Claude 4.6 和 Gemini 3.1 Pro 是当前的三强。&lt;/p&gt;
+&lt;p&gt;值得一提的是，2026年3月 OpenAI 刚发布了 GPT-5.4 mini 和 nano，针对编码和子 Agent 场景优化，成本更低，适合处理简单任务的 Agent 节点。&lt;/p&gt;
+&lt;h3 id="22-工具调用tool-use--function-calling"&gt;2.2 工具调用（Tool Use / Function Calling）
+&lt;/h3&gt;&lt;p&gt;这是 Agent 最核心的能力——让模型能调用外部工具。主流实现方式：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 原生 Function Calling&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;OpenAI、Anthropic、Google 都在模型 API 层面支持了 Function Calling。你只需要定义一个 JSON Schema 描述工具的输入输出格式，模型会自动判断何时调用、传什么参数。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+ &amp;quot;name&amp;quot;: &amp;quot;search_flights&amp;quot;,
+ &amp;quot;description&amp;quot;: &amp;quot;搜索航班信息&amp;quot;,
+ &amp;quot;parameters&amp;quot;: {
+ &amp;quot;departure&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;出发城市&amp;quot;},
+ &amp;quot;destination&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;目的城市&amp;quot;},
+ &amp;quot;date&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;出发日期&amp;quot;}
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;2. MCP（Model Context Protocol）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是 Anthropic 在 2024 年底推出的开放协议，如今已成为事实标准——截至 2026 年 3 月，MCP SDK 月下载量已达 &lt;strong&gt;9700 万次&lt;/strong&gt; ，生态中有 &lt;strong&gt;5800+ 个 MCP Server&lt;/strong&gt; ，已有 5 家以上主流 AI 厂商采纳。&lt;/p&gt;
+&lt;p&gt;MCP 定义了模型和外部工具/数据源之间的标准通信协议，类似于 AI 领域的 USB 接口。核心优势：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;标准化&lt;/strong&gt; ：一次接入，所有支持 MCP 的客户端/模型都能用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;生态丰富&lt;/strong&gt; ：5800+ 现成 Server 可直接使用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全可控&lt;/strong&gt; ：权限管理、沙箱隔离&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你在做 Agent 开发，MCP 是必须深入研究的方向。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. ReAct 模式&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Reasoning + Acting。模型交替进行&amp;quot;思考&amp;quot;和&amp;quot;行动&amp;quot;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Thought: 我需要先查询数据库获取订单信息
+Action: query_database(&amp;quot;SELECT * FROM orders WHERE id=123&amp;quot;)
+Observation: 返回订单数据...
+Thought: 根据订单数据，我需要计算退款金额
+Action: calculate_refund(order_data)
+Observation: 退款金额为 ¥299
+Thought: 现在可以给用户一个完整的回复了
+Answer: 您的退款金额为 ¥299，预计 3 个工作日到账。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="23-记忆系统memory"&gt;2.3 记忆系统（Memory）
+&lt;/h3&gt;&lt;p&gt;没有记忆的 Agent 就像金鱼，每次对话都要从头开始。记忆分为三层：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;层级&lt;/th&gt;
+ &lt;th&gt;作用&lt;/th&gt;
+ &lt;th&gt;实现方式&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;短期记忆&lt;/td&gt;
+ &lt;td&gt;当前对话上下文&lt;/td&gt;
+ &lt;td&gt;放在 prompt 中（各模型上下文已普遍达到百万级 token）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;中期记忆&lt;/td&gt;
+ &lt;td&gt;跨会话工作记忆&lt;/td&gt;
+ &lt;td&gt;向量数据库（Milvus、Chroma、Qdrant）+ 语义检索&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;长期记忆&lt;/td&gt;
+ &lt;td&gt;持久化知识/偏好&lt;/td&gt;
+ &lt;td&gt;文件系统 + 结构化存储（数据库、知识图谱）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;实践建议&lt;/strong&gt; ：得益于各模型上下文窗口大幅扩展（GPT-5.4 和 Claude 4.6 都支持百万级 token），短期记忆已不再是主要瓶颈。中期记忆用轻量级向量库足够；长期记忆看具体需求，不要过度设计。&lt;/p&gt;
+&lt;h3 id="24-规划与编排orchestration"&gt;2.4 规划与编排（Orchestration）
+&lt;/h3&gt;&lt;p&gt;当任务复杂到需要多步推理、条件分支、错误恢复时，就需要编排框架。这是 Agent 区别于简单&amp;quot;Tool + LLM&amp;quot;组合的关键。&lt;/p&gt;
+&lt;h2 id="三主流框架对比"&gt;三、主流框架对比
+&lt;/h2&gt;&lt;h3 id="31-编排框架orchestration"&gt;3.1 编排框架（Orchestration）
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;框架&lt;/th&gt;
+ &lt;th&gt;语言&lt;/th&gt;
+ &lt;th&gt;特点&lt;/th&gt;
+ &lt;th&gt;适合场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;LangGraph&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Python/JS&lt;/td&gt;
+ &lt;td&gt;LangChain 团队出品，基于图的状态机模型，支持循环、分支、人工介入&lt;/td&gt;
+ &lt;td&gt;复杂多步骤工作流&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;CrewAI&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Python&lt;/td&gt;
+ &lt;td&gt;多 Agent 协作，角色+任务+团队组织方式&lt;/td&gt;
+ &lt;td&gt;多角色协作场景&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;AutoGen&lt;/strong&gt; （微软）&lt;/td&gt;
+ &lt;td&gt;Python&lt;/td&gt;
+ &lt;td&gt;多 Agent 对话式协作，支持人类参与&lt;/td&gt;
+ &lt;td&gt;多 Agent 讨论决策&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;OpenAI Agents SDK&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Python&lt;/td&gt;
+ &lt;td&gt;OpenAI 官方，轻量，支持 Handoffs、Guardrails&lt;/td&gt;
+ &lt;td&gt;用 OpenAI 模型快速原型&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Dify&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;开源平台&lt;/td&gt;
+ &lt;td&gt;可视化编排 + RAG 引擎，低代码&lt;/td&gt;
+ &lt;td&gt;快速搭建 AI 应用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Coze（扣子）&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;字节出品&lt;/td&gt;
+ &lt;td&gt;可视化搭建，国内生态好&lt;/td&gt;
+ &lt;td&gt;国内用户快速搭建 Bot&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="32-我的选型思考"&gt;3.2 我的选型思考
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;底层能力&lt;/strong&gt; ：优先国产模型（合规），兼容 OpenAI 接口格式；工具调用采用 MCP 协议标准；向量数据库用 Milvus。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;编排层&lt;/strong&gt; ：单一任务流水线用 LangGraph；多角色协作用 CrewAI 或 AutoGen；快速原型用 Dify。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基础设施&lt;/strong&gt; ：Docker 容器化、API Gateway 统一管理、完整的可观测性日志。&lt;/p&gt;
+&lt;h2 id="四踩坑预警"&gt;四、踩坑预警
+&lt;/h2&gt;&lt;h3 id="坑一模型幻觉导致工具调用错误"&gt;坑一：模型&amp;quot;幻觉&amp;quot;导致工具调用错误
+&lt;/h3&gt;&lt;p&gt;模型不是每次都能正确判断该调什么工具、传什么参数。工具多时容易&amp;quot;搞混&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：工具描述清晰简洁；同时暴露的工具不超过 10 个；关键操作加参数校验和人工确认。&lt;/p&gt;
+&lt;h3 id="坑二成本失控"&gt;坑二：成本失控
+&lt;/h3&gt;&lt;p&gt;Agent 多步推理意味着多次 API 调用，成本可能比普通对话高 5-10 倍。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：简单任务用小模型（GPT-5.4 mini、Gemini 3.1 Flash Lite）；缓存中间结果；设定最大步数上限防死循环。&lt;/p&gt;
+&lt;h3 id="坑三调试困难"&gt;坑三：调试困难
+&lt;/h3&gt;&lt;p&gt;Agent 行为不像传统程序那样确定，同样输入可能输出不同执行路径。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：记录完整推理链路日志；用 LangSmith 或自建可观测平台追踪；关键路径加断点和人工审批。&lt;/p&gt;
+&lt;h3 id="坑四上下文窗口管理"&gt;坑四：上下文窗口管理
+&lt;/h3&gt;&lt;p&gt;多步任务中工具返回结果和中间推理会快速膨胀。虽然各模型上下文已大幅扩展，但&amp;quot;能塞下&amp;quot;和&amp;quot;塞得高效&amp;quot;是两回事——上下文越长，模型越容易丢失关键信息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：中间结果做摘要压缩；长文档走外部存储；善用各模型的专长处理复杂输入。&lt;/p&gt;
+&lt;h2 id="五写在最后"&gt;五、写在最后
+&lt;/h2&gt;&lt;p&gt;AI Agent 领域仍处于快速迭代期，每月都有新框架、新协议、新模型出现。我的策略是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;先跑通最小闭环&lt;/strong&gt; ：不要一上来就搞多 Agent 协作，先用&amp;quot;模型 + Function Calling + 单一任务&amp;quot;跑通&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;关注标准协议&lt;/strong&gt; ：MCP 已成为事实标准，值得深入投入&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;可观测性优先&lt;/strong&gt; ：能观察才能优化，日志和追踪从第一天就设计好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全底线&lt;/strong&gt; ：Agent 能调用工具就能操作真实系统，权限控制和人工兜底必须有&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;接下来到了总部之后，我会把实际选型和开发中的踩坑记录持续更新，敬请关注。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;如果你也在做 AI Agent 相关的开发，欢迎交流探讨。技术选型没有银弹，适合自己业务场景的才是最好的。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>国内 AI Coding Plan 横评：DeepSeek、智谱 GLM、通义千问、MiniMax、Kimi</title><link>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</guid><description>&lt;h2 id="前言为什么要对比"&gt;前言：为什么要对比？
+&lt;/h2&gt;&lt;p&gt;作为一个 OpenClaw 用户，模型选择直接决定了两个核心体验：&lt;strong&gt;响应速度&lt;/strong&gt; 和&lt;strong&gt;钱包厚度&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;OpenClaw 是个&amp;quot;吃 Token 大户&amp;quot;——每次对话都要带上完整的系统提示、工具定义、记忆文件等上下文，单次请求动辄消耗上万 Token。如果选错了模型或套餐，要么经常被限流搞得体验稀烂，要么月底账单让人心梗。&lt;/p&gt;
+&lt;p&gt;这篇文章对比国内五家主流 AI 厂商的 Coding Plan / API 定价和限流策略，聚焦一个问题：&lt;strong&gt;哪个最适合搭配 OpenClaw 使用？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本文数据截至 2026 年 3 月，价格和限流策略可能随时调整，请以官方最新信息为准。&lt;/p&gt;
+&lt;h2 id="一各家-coding-plan--api-概览"&gt;一、各家 Coding Plan / API 概览
+&lt;/h2&gt;&lt;h3 id="11-智谱-glm-coding-plan"&gt;1.1 智谱 GLM Coding Plan
+&lt;/h3&gt;&lt;p&gt;智谱推出了专门的 Coding Plan 套餐，面向 Cursor、Copilot、OpenClaw 等 AI 编码工具用户。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;套餐&lt;/th&gt;
+ &lt;th&gt;月费&lt;/th&gt;
+ &lt;th&gt;定位&lt;/th&gt;
+ &lt;th&gt;建议并发项目数&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Lite&lt;/td&gt;
+ &lt;td&gt;¥49/月（包年¥34/月）&lt;/td&gt;
+ &lt;td&gt;个人轻量&lt;/td&gt;
+ &lt;td&gt;~80 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pro（最受欢迎）&lt;/td&gt;
+ &lt;td&gt;¥149/月（包年¥104/月）&lt;/td&gt;
+ &lt;td&gt;个人主力&lt;/td&gt;
+ &lt;td&gt;~400 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Max&lt;/td&gt;
+ &lt;td&gt;¥469/月（包年¥328/月）&lt;/td&gt;
+ &lt;td&gt;重度用户&lt;/td&gt;
+ &lt;td&gt;~1,600 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lite 套餐仅支持 GLM-4.7/4.6（GLM-5 需 Pro 及以上）；Pro/Max 才支持 GLM-5（744B MoE），且 GLM-5 消耗 3 倍额度&lt;/li&gt;
+&lt;li&gt;套餐制，不用操心 Token 计费&lt;/li&gt;
+&lt;li&gt;低峰期动态提升并发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;按 prompt 配额计费而非无限用——有开发者反馈 Pro 套餐在工作日高峰期（下午 15:00-18:00）连基础请求都频繁被拦截&lt;/li&gt;
+&lt;li&gt;套餐用户不支持申请调整并发，固定等级&lt;/li&gt;
+&lt;li&gt;曾因限流问题在 V2EX 社区引发讨论（来源：&lt;a class="link" href="https://www.80aj.com/2026/01/20/zhipu-glm-rate-limit-problem/" target="_blank" rel="noopener"
+ &gt;前沿哨所报道&lt;/a&gt;）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;OpenClaw 适配度：&lt;/strong&gt; 适合单人、单渠道、低频场景。如果同时挂多个 channel（飞书+Discord+WhatsApp），并发可能不够用。&lt;/p&gt;
+&lt;h3 id="12-deepseek-api"&gt;1.2 DeepSeek API
+&lt;/h3&gt;&lt;p&gt;DeepSeek 不搞套餐制，纯按 Token 计费，简单粗暴。当前主力模型为 DeepSeek V3.2（685B MoE）。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;模型&lt;/th&gt;
+ &lt;th&gt;输入价格（¥/百万Token）&lt;/th&gt;
+ &lt;th&gt;输出价格（¥/百万Token）&lt;/th&gt;
+ &lt;th&gt;上下文窗口&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek V3.2 (chat)&lt;/td&gt;
+ &lt;td&gt;¥1.9&lt;/td&gt;
+ &lt;td&gt;¥7.5&lt;/td&gt;
+ &lt;td&gt;128K&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek V3.2 (reasoner)&lt;/td&gt;
+ &lt;td&gt;¥3.7&lt;/td&gt;
+ &lt;td&gt;¥14.9&lt;/td&gt;
+ &lt;td&gt;128K&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;缓存命中&lt;/td&gt;
+ &lt;td&gt;¥0.19&lt;/td&gt;
+ &lt;td&gt;—&lt;/td&gt;
+ &lt;td&gt;—&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;免费额度：&lt;/strong&gt; 新用户注册送 500 万 Token。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;价格极低，缓存命中后输入仅需 ¥0.19/百万 Token&lt;/li&gt;
+&lt;li&gt;OpenAI 兼容 API，OpenClaw 零成本接入&lt;/li&gt;
+&lt;li&gt;无套餐限制，按量付费，不用的不收钱&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;纯文本，无多模态&lt;/li&gt;
+&lt;li&gt;高峰期偶有延迟波动&lt;/li&gt;
+&lt;li&gt;需要自己关注用量，没有&amp;quot;无限用&amp;quot;的安全感&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="13-阿里云百炼通义千问-qwen"&gt;1.3 阿里云百炼（通义千问 Qwen）
+&lt;/h3&gt;&lt;p&gt;通过阿里云百炼平台调用 Qwen 系列，按 Token 计费，免费额度非常大方。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;模型&lt;/th&gt;
+ &lt;th&gt;输入（¥/百万Token）&lt;/th&gt;
+ &lt;th&gt;输出（¥/百万Token）&lt;/th&gt;
+ &lt;th&gt;上下文&lt;/th&gt;
+ &lt;th&gt;RPM&lt;/th&gt;
+ &lt;th&gt;TPM&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5 Plus&lt;/td&gt;
+ &lt;td&gt;¥2&lt;/td&gt;
+ &lt;td&gt;¥6&lt;/td&gt;
+ &lt;td&gt;128K&lt;/td&gt;
+ &lt;td&gt;30,000&lt;/td&gt;
+ &lt;td&gt;5,000,000&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5 Flash&lt;/td&gt;
+ &lt;td&gt;¥0.8&lt;/td&gt;
+ &lt;td&gt;¥2&lt;/td&gt;
+ &lt;td&gt;128K&lt;/td&gt;
+ &lt;td&gt;30,000&lt;/td&gt;
+ &lt;td&gt;10,000,000&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3 Max&lt;/td&gt;
+ &lt;td&gt;¥4&lt;/td&gt;
+ &lt;td&gt;¥16&lt;/td&gt;
+ &lt;td&gt;32K&lt;/td&gt;
+ &lt;td&gt;30,000&lt;/td&gt;
+ &lt;td&gt;5,000,000&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;免费额度：&lt;/strong&gt; 新用户注册送超 7000 万 Token。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;限流规则：&lt;/strong&gt; 基于 API Key 级别限流，触发限流后通常 1 分钟内恢复。支持 Batch API（批量推理），不受实时限流约束。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;限流极其宽松（30,000 RPM），适合高并发场景&lt;/li&gt;
+&lt;li&gt;免费额度大，够用几个月&lt;/li&gt;
+&lt;li&gt;模型矩阵丰富，可按任务路由不同模型&lt;/li&gt;
+&lt;li&gt;阿里云基础设施稳定，国内延迟低&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="14-minimax"&gt;1.4 MiniMax
+&lt;/h3&gt;&lt;p&gt;MiniMax 最新推出了 M2.7 模型（全模态），并提供 Token Plan 套餐和按量计费两种模式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Token Plan 套餐（按月）：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;套餐&lt;/th&gt;
+ &lt;th&gt;月费&lt;/th&gt;
+ &lt;th&gt;M2.7 请求额度&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Starter&lt;/td&gt;
+ &lt;td&gt;¥29/月&lt;/td&gt;
+ &lt;td&gt;600 次/5小时&lt;/td&gt;
+ &lt;td&gt;仅文本&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Plus（高性价比）&lt;/td&gt;
+ &lt;td&gt;¥49/月&lt;/td&gt;
+ &lt;td&gt;1,500 次/5小时&lt;/td&gt;
+ &lt;td&gt;含语音+图像&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Max（超大份量）&lt;/td&gt;
+ &lt;td&gt;¥119/月&lt;/td&gt;
+ &lt;td&gt;4,500 次/5小时&lt;/td&gt;
+ &lt;td&gt;含全模态&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Plus-极速版&lt;/td&gt;
+ &lt;td&gt;¥98/月&lt;/td&gt;
+ &lt;td&gt;1,500 次/5小时（高速）&lt;/td&gt;
+ &lt;td&gt;高速版 M2.7&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Max-极速版&lt;/td&gt;
+ &lt;td&gt;¥199/月&lt;/td&gt;
+ &lt;td&gt;4,500 次/5小时（高速）&lt;/td&gt;
+ &lt;td&gt;高速版 M2.7&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Ultra-极速版&lt;/td&gt;
+ &lt;td&gt;¥899/月&lt;/td&gt;
+ &lt;td&gt;30,000 次/5小时（高速）&lt;/td&gt;
+ &lt;td&gt;极速畅用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;按量计费：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;模型&lt;/th&gt;
+ &lt;th&gt;输入（¥/百万Token）&lt;/th&gt;
+ &lt;th&gt;输出（¥/百万Token）&lt;/th&gt;
+ &lt;th&gt;缓存读取&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax-M2.7&lt;/td&gt;
+ &lt;td&gt;¥2.1&lt;/td&gt;
+ &lt;td&gt;¥8.4&lt;/td&gt;
+ &lt;td&gt;¥0.42&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax-M2.7-highspeed&lt;/td&gt;
+ &lt;td&gt;¥4.2&lt;/td&gt;
+ &lt;td&gt;¥16.8&lt;/td&gt;
+ &lt;td&gt;¥0.42&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Token Plan 按请求次数计费，对 OpenClaw 的长上下文场景很友好（每次对话消耗大量 Token 但只算 1 次请求）&lt;/li&gt;
+&lt;li&gt;支持全模态（文本+语音+图像+视频+音乐）&lt;/li&gt;
+&lt;li&gt;按年订阅有折扣（最高省 ¥658/年）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;请求额度按 5 小时窗口刷新，频繁使用可能触发窗口限制&lt;/li&gt;
+&lt;li&gt;高速版价格偏高&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="15-月之暗面-kimi"&gt;1.5 月之暗面 Kimi
+&lt;/h3&gt;&lt;p&gt;Kimi 最新旗舰模型为 K2.5（2026年1月27日发布），原生多模态，256K 上下文窗口。提供 Kimi Code Plan 订阅套餐和按量 API 两种模式。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Kimi Code Plan 套餐：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;套餐&lt;/th&gt;
+ &lt;th&gt;月费&lt;/th&gt;
+ &lt;th&gt;额度&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Andante&lt;/td&gt;
+ &lt;td&gt;¥49/月（年付¥39/月）&lt;/td&gt;
+ &lt;td&gt;5h token 配额（~300-1,200次 API 调用），每7天刷新&lt;/td&gt;
+ &lt;td&gt;含 AI 建站/文档/PPT&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Moderato（推荐）&lt;/td&gt;
+ &lt;td&gt;¥99/月（年付¥79/月）&lt;/td&gt;
+ &lt;td&gt;更大 token 配额，每7天刷新&lt;/td&gt;
+ &lt;td&gt;支持多设备、Claude Code/Roo Code&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;API 按量计费：&lt;/strong&gt;&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;模型&lt;/th&gt;
+ &lt;th&gt;输入（$/百万Token）&lt;/th&gt;
+ &lt;th&gt;输出（$/百万Token）&lt;/th&gt;
+ &lt;th&gt;上下文&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Kimi K2.5&lt;/td&gt;
+ &lt;td&gt;$0.60（≈¥4.3）&lt;/td&gt;
+ &lt;td&gt;$2.50-3.00（≈¥18-21）&lt;/td&gt;
+ &lt;td&gt;256K&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Kimi K2&lt;/td&gt;
+ &lt;td&gt;$0.60&lt;/td&gt;
+ &lt;td&gt;$2.50&lt;/td&gt;
+ &lt;td&gt;128K&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;API 限流按充值层级递增：起步 $1 充值仅 3 RPM，充值 $10+ 升至 200 RPM，充值 $3,000+ 达 10,000 RPM。上下文缓存可降低输入成本最高 75%。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;256K 超长上下文窗口，OpenClaw 长记忆场景友好&lt;/li&gt;
+&lt;li&gt;支持 Claude Code、Roo Code 等主流编程工具&lt;/li&gt;
+&lt;li&gt;限时 3 倍额度扩容活动&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;API 低充值档位限流严重（3 RPM），需要充值 $10+ 才能正常使用&lt;/li&gt;
+&lt;li&gt;Code Plan 额度按 7 天周期刷新，不累积&lt;/li&gt;
+&lt;li&gt;社区反馈的 OpenClaw 适配经验相对较少&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="二核心维度对比"&gt;二、核心维度对比
+&lt;/h2&gt;&lt;h3 id="21-费用openclaw-典型场景"&gt;2.1 费用（OpenClaw 典型场景）
+&lt;/h3&gt;&lt;p&gt;以 OpenClaw 每天中等使用强度估算：约 50 次对话，每次平均消耗 20K 输入 + 5K 输出 Token。每月约 3000 万输入 + 750 万输出 Token。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方案&lt;/th&gt;
+ &lt;th&gt;月费用估算&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;智谱 Pro&lt;/td&gt;
+ &lt;td&gt;¥149&lt;/td&gt;
+ &lt;td&gt;套餐内不限 Token（但有并发限制）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;智谱 Max&lt;/td&gt;
+ &lt;td&gt;¥469&lt;/td&gt;
+ &lt;td&gt;1,600 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek V3.2&lt;/td&gt;
+ &lt;td&gt;¥57（缓存命中率 50%）&lt;/td&gt;
+ &lt;td&gt;无缓存约 ¥102&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5 Flash&lt;/td&gt;
+ &lt;td&gt;¥29（按量计费）&lt;/td&gt;
+ &lt;td&gt;最便宜的选项&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5 Plus&lt;/td&gt;
+ &lt;td&gt;¥109&lt;/td&gt;
+ &lt;td&gt;性价比最好的中端&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax Starter&lt;/td&gt;
+ &lt;td&gt;¥29/月起&lt;/td&gt;
+ &lt;td&gt;600 次/5小时，按请求计&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax Plus&lt;/td&gt;
+ &lt;td&gt;¥49&lt;/td&gt;
+ &lt;td&gt;1,500 次/5小时，含多模态&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax Max&lt;/td&gt;
+ &lt;td&gt;¥119&lt;/td&gt;
+ &lt;td&gt;4,500 次/5小时&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;NVIDIA NIM 免费&lt;/td&gt;
+ &lt;td&gt;¥0&lt;/td&gt;
+ &lt;td&gt;40 RPM 限制&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;💡 关键发现：MiniMax Token Plan 对 OpenClaw 特别划算。&lt;/strong&gt; OpenClaw 每次对话消耗大量 Token（系统提示+上下文），但只算 1 次请求。Plus 套餐 ¥49/月就能覆盖 1,500 次对话（约每天 50 次），相当于用 Flash 的价格享受旗舰模型的能力。&lt;/p&gt;
+&lt;h3 id="22-并发与限流"&gt;2.2 并发与限流
+&lt;/h3&gt;&lt;p&gt;这对 OpenClaw 来说至关重要——你可能在飞书、Discord、WhatsApp 多个渠道同时收到消息。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方案&lt;/th&gt;
+ &lt;th&gt;并发限制&lt;/th&gt;
+ &lt;th&gt;刷新频率&lt;/th&gt;
+ &lt;th&gt;OpenClaw 适配度&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;智谱 Lite&lt;/td&gt;
+ &lt;td&gt;极低&lt;/td&gt;
+ &lt;td&gt;—&lt;/td&gt;
+ &lt;td&gt;❌ 仅够尝鲜&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;智谱 Pro&lt;/td&gt;
+ &lt;td&gt;中等，高峰期可能不够&lt;/td&gt;
+ &lt;td&gt;低峰动态提升&lt;/td&gt;
+ &lt;td&gt;⚠️ 单渠道勉强&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;智谱 Max&lt;/td&gt;
+ &lt;td&gt;较高&lt;/td&gt;
+ &lt;td&gt;低峰动态提升&lt;/td&gt;
+ &lt;td&gt;✅ 基本够用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek&lt;/td&gt;
+ &lt;td&gt;按 Token 消耗，无硬性 RPM&lt;/td&gt;
+ &lt;td&gt;即时扣费&lt;/td&gt;
+ &lt;td&gt;✅ 不限并发&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5 系列&lt;/td&gt;
+ &lt;td&gt;30,000 RPM&lt;/td&gt;
+ &lt;td&gt;1分钟恢复&lt;/td&gt;
+ &lt;td&gt;✅✅ 非常宽裕&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax Token Plan&lt;/td&gt;
+ &lt;td&gt;按 5 小时窗口内请求次数&lt;/td&gt;
+ &lt;td&gt;每 5 小时刷新&lt;/td&gt;
+ &lt;td&gt;✅ 中等使用足够&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax 按量&lt;/td&gt;
+ &lt;td&gt;无硬性 RPM&lt;/td&gt;
+ &lt;td&gt;即时扣费&lt;/td&gt;
+ &lt;td&gt;✅ 不限并发&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;NVIDIA NIM&lt;/td&gt;
+ &lt;td&gt;40 RPM&lt;/td&gt;
+ &lt;td&gt;—&lt;/td&gt;
+ &lt;td&gt;❌ 太低&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="23-性能与模型能力"&gt;2.3 性能与模型能力
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方案&lt;/th&gt;
+ &lt;th&gt;最新模型&lt;/th&gt;
+ &lt;th&gt;参数规模&lt;/th&gt;
+ &lt;th&gt;编码能力&lt;/th&gt;
+ &lt;th&gt;工具调用&lt;/th&gt;
+ &lt;th&gt;多模态&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;智谱&lt;/td&gt;
+ &lt;td&gt;GLM-5&lt;/td&gt;
+ &lt;td&gt;744B MoE&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek&lt;/td&gt;
+ &lt;td&gt;V3.2&lt;/td&gt;
+ &lt;td&gt;685B MoE&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;❌&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen&lt;/td&gt;
+ &lt;td&gt;Qwen 3.5&lt;/td&gt;
+ &lt;td&gt;多尺寸可选&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;MiniMax&lt;/td&gt;
+ &lt;td&gt;M2.7&lt;/td&gt;
+ &lt;td&gt;未公开（推测 200B+）&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;★★★★&lt;/td&gt;
+ &lt;td&gt;✅✅（全模态）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Kimi&lt;/td&gt;
+ &lt;td&gt;K2&lt;/td&gt;
+ &lt;td&gt;未公开&lt;/td&gt;
+ &lt;td&gt;★★★&lt;/td&gt;
+ &lt;td&gt;★★★&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2 id="三我的推荐"&gt;三、我的推荐
+&lt;/h2&gt;&lt;h3 id="-最佳性价比阿里云百炼--qwen-35-plusflash"&gt;🏆 最佳性价比：阿里云百炼 + Qwen 3.5 Plus/Flash
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;理由：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;限流极其宽松&lt;/strong&gt; （30,000 RPM），多渠道并发完全不是问题&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;新用户免费 7000 万 Token&lt;/strong&gt; ，够用几个月零成本体验&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;模型矩阵丰富&lt;/strong&gt; ，可以给 OpenClaw 配置模型路由——简单任务走 Flash（¥0.8/百万Token），复杂任务走 Plus（¥2/百万Token）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;阿里云基础设施&lt;/strong&gt; 稳定可靠，国内延迟低&lt;/li&gt;
+&lt;li&gt;OpenAI 兼容 API，OpenClaw 直接配置即可&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="-最省-token-方案minimax-token-plan"&gt;💰 最省 Token 方案：MiniMax Token Plan
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;理由：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;OpenClaw 的系统提示每次都很长（SOUL.md + 工具定义 + 记忆文件），按 Token 计费很吃亏&lt;/li&gt;
+&lt;li&gt;MiniMax Token Plan 按&lt;strong&gt;请求次数&lt;/strong&gt; 计费，一次对话不管消耗多少 Token 都算 1 次&lt;/li&gt;
+&lt;li&gt;Plus 套餐 ¥49/月，1,500 次/5小时，日常使用绑绑有余&lt;/li&gt;
+&lt;li&gt;额外赠送语音、图像等多模态能力&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="-最省钱过渡deepseek--免费额度"&gt;🆓 最省钱过渡：DeepSeek + 免费额度
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;理由：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;注册送 500 万 Token，够轻度使用&lt;/li&gt;
+&lt;li&gt;缓存命中后价格极低（¥0.19/百万 Token）&lt;/li&gt;
+&lt;li&gt;OpenClaw 的系统提示每次都一样，缓存命中率会很高&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;适合人群：&lt;/strong&gt; 个人轻度使用，预算敏感。&lt;/p&gt;
+&lt;h3 id="-免费白嫖nvidia-nim"&gt;🎁 免费白嫖：NVIDIA NIM
+&lt;/h3&gt;&lt;p&gt;完全免费，零 Token 费。但 40 RPM 太低，多渠道场景会频繁触发限流。适合只挂一个渠道的个人用户。&lt;/p&gt;
+&lt;h3 id="-不推荐智谱-coding-plan当前阶段"&gt;⚠️ 不推荐：智谱 Coding Plan（当前阶段）
+&lt;/h3&gt;&lt;p&gt;按 prompt 配额计费（~400/5小时），OpenClaw 单次对话消耗约 1-3 个 prompt，配额消耗极快；高峰限流也有反馈。Max 套餐 ¥469/月性价比不如 MiniMax Max（¥119/月，4,500 次/5小时）。 MiniMax Max ¥119/月（4,500 次/5小时）或百炼 Qwen Plus 按量计费都更划算。建议保留智谱 Lite（免费）作为备用。&lt;/p&gt;
+&lt;h2 id="四配置建议"&gt;四、配置建议
+&lt;/h2&gt;&lt;p&gt;以多供应商容灾为目标，推荐 OpenClaw 的模型配置：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;主模型（日常对话）：qwen3.5-plus
+轻量模型（心跳/简单任务）：qwen3.5-flash
+备用模型（容灾）：deepseek-chat
+尝鲜/多模态：minimax-m2.7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;多供应商容灾原则：&lt;/strong&gt; 不要把所有鸡蛋放在一个篮子里。主用百炼，备用 DeepSeek 或 MiniMax，任何一家挂了自动切到另一家。&lt;/p&gt;
+&lt;h2 id="五写在最后"&gt;五、写在最后
+&lt;/h2&gt;&lt;p&gt;AI 模型的价格战还在继续，今天的结论可能下个月就变了。但有几个原则不会变：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;限流比价格更重要&lt;/strong&gt; ——便宜但不能用，等于没用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;计费模式要匹配使用方式&lt;/strong&gt; ——OpenClaw 长上下文场景适合按请求计费（MiniMax）或限流宽松的按量计费（百炼）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;模型路由比单一模型更聪明&lt;/strong&gt; ——不同任务用不同模型&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;缓存是省钱利器&lt;/strong&gt; ——选支持上下文缓存的供应商&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;永远要有备用方案&lt;/strong&gt; ——多供应商配置是必须的&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;希望这篇文章能帮你省下一些试错成本。如果你有不同体验或发现更好的方案，欢迎交流。&lt;/p&gt;</description></item></channel></rss>

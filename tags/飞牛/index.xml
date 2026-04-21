@@ -1,15 +1,298 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>飞牛 on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/%E9%A3%9E%E7%89%9B/</link>
-        <description>Recent content in 飞牛 on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/%E9%A3%9E%E7%89%9B/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>飞牛 NAS vs 群晖 DSM：真实使用对比，哪个更适合你？</title>
-            <link>https://jonnynan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;群晖 DSM 是 NAS 界的老大哥，飞牛（fnOS）是近年崛起的国产新秀。两个系统我都深度使用过，这篇从实际体验出发帮你对比。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一系统定位&#34;&gt;一、系统定位&#xA;&lt;/h2&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖 DSM&lt;/th&gt;&#xA;          &lt;th&gt;飞牛 fnOS&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;性质&lt;/td&gt;&#xA;          &lt;td&gt;商业闭源&lt;/td&gt;&#xA;          &lt;td&gt;国产开源免费&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;硬件&lt;/td&gt;&#xA;          &lt;td&gt;群晖自家的 NAS&lt;/td&gt;&#xA;          &lt;td&gt;支持主流 x86 硬件（也支持部分 ARM）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;价格&lt;/td&gt;&#xA;          &lt;td&gt;NAS 硬件贵 + 软件免费&lt;/td&gt;&#xA;          &lt;td&gt;软件免费，硬件自选&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;适合人群&lt;/td&gt;&#xA;          &lt;td&gt;不想折腾、预算充足&lt;/td&gt;&#xA;          &lt;td&gt;喜欢折腾、追求性价比&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;核心区别：&lt;/strong&gt; 群晖卖的是&amp;quot;整套方案&amp;quot;，飞牛提供的是&amp;quot;免费系统 + 你自己选硬件&amp;quot;。&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二核心功能对比&#34;&gt;二、核心功能对比&#xA;&lt;/h2&gt;&lt;h3 id=&#34;文件管理&#34;&gt;文件管理&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;功能&lt;/th&gt;&#xA;          &lt;th&gt;群晖&lt;/th&gt;&#xA;          &lt;th&gt;飞牛&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Web 文件管理&lt;/td&gt;&#xA;          &lt;td&gt;File Station ✅&lt;/td&gt;&#xA;          &lt;td&gt;文件管理器 ✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;SMB/CIFS 共享&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;NFS&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;WebDAV&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;回收站&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;文件去重&lt;/td&gt;&#xA;          &lt;td&gt;✅（需Btrfs）&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;体验差距不大，都能满足日常需求。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;h3 id=&#34;docker&#34;&gt;Docker&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖&lt;/th&gt;&#xA;          &lt;th&gt;飞牛&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;GUI 管理器&lt;/td&gt;&#xA;          &lt;td&gt;Container Manager ✅&lt;/td&gt;&#xA;          &lt;td&gt;Docker 管理器 ✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Portainer 支持&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Compose 支持&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;资源限制设置&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;平手。&lt;/strong&gt; 两个系统对 Docker 的支持都很完善。&lt;/p&gt;&#xA;&lt;h3 id=&#34;照片管理&#34;&gt;照片管理&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖 Synology Photos&lt;/th&gt;&#xA;          &lt;th&gt;飞牛相册&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;AI 人脸识别&lt;/td&gt;&#xA;          &lt;td&gt;✅ 收费（需高级许可）&lt;/td&gt;&#xA;          &lt;td&gt;✅ 免费&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;时间线浏览&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;手机自动备份&lt;/td&gt;&#xA;          &lt;td&gt;✅ Synology Photos App&lt;/td&gt;&#xA;          &lt;td&gt;✅ 飞牛 App&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;共享相册&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;          &lt;td&gt;✅&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;飞牛的 AI 相册免费是一大优势。&lt;/strong&gt; 群晖的人脸识别需要购买高级许可（约 500 元/台/永久）。&lt;/p&gt;&#xA;&lt;h3 id=&#34;影音中心&#34;&gt;影音中心&#xA;&lt;/h3&gt;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;&lt;/th&gt;&#xA;          &lt;th&gt;群晖&lt;/th&gt;&#xA;          &lt;th&gt;飞牛&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Video Station&lt;/td&gt;&#xA;          &lt;td&gt;✅ 但功能一般&lt;/td&gt;&#xA;          &lt;td&gt;内置影音中心&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;Jellyfin/Emby 支持&lt;/td&gt;&#xA;          &lt;td&gt;✅ Docker 安装&lt;/td&gt;&#xA;          &lt;td&gt;✅ Docker 安装&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;硬件转码&lt;/td&gt;&#xA;          &lt;td&gt;✅ 部分型号&lt;/td&gt;&#xA;          &lt;td&gt;✅ 需要支持核显的 CPU&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;在线刮削&lt;/td&gt;&#xA;          &lt;td&gt;群晖原生较弱&lt;/td&gt;&#xA;          &lt;td&gt;飞牛集成更好&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;&lt;strong&gt;影音党建议两个都上 Jellyfin/Emby，原生的都不够打。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三易用性对比&#34;&gt;三、易用性对比&#xA;&lt;/h2&gt;&lt;h3 id=&#34;安装&#34;&gt;安装&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：开箱即用，引导式安装，小白友好&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：需要自己准备 U 盘引导安装，稍微折腾&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;界面&#34;&gt;界面&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：更像传统操作系统，功能入口多，初看有点乱但习惯了很顺手&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：界面更现代，操作更简洁&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;套件生态&#34;&gt;套件生态&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：套件中心丰富，第三方套件多（Active Backup、Drive、Snapshot Replication 等企业级功能）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：内置功能够用，第三方生态还在发展，社区逐渐壮大&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;更新维护&#34;&gt;更新维护&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：OTA 更新稳定，大版本升级有明确路径&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：更新较频繁，社区活跃，偶尔有小 bug 但修复快&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四性能与扩展&#34;&gt;四、性能与扩展&#xA;&lt;/h2&gt;&lt;h3 id=&#34;硬件选择&#34;&gt;硬件选择&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;群晖：&lt;/strong&gt; 买什么就是什么，CPU/内存固定，扩展有限。好处是不用选，坏处是性价比低。&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;飞牛：&lt;/strong&gt; 自己选硬件，灵活性极高：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;配置&lt;/th&gt;&#xA;          &lt;th&gt;群晖同性能型号&lt;/th&gt;&#xA;          &lt;th&gt;飞牛自组&lt;/th&gt;&#xA;          &lt;th&gt;价格对比&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;4盘位 + N100&lt;/td&gt;&#xA;          &lt;td&gt;DS423+&lt;/td&gt;&#xA;          &lt;td&gt;N100 迷你主机 + 4盘位&lt;/td&gt;&#xA;          &lt;td&gt;~3000 vs ~1500&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;8盘位 + J4125&lt;/td&gt;&#xA;          &lt;td&gt;DS1821+&lt;/td&gt;&#xA;          &lt;td&gt;J4125 准系统 + 8盘位&lt;/td&gt;&#xA;          &lt;td&gt;~8000 vs ~2500&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;飞牛方案的价格通常是群晖的 &lt;strong&gt;1/2 到 1/3&lt;/strong&gt;。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h3 id=&#34;虚拟机&#34;&gt;虚拟机&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt;：Virtual Machine Manager（需较强 CPU，额外占用资源）&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt;：原生支持更好，对硬件直通支持更灵活&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五优缺点总结&#34;&gt;五、优缺点总结&#xA;&lt;/h2&gt;&lt;h3 id=&#34;群晖-dsm&#34;&gt;群晖 DSM&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;稳定可靠，久经考验&lt;/li&gt;&#xA;&lt;li&gt;套件生态成熟&lt;/li&gt;&#xA;&lt;li&gt;企业级功能（Active Backup、Snapshot Replication）&lt;/li&gt;&#xA;&lt;li&gt;文档和社区资源丰富&lt;/li&gt;&#xA;&lt;li&gt;手机 App 体验好&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;硬件贵，性价比低&lt;/li&gt;&#xA;&lt;li&gt;高级功能需要额外付费（许可证）&lt;/li&gt;&#xA;&lt;li&gt;硬件性能落后于同价位自组&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;飞牛-fnos&#34;&gt;飞牛 fnOS&#xA;&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;免费开源&lt;/li&gt;&#xA;&lt;li&gt;硬件自由选择，性价比高&lt;/li&gt;&#xA;&lt;li&gt;AI 相册免费&lt;/li&gt;&#xA;&lt;li&gt;国产系统，社区活跃&lt;/li&gt;&#xA;&lt;li&gt;界面现代，操作简洁&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;需要一定动手能力&lt;/li&gt;&#xA;&lt;li&gt;套件生态还在完善中&lt;/li&gt;&#xA;&lt;li&gt;文档不如群晖全面&lt;/li&gt;&#xA;&lt;li&gt;企业级功能不如群晖&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六怎么选&#34;&gt;六、怎么选？&#xA;&lt;/h2&gt;&lt;h3 id=&#34;选群晖如果&#34;&gt;选群晖，如果：&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;预算充足，不想折腾硬件&lt;/li&gt;&#xA;&lt;li&gt;需要企业级备份方案&lt;/li&gt;&#xA;&lt;li&gt;追求开箱即用的稳定体验&lt;/li&gt;&#xA;&lt;li&gt;公司/团队使用&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;选飞牛如果&#34;&gt;选飞牛，如果：&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;追求性价比&lt;/li&gt;&#xA;&lt;li&gt;喜欢折腾，享受 DIY 的乐趣&lt;/li&gt;&#xA;&lt;li&gt;已经有闲置硬件想利用&lt;/li&gt;&#xA;&lt;li&gt;看重 AI 相册等免费功能&lt;/li&gt;&#xA;&lt;li&gt;支持国产开源&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;我的选择两个都要-&#34;&gt;我的选择：两个都要 ✅&#xA;&lt;/h3&gt;&lt;p&gt;如果你有两台 NAS（比如一台 8 盘位 + 一台 4 盘位），可以一台跑群晖负责重要数据备份，另一台跑飞牛负责影音、Docker 和实验性玩法。&lt;strong&gt;两全其美。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;NAS 的本质是数据安全。不管选哪个，&lt;strong&gt;3-2-1 备份原则&lt;/strong&gt;一定要遵守：3份副本、2种介质、1份异地。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>飞牛 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E9%A3%9E%E7%89%9B/</link><description>Recent content in 飞牛 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E9%A3%9E%E7%89%9B/index.xml" rel="self" type="application/rss+xml"/><item><title>飞牛 NAS vs 群晖 DSM：真实使用对比，哪个更适合你？</title><link>https://jasper-nan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;群晖 DSM 是 NAS 界的老大哥，飞牛（fnOS）是近年崛起的国产新秀。两个系统我都深度使用过，这篇从实际体验出发帮你对比。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一系统定位"&gt;一、系统定位
+&lt;/h2&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖 DSM&lt;/th&gt;
+ &lt;th&gt;飞牛 fnOS&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;性质&lt;/td&gt;
+ &lt;td&gt;商业闭源&lt;/td&gt;
+ &lt;td&gt;国产开源免费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;硬件&lt;/td&gt;
+ &lt;td&gt;群晖自家的 NAS&lt;/td&gt;
+ &lt;td&gt;支持主流 x86 硬件（也支持部分 ARM）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;价格&lt;/td&gt;
+ &lt;td&gt;NAS 硬件贵 + 软件免费&lt;/td&gt;
+ &lt;td&gt;软件免费，硬件自选&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;适合人群&lt;/td&gt;
+ &lt;td&gt;不想折腾、预算充足&lt;/td&gt;
+ &lt;td&gt;喜欢折腾、追求性价比&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;核心区别：&lt;/strong&gt; 群晖卖的是&amp;quot;整套方案&amp;quot;，飞牛提供的是&amp;quot;免费系统 + 你自己选硬件&amp;quot;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二核心功能对比"&gt;二、核心功能对比
+&lt;/h2&gt;&lt;h3 id="文件管理"&gt;文件管理
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;功能&lt;/th&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Web 文件管理&lt;/td&gt;
+ &lt;td&gt;File Station ✅&lt;/td&gt;
+ &lt;td&gt;文件管理器 ✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SMB/CIFS 共享&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;NFS&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;WebDAV&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;回收站&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;文件去重&lt;/td&gt;
+ &lt;td&gt;✅（需Btrfs）&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;体验差距不大，都能满足日常需求。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="docker"&gt;Docker
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GUI 管理器&lt;/td&gt;
+ &lt;td&gt;Container Manager ✅&lt;/td&gt;
+ &lt;td&gt;Docker 管理器 ✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Portainer 支持&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Compose 支持&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;资源限制设置&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;平手。&lt;/strong&gt; 两个系统对 Docker 的支持都很完善。&lt;/p&gt;
+&lt;h3 id="照片管理"&gt;照片管理
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖 Synology Photos&lt;/th&gt;
+ &lt;th&gt;飞牛相册&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;AI 人脸识别&lt;/td&gt;
+ &lt;td&gt;✅ 收费（需高级许可）&lt;/td&gt;
+ &lt;td&gt;✅ 免费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;时间线浏览&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;手机自动备份&lt;/td&gt;
+ &lt;td&gt;✅ Synology Photos App&lt;/td&gt;
+ &lt;td&gt;✅ 飞牛 App&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;共享相册&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;飞牛的 AI 相册免费是一大优势。&lt;/strong&gt; 群晖的人脸识别需要购买高级许可（约 500 元/台/永久）。&lt;/p&gt;
+&lt;h3 id="影音中心"&gt;影音中心
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Video Station&lt;/td&gt;
+ &lt;td&gt;✅ 但功能一般&lt;/td&gt;
+ &lt;td&gt;内置影音中心&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Jellyfin/Emby 支持&lt;/td&gt;
+ &lt;td&gt;✅ Docker 安装&lt;/td&gt;
+ &lt;td&gt;✅ Docker 安装&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;硬件转码&lt;/td&gt;
+ &lt;td&gt;✅ 部分型号&lt;/td&gt;
+ &lt;td&gt;✅ 需要支持核显的 CPU&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;在线刮削&lt;/td&gt;
+ &lt;td&gt;群晖原生较弱&lt;/td&gt;
+ &lt;td&gt;飞牛集成更好&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;影音党建议两个都上 Jellyfin/Emby，原生的都不够打。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="三易用性对比"&gt;三、易用性对比
+&lt;/h2&gt;&lt;h3 id="安装"&gt;安装
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：开箱即用，引导式安装，小白友好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：需要自己准备 U 盘引导安装，稍微折腾&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="界面"&gt;界面
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：更像传统操作系统，功能入口多，初看有点乱但习惯了很顺手&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：界面更现代，操作更简洁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="套件生态"&gt;套件生态
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：套件中心丰富，第三方套件多（Active Backup、Drive、Snapshot Replication 等企业级功能）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：内置功能够用，第三方生态还在发展，社区逐渐壮大&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="更新维护"&gt;更新维护
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：OTA 更新稳定，大版本升级有明确路径&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：更新较频繁，社区活跃，偶尔有小 bug 但修复快&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四性能与扩展"&gt;四、性能与扩展
+&lt;/h2&gt;&lt;h3 id="硬件选择"&gt;硬件选择
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;群晖：&lt;/strong&gt; 买什么就是什么，CPU/内存固定，扩展有限。好处是不用选，坏处是性价比低。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;飞牛：&lt;/strong&gt; 自己选硬件，灵活性极高：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;配置&lt;/th&gt;
+ &lt;th&gt;群晖同性能型号&lt;/th&gt;
+ &lt;th&gt;飞牛自组&lt;/th&gt;
+ &lt;th&gt;价格对比&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;4盘位 + N100&lt;/td&gt;
+ &lt;td&gt;DS423+&lt;/td&gt;
+ &lt;td&gt;N100 迷你主机 + 4盘位&lt;/td&gt;
+ &lt;td&gt;~3000 vs ~1500&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;8盘位 + J4125&lt;/td&gt;
+ &lt;td&gt;DS1821+&lt;/td&gt;
+ &lt;td&gt;J4125 准系统 + 8盘位&lt;/td&gt;
+ &lt;td&gt;~8000 vs ~2500&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;飞牛方案的价格通常是群晖的 &lt;strong&gt;1/2 到 1/3&lt;/strong&gt; 。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;h3 id="虚拟机"&gt;虚拟机
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;群晖&lt;/strong&gt; ：Virtual Machine Manager（需较强 CPU，额外占用资源）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;飞牛&lt;/strong&gt; ：原生支持更好，对硬件直通支持更灵活&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="五优缺点总结"&gt;五、优缺点总结
+&lt;/h2&gt;&lt;h3 id="群晖-dsm"&gt;群晖 DSM
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;稳定可靠，久经考验&lt;/li&gt;
+&lt;li&gt;套件生态成熟&lt;/li&gt;
+&lt;li&gt;企业级功能（Active Backup、Snapshot Replication）&lt;/li&gt;
+&lt;li&gt;文档和社区资源丰富&lt;/li&gt;
+&lt;li&gt;手机 App 体验好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;硬件贵，性价比低&lt;/li&gt;
+&lt;li&gt;高级功能需要额外付费（许可证）&lt;/li&gt;
+&lt;li&gt;硬件性能落后于同价位自组&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="飞牛-fnos"&gt;飞牛 fnOS
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;优点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;免费开源&lt;/li&gt;
+&lt;li&gt;硬件自由选择，性价比高&lt;/li&gt;
+&lt;li&gt;AI 相册免费&lt;/li&gt;
+&lt;li&gt;国产系统，社区活跃&lt;/li&gt;
+&lt;li&gt;界面现代，操作简洁&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;缺点：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要一定动手能力&lt;/li&gt;
+&lt;li&gt;套件生态还在完善中&lt;/li&gt;
+&lt;li&gt;文档不如群晖全面&lt;/li&gt;
+&lt;li&gt;企业级功能不如群晖&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="六怎么选"&gt;六、怎么选？
+&lt;/h2&gt;&lt;h3 id="选群晖如果"&gt;选群晖，如果：
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;预算充足，不想折腾硬件&lt;/li&gt;
+&lt;li&gt;需要企业级备份方案&lt;/li&gt;
+&lt;li&gt;追求开箱即用的稳定体验&lt;/li&gt;
+&lt;li&gt;公司/团队使用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="选飞牛如果"&gt;选飞牛，如果：
+&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;追求性价比&lt;/li&gt;
+&lt;li&gt;喜欢折腾，享受 DIY 的乐趣&lt;/li&gt;
+&lt;li&gt;已经有闲置硬件想利用&lt;/li&gt;
+&lt;li&gt;看重 AI 相册等免费功能&lt;/li&gt;
+&lt;li&gt;支持国产开源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="我的选择两个都要-"&gt;我的选择：两个都要 ✅
+&lt;/h3&gt;&lt;p&gt;如果你有两台 NAS（比如一台 8 盘位 + 一台 4 盘位），可以一台跑群晖负责重要数据备份，另一台跑飞牛负责影音、Docker 和实验性玩法。&lt;strong&gt;两全其美。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;NAS 的本质是数据安全。不管选哪个，&lt;strong&gt;3-2-1 备份原则&lt;/strong&gt; 一定要遵守：3份副本、2种介质、1份异地。&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

@@ -1,15 +1,111 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>版本管理 on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
-        <description>Recent content in 版本管理 on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Tue, 13 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>git系列之时光穿梭</title>
-            <link>https://jonnynan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</link>
-            <pubDate>Tue, 13 Aug 2019 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</guid>
-            <description>&lt;p&gt;aliases:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;/posts/2019-08-13-git系列之时光穿梭/&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;小结&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;要随时掌握工作区的状态，使用git status命令。&lt;/p&gt;&#xA;&lt;p&gt;如果git status告诉你有文件被修改过，用git diff可以查看修改内容。&lt;/p&gt;&#xA;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;#%e7%89%88%e6%9c%ac%e5%9b%9e%e9%80%80&#34; &gt;&lt;/a&gt;版本回退&#xA;git 每次 commit 都会产生一个 版本 commit 编号&lt;/p&gt;&#xA;&lt;p&gt;查看可以使用  git log 命令&lt;/p&gt;&#xA;&lt;p&gt;需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。&lt;/p&gt;&#xA;&lt;p&gt;好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？&lt;/p&gt;&#xA;&lt;p&gt;首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。&lt;/p&gt;&#xA;&lt;p&gt;现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git reset --hard HEAD^HEAD is now at e475afc add distributed&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;查看文件可以发现确实已经回到了上个版本提交的内容。&lt;/p&gt;&#xA;&lt;p&gt;此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？&lt;/p&gt;&#xA;&lt;p&gt;还是有办法 。再学两个命令：&lt;/p&gt;&#xA;&lt;p&gt;git reflog  查看之前执行的每个命令。找到对应的 commit log&lt;/p&gt;&#xA;&lt;p&gt;然后执行命令 git reset –hard commit_id&lt;/p&gt;&#xA;&lt;p&gt;即可恢复到指定提交版本了。&lt;/p&gt;&#xA;&lt;h2 id=&#34;小结-1&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。&lt;/p&gt;&#xA;&lt;p&gt;穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。&lt;/p&gt;&#xA;&lt;p&gt;要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。&lt;/p&gt;&#xA;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;#%e5%b7%a5%e4%bd%9c%e5%8c%ba%e5%92%8c%e6%9a%82%e5%ad%98%e5%8c%ba&#34; &gt;&lt;/a&gt;工作区和暂存区&#xA;核心知识点来了。&lt;/p&gt;&#xA;&lt;p&gt;git学的好不好最要紧的就是理解这个暂存区。&lt;/p&gt;&#xA;&lt;h2 id=&#34;工作区&#34;&gt;工作区&#xA;&lt;/h2&gt;&lt;p&gt;首先来看看什么是工作区。&lt;/p&gt;&#xA;&lt;p&gt;我们在某个空文件夹内执行了 git init 命令。此文件夹以及其子文件夹就都属于工作区。&lt;/p&gt;&#xA;&lt;p&gt;注意 目录中 有一个 .git的隐藏目录 ，它属于版本库,不算工作区。&lt;/p&gt;&#xA;&lt;h2 id=&#34;暂存区&#34;&gt;暂存区&#xA;&lt;/h2&gt;&lt;p&gt;Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD&lt;/p&gt;&#xA;&lt;p&gt;分支和HEAD以后再讲。&lt;/p&gt;&#xA;&lt;p&gt;前面说了往git仓库中加文件需要两步走，第一步add 第二步 commit,其实这里：第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；&lt;/p&gt;&#xA;&lt;p&gt;第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。&lt;/p&gt;&#xA;&lt;p&gt;因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以，现在，git commit就是往master分支上提交更改。&lt;/p&gt;&#xA;&lt;p&gt;你可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。&lt;/p&gt;&#xA;&lt;p&gt;此时我们编辑下 redeme.txt文件，再新建一个 LICENSE 文件。&lt;/p&gt;&#xA;&lt;p&gt;git status 查看状态&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git statusOn branch masterChanges not staged for commit:  (use &amp;#34;git add &amp;amp;lt;file&amp;amp;gt;...&amp;#34; to update what will be committed)  (use &amp;#34;git checkout -- &amp;amp;lt;file&amp;amp;gt;...&amp;#34; to discard changes in working directory)&#x9;modified:   readme.txtUntracked files:  (use &amp;#34;git add &amp;amp;lt;file&amp;amp;gt;...&amp;#34; to include in what will be committed)&#x9;LICENSEno changes added to commit (use &amp;#34;git add&amp;#34; and/or &amp;#34;git commit -a&amp;#34;)&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Git非常清楚地告诉我们，readme.txt被修改了，而LICENSE还从来没有被添加过，所以它的状态是Untracked。&lt;/p&gt;&#xA;&lt;p&gt;现在，使用两次命令git add，把readme.txt和LICENSE都添加后，用git status再查看一下：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git statusOn branch masterChanges to be committed:  (use &amp;#34;git reset HEAD &amp;amp;lt;file&amp;amp;gt;...&amp;#34; to unstage)&#x9;new file:   LICENSE&#x9;modified:   readme.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以，git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git commit -m &amp;#34;understand how stage works&amp;#34;[master e43a48b] understand how stage works 2 files changed, 2 insertions(+) create mode 100644 LICENSE&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git statusOn branch masternothing to commit, working tree clean&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;小结-2&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么&lt;/p&gt;&#xA;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;#%e7%ae%a1%e7%90%86%e4%bf%ae%e6%94%b9&#34; &gt;&lt;/a&gt;管理修改&#xA;git 管理的是修改本身，而不是文件。这也是git的特色之一。&lt;/p&gt;&#xA;&lt;p&gt;假如你修改了一次 readme.txt add了 一次 。然后又修改了一次 readme.txt，再提交。&lt;/p&gt;&#xA;&lt;p&gt;此时 执行 git status,你会发现第二次的修改没有被提交。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;第一次修改 -&amp;gt; git add -&amp;gt; 第二次修改 -&amp;gt; git commit.你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。&lt;/p&gt;&#xA;&lt;p&gt;提交后，用git diff HEAD – readme.txt命令可以查看工作区和版本库里面最新版本的区别：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files.&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那怎么提交第二次修改呢？你可以继续git add再git commit，也可以别着急提交第一次修改，先git add第二次修改，再git commit，就相当于把两次修改合并后一块提交了：&lt;/p&gt;&#xA;&lt;p&gt;第一次修改 -&amp;gt; git add -&amp;gt; 第二次修改 -&amp;gt; git add -&amp;gt; git commit&lt;/p&gt;&#xA;&lt;h2 id=&#34;小结-3&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;理解了Git是如何跟踪修改的，每次修改，如果不用git add到暂存区，那就不会加入到commit中。&lt;/p&gt;&#xA;&lt;p&gt;#撤销修改&lt;/p&gt;&#xA;&lt;p&gt;万一我提交的东西里面有错误内容，可以后悔吗？可以！&lt;/p&gt;&#xA;&lt;h2 id=&#34;丢弃工作区修改&#34;&gt;丢弃工作区修改&#xA;&lt;/h2&gt;&lt;p&gt;丢弃工作区的修改 ,恢复到上次提交时候的内容&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1git checkout -- readme.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;命令git checkout – readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，这里有两种情况：&lt;/p&gt;&#xA;&lt;p&gt;一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；&lt;/p&gt;&#xA;&lt;p&gt;一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。&lt;/p&gt;&#xA;&lt;p&gt;总之，就是让这个文件回到最近一次git commit或git add时的状态。&lt;/p&gt;&#xA;&lt;h2 id=&#34;还原暂存区的修改&#34;&gt;还原暂存区的修改&#xA;&lt;/h2&gt;&lt;p&gt;执行了 git add 还没有 commit 的修改也能撤销&lt;/p&gt;&#xA;&lt;p&gt;Git同样告诉我们，用命令git reset HEAD &amp;lt;file&amp;gt;可以把暂存区的修改撤销掉（unstage），重新放回工作区：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git reset HEAD readme.txtUnstaged changes after reset:M&#x9;readme.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。&lt;/p&gt;&#xA;&lt;p&gt;现在用git status查看一下，现在暂存区是干净的，工作区有修改.&lt;/p&gt;&#xA;&lt;p&gt;再 git checkout – readme.txt  工作区修改也还原了&lt;/p&gt;&#xA;&lt;h2 id=&#34;小结-4&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout – file。&lt;/p&gt;&#xA;&lt;p&gt;场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD &amp;lt;file&amp;gt;，就回到了场景1，第二步按场景1操作。&lt;/p&gt;&#xA;&lt;p&gt;场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。&lt;/p&gt;&#xA;&lt;p&gt;&lt;a class=&#34;link&#34; href=&#34;#%e5%88%a0%e9%99%a4%e6%96%87%e4%bb%b6&#34; &gt;&lt;/a&gt;删除文件&#xA;假如我已经提交的文件，我本地给删除了。如何git库中也进行删除呢？&lt;/p&gt;&#xA;&lt;p&gt;在Git中，删除也是一个修改操作，我们实战一下，先添加一个新文件test.txt到Git并且提交：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git add test.txt$ git commit -m &amp;#34;add test.txt&amp;#34;[master b84166e] add test.txt 1 file changed, 1 insertion(+) create mode 100644 test.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一般情况下，你通常直接在文件管理器中把没用的文件删了，或者用rm命令删了：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ rm test.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这个时候，Git知道你删除了文件，因此，工作区和版本库就不一致了，git status命令会立刻告诉你哪些文件被删除了：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git statusOn branch masterChanges not staged for commit:  (use &amp;#34;git add/rm &amp;amp;lt;file&amp;amp;gt;...&amp;#34; to update what will be committed)  (use &amp;#34;git checkout -- &amp;amp;lt;file&amp;amp;gt;...&amp;#34; to discard changes in working directory)&#x9;deleted:    test.txtno changes added to commit (use &amp;#34;git add&amp;#34; and/or &amp;#34;git commit -a&amp;#34;)&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;现在你有两个选择，一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;$ git rm test.txtrm &amp;#39;test.txt&amp;#39;$ git commit -m &amp;#34;remove test.txt&amp;#34;[master d46f35e] remove test.txt 1 file changed, 1 deletion(-) delete mode 100644 test.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;1git checkout -- test.txt&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;ul&gt;&#xA;&lt;li&gt;git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;从来没有被添加到版本库就被删除的文件，是无法恢复的！&lt;/p&gt;&#xA;&lt;h2 id=&#34;小结-5&#34;&gt;小结&#xA;&lt;/h2&gt;&lt;p&gt;命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>版本管理 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link><description>Recent content in 版本管理 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 13 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/index.xml" rel="self" type="application/rss+xml"/><item><title>git系列之时光穿梭</title><link>https://jasper-nan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</link><pubDate>Tue, 13 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-13-git系列之时光穿梭/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="小结"&gt;小结
+&lt;/h2&gt;&lt;p&gt;要随时掌握工作区的状态，使用git status命令。&lt;/p&gt;
+&lt;p&gt;如果git status告诉你有文件被修改过，用git diff可以查看修改内容。&lt;/p&gt;
+&lt;p&gt;版本回退 git 每次 commit 都会产生一个 版本 commit 编号&lt;/p&gt;
+&lt;p&gt;查看可以使用 git log 命令&lt;/p&gt;
+&lt;p&gt;需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。&lt;/p&gt;
+&lt;p&gt;好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？&lt;/p&gt;
+&lt;p&gt;首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。&lt;/p&gt;
+&lt;p&gt;现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git reset --hard HEAD^HEAD is now at e475afc add distributed
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看文件可以发现确实已经回到了上个版本提交的内容。&lt;/p&gt;
+&lt;p&gt;此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？&lt;/p&gt;
+&lt;p&gt;还是有办法 。再学两个命令：&lt;/p&gt;
+&lt;p&gt;git reflog 查看之前执行的每个命令。找到对应的 commit log&lt;/p&gt;
+&lt;p&gt;然后执行命令 git reset –hard commit_id&lt;/p&gt;
+&lt;p&gt;即可恢复到指定提交版本了。&lt;/p&gt;
+&lt;h2 id="小结-1"&gt;小结
+&lt;/h2&gt;&lt;p&gt;HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。&lt;/p&gt;
+&lt;p&gt;穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。&lt;/p&gt;
+&lt;p&gt;要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。&lt;/p&gt;
+&lt;p&gt;工作区和暂存区 核心知识点来了。&lt;/p&gt;
+&lt;p&gt;git学的好不好最要紧的就是理解这个暂存区。&lt;/p&gt;
+&lt;h2 id="工作区"&gt;工作区
+&lt;/h2&gt;&lt;p&gt;首先来看看什么是工作区。&lt;/p&gt;
+&lt;p&gt;我们在某个空文件夹内执行了 git init 命令。此文件夹以及其子文件夹就都属于工作区。&lt;/p&gt;
+&lt;p&gt;注意 目录中 有一个 .git的隐藏目录 ，它属于版本库,不算工作区。&lt;/p&gt;
+&lt;h2 id="暂存区"&gt;暂存区
+&lt;/h2&gt;&lt;p&gt;Git的版本库里存了很多东西，其中最重要的就是称为stage（或者叫index）的暂存区，还有Git为我们自动创建的第一个分支master，以及指向master的一个指针叫HEAD&lt;/p&gt;
+&lt;p&gt;分支和HEAD以后再讲。&lt;/p&gt;
+&lt;p&gt;前面说了往git仓库中加文件需要两步走，第一步add 第二步 commit,其实这里：第一步是用git add把文件添加进去，实际上就是把文件修改添加到暂存区；&lt;/p&gt;
+&lt;p&gt;第二步是用git commit提交更改，实际上就是把暂存区的所有内容提交到当前分支。&lt;/p&gt;
+&lt;p&gt;因为我们创建Git版本库时，Git自动为我们创建了唯一一个master分支，所以，现在，git commit就是往master分支上提交更改。&lt;/p&gt;
+&lt;p&gt;你可以简单理解为，需要提交的文件修改通通放到暂存区，然后，一次性提交暂存区的所有修改。&lt;/p&gt;
+&lt;p&gt;此时我们编辑下 redeme.txt文件，再新建一个 LICENSE 文件。&lt;/p&gt;
+&lt;p&gt;git status 查看状态&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git statusOn branch masterChanges not staged for commit: (use &amp;quot;git add &amp;amp;lt;file&amp;amp;gt;...&amp;quot; to update what will be committed) (use &amp;quot;git checkout -- &amp;amp;lt;file&amp;amp;gt;...&amp;quot; to discard changes in working directory)	modified: readme.txtUntracked files: (use &amp;quot;git add &amp;amp;lt;file&amp;amp;gt;...&amp;quot; to include in what will be committed)	LICENSEno changes added to commit (use &amp;quot;git add&amp;quot; and/or &amp;quot;git commit -a&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Git非常清楚地告诉我们，readme.txt被修改了，而LICENSE还从来没有被添加过，所以它的状态是Untracked。&lt;/p&gt;
+&lt;p&gt;现在，使用两次命令git add，把readme.txt和LICENSE都添加后，用git status再查看一下：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git statusOn branch masterChanges to be committed: (use &amp;quot;git reset HEAD &amp;amp;lt;file&amp;amp;gt;...&amp;quot; to unstage)	new file: LICENSE	modified: readme.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;所以，git add命令实际上就是把要提交的所有修改放到暂存区（Stage），然后，执行git commit就可以一次性把暂存区的所有修改提交到分支。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git commit -m &amp;quot;understand how stage works&amp;quot;[master e43a48b] understand how stage works 2 files changed, 2 insertions(+) create mode 100644 LICENSE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;一旦提交后，如果你又没有对工作区做任何修改，那么工作区就是“干净”的：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git statusOn branch masternothing to commit, working tree clean
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="小结-2"&gt;小结
+&lt;/h2&gt;&lt;p&gt;暂存区是Git非常重要的概念，弄明白了暂存区，就弄明白了Git的很多操作到底干了什么&lt;/p&gt;
+&lt;p&gt;管理修改 git 管理的是修改本身，而不是文件。这也是git的特色之一。&lt;/p&gt;
+&lt;p&gt;假如你修改了一次 readme.txt add了 一次 。然后又修改了一次 readme.txt，再提交。&lt;/p&gt;
+&lt;p&gt;此时 执行 git status,你会发现第二次的修改没有被提交。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。提交后，用git diff HEAD -- readme.txt命令可以查看工作区和版本库里面最新版本的区别：
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;第一次修改 -&amp;gt; git add -&amp;gt; 第二次修改 -&amp;gt; git commit.你看，我们前面讲了，Git管理的是修改，当你用git add命令后，在工作区的第一次修改被放入暂存区，准备提交，但是，在工作区的第二次修改并没有放入暂存区，所以，git commit只负责把暂存区的修改提交了，也就是第一次的修改被提交了，第二次的修改不会被提交。&lt;/p&gt;
+&lt;p&gt;提交后，用git diff HEAD – readme.txt命令可以查看工作区和版本库里面最新版本的区别：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git diff HEAD -- readme.txt diff --git a/readme.txt b/readme.txtindex 76d770f..a9c5755 100644--- a/readme.txt+++ b/readme.txt@@ -1,4 +1,4 @@ Git is a distributed version control system. Git is free software distributed under the GPL. Git has a mutable index called stage.-Git tracks changes.+Git tracks changes of files.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;那怎么提交第二次修改呢？你可以继续git add再git commit，也可以别着急提交第一次修改，先git add第二次修改，再git commit，就相当于把两次修改合并后一块提交了：&lt;/p&gt;
+&lt;p&gt;第一次修改 -&amp;gt; git add -&amp;gt; 第二次修改 -&amp;gt; git add -&amp;gt; git commit&lt;/p&gt;
+&lt;h2 id="小结-3"&gt;小结
+&lt;/h2&gt;&lt;p&gt;理解了Git是如何跟踪修改的，每次修改，如果不用git add到暂存区，那就不会加入到commit中。&lt;/p&gt;
+&lt;p&gt;#撤销修改&lt;/p&gt;
+&lt;p&gt;万一我提交的东西里面有错误内容，可以后悔吗？可以！&lt;/p&gt;
+&lt;h2 id="丢弃工作区修改"&gt;丢弃工作区修改
+&lt;/h2&gt;&lt;p&gt;丢弃工作区的修改 ,恢复到上次提交时候的内容&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1git checkout -- readme.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;命令git checkout – readme.txt意思就是，把readme.txt文件在工作区的修改全部撤销，这里有两种情况：&lt;/p&gt;
+&lt;p&gt;一种是readme.txt自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态；&lt;/p&gt;
+&lt;p&gt;一种是readme.txt已经添加到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。&lt;/p&gt;
+&lt;p&gt;总之，就是让这个文件回到最近一次git commit或git add时的状态。&lt;/p&gt;
+&lt;h2 id="还原暂存区的修改"&gt;还原暂存区的修改
+&lt;/h2&gt;&lt;p&gt;执行了 git add 还没有 commit 的修改也能撤销&lt;/p&gt;
+&lt;p&gt;Git同样告诉我们，用命令git reset HEAD &lt;!-- raw HTML omitted --&gt;可以把暂存区的修改撤销掉（unstage），重新放回工作区：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git reset HEAD readme.txtUnstaged changes after reset:M	readme.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。&lt;/p&gt;
+&lt;p&gt;现在用git status查看一下，现在暂存区是干净的，工作区有修改.&lt;/p&gt;
+&lt;p&gt;再 git checkout – readme.txt 工作区修改也还原了&lt;/p&gt;
+&lt;h2 id="小结-4"&gt;小结
+&lt;/h2&gt;&lt;p&gt;场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout – file。&lt;/p&gt;
+&lt;p&gt;场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD &lt;!-- raw HTML omitted --&gt;，就回到了场景1，第二步按场景1操作。&lt;/p&gt;
+&lt;p&gt;场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。&lt;/p&gt;
+&lt;p&gt;删除文件 假如我已经提交的文件，我本地给删除了。如何git库中也进行删除呢？&lt;/p&gt;
+&lt;p&gt;在Git中，删除也是一个修改操作，我们实战一下，先添加一个新文件test.txt到Git并且提交：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git add test.txt$ git commit -m &amp;quot;add test.txt&amp;quot;[master b84166e] add test.txt 1 file changed, 1 insertion(+) create mode 100644 test.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;一般情况下，你通常直接在文件管理器中把没用的文件删了，或者用rm命令删了：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ rm test.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;这个时候，Git知道你删除了文件，因此，工作区和版本库就不一致了，git status命令会立刻告诉你哪些文件被删除了：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git statusOn branch masterChanges not staged for commit: (use &amp;quot;git add/rm &amp;amp;lt;file&amp;amp;gt;...&amp;quot; to update what will be committed) (use &amp;quot;git checkout -- &amp;amp;lt;file&amp;amp;gt;...&amp;quot; to discard changes in working directory)	deleted: test.txtno changes added to commit (use &amp;quot;git add&amp;quot; and/or &amp;quot;git commit -a&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;现在你有两个选择，一是确实要从版本库中删除该文件，那就用命令git rm删掉，并且git commit：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git rm test.txtrm 'test.txt'$ git commit -m &amp;quot;remove test.txt&amp;quot;[master d46f35e] remove test.txt 1 file changed, 1 deletion(-) delete mode 100644 test.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;另一种情况是删错了，因为版本库里还有呢，所以可以很轻松地把误删的文件恢复到最新版本：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1git checkout -- test.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;git checkout其实是用版本库里的版本替换工作区的版本，无论工作区是修改还是删除，都可以“一键还原”。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;从来没有被添加到版本库就被删除的文件，是无法恢复的！&lt;/p&gt;
+&lt;h2 id="小结-5"&gt;小结
+&lt;/h2&gt;&lt;p&gt;命令git rm用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。&lt;/p&gt;</description></item></channel></rss>

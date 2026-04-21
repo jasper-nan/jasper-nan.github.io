@@ -1,15 +1,180 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>Linux on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/tags/linux/</link>
-        <description>Recent content in Linux on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>Linux 进程管理实战：从查找、过滤到终止</title>
-            <link>https://jonnynan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</link>
-            <pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;一查找进程ps&#34;&gt;一、查找进程：ps&#xA;&lt;/h2&gt;&lt;p&gt;&lt;code&gt;ps&lt;/code&gt;（Process Status）是最常用的进程查看命令。&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 列出所有进程的详细信息&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出字段说明：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;字段&lt;/th&gt;&#xA;          &lt;th&gt;含义&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;UID&lt;/td&gt;&#xA;          &lt;td&gt;进程所属用户&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;PID&lt;/td&gt;&#xA;          &lt;td&gt;进程号&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;PPID&lt;/td&gt;&#xA;          &lt;td&gt;父进程号&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;STIME&lt;/td&gt;&#xA;          &lt;td&gt;启动时间&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;CMD&lt;/td&gt;&#xA;          &lt;td&gt;启动命令&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;常用组合&#34;&gt;常用组合&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看所有进程（BSD 风格，更直观）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 按内存使用排序（Top 10）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux --sort&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;-%mem &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; head -10&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 按 CPU 使用排序（Top 10）&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux --sort&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;-%cpu &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; head -10&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;二过滤进程grep&#34;&gt;二、过滤进程：grep&#xA;&lt;/h2&gt;&lt;p&gt;在进程列表中精确匹配目标：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;关键字&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;⚠️ 注意：&lt;code&gt;grep&lt;/code&gt; 本身也会出现在结果中，因为命令行参数中包含&amp;quot;关键字&amp;quot;。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;p&gt;&lt;strong&gt;过滤掉 grep 自身：&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;三提取进程号awk&#34;&gt;三、提取进程号：awk&#xA;&lt;/h2&gt;&lt;p&gt;拿到 PID 后经常需要做进一步操作（比如 kill），用 &lt;code&gt;awk&lt;/code&gt; 提取：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;awk &#39;{print $2}&#39;&lt;/code&gt;：提取每行的第二个字段，即 PID&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;四终止进程kill&#34;&gt;四、终止进程：kill&#xA;&lt;/h2&gt;&lt;h3 id=&#34;优雅终止&#34;&gt;优雅终止&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; PID&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;发送 &lt;code&gt;SIGTERM&lt;/code&gt;（15）信号，进程可以自行清理资源后退出。&lt;/p&gt;&#xA;&lt;h3 id=&#34;强制终止&#34;&gt;强制终止&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 PID&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;发送 &lt;code&gt;SIGKILL&lt;/code&gt;（9）信号，进程无法捕获，立即被系统终止。&lt;strong&gt;慎用&lt;/strong&gt;，可能导致数据丢失。&lt;/p&gt;&#xA;&lt;h3 id=&#34;终止一组进程&#34;&gt;终止一组进程&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 终止所有 java 进程&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 &lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;java&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;五程序后台运行nohup&#34;&gt;五、程序后台运行：nohup&#xA;&lt;/h2&gt;&lt;p&gt;SSH 登录服务器启动程序后，关闭终端进程就死了。用 &lt;code&gt;nohup&lt;/code&gt; 解决：&lt;/p&gt;&#xA;&lt;h3 id=&#34;基本格式&#34;&gt;基本格式&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup &amp;lt;command&amp;gt; &amp;gt; output.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;拆解说明：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;部分&lt;/th&gt;&#xA;          &lt;th&gt;作用&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;nohup&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;防止 SIGHUP 信号杀死进程&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;&amp;gt; output.log&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;标准输出重定向到日志文件&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;2&amp;gt;&amp;amp;1&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;标准错误合并到标准输出&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;code&gt;&amp;amp;&lt;/code&gt;&lt;/td&gt;&#xA;          &lt;td&gt;放入后台运行&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;h3 id=&#34;实际示例&#34;&gt;实际示例&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行 MySQL&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup mysql --user&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;root --password&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;my_pass &amp;gt; mysql.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行 Python 脚本&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup python3 app.py &amp;gt; app.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行 Java 应用&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup java -jar myapp.jar &amp;gt; myapp.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看-nohup-启动的进程&#34;&gt;查看 nohup 启动的进程&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps aux &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;app.py&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;查看输出日志&#34;&gt;查看输出日志&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tail -f output.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;h2 id=&#34;六日志分析goaccess&#34;&gt;六、日志分析：Goaccess&#xA;&lt;/h2&gt;&lt;p&gt;用 Goaccess 生成 Nginx 访问日志的可视化报告：&lt;/p&gt;&#xA;&lt;h3 id=&#34;实时-html-报告&#34;&gt;实时 HTML 报告&#xA;&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;goaccess /var/log/nginx/access.log &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -o /usr/local/nginx/html/report.html &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --real-time-html &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --time-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%H:%M:%S&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --date-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;%d/%b/%Y&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --log-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;COMBINED&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;自定义日志格式&#34;&gt;自定义日志格式&#xA;&lt;/h3&gt;&lt;p&gt;如果你的 Nginx 日志格式不是标准 COMBINED，可以用正则自定义：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;goaccess access.log &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -o /usr/local/nginx/html/report.html &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --log-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;~h{, } %^[%d:%t %^] &amp;#34;%r&amp;#34; %s %b &amp;#34;%R&amp;#34; &amp;#34;%u&amp;#34;&amp;#39;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --date-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;%d/%b/%Y &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  --time-format&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;%T&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;code&gt;~h{, }&lt;/code&gt;：匹配可选协议头&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;%d:%t&lt;/code&gt;：自定义日期时间解析&lt;/li&gt;&#xA;&lt;li&gt;&lt;code&gt;&amp;quot;%r&amp;quot;&lt;/code&gt;：匹配原始请求行&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;-速查表&#34;&gt;📋 速查表&#xA;&lt;/h2&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查找进程&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;关键词&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 提取 PID&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;ps -ef &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;关键词&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; grep -v grep &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; awk &lt;span class=&#34;s1&#34;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 终止进程&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; PID          &lt;span class=&#34;c1&#34;&gt;# 优雅终止&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;kill&lt;/span&gt; -9 PID       &lt;span class=&#34;c1&#34;&gt;# 强制终止&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 后台运行&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;nohup &lt;span class=&#34;nb&#34;&gt;command&lt;/span&gt; &amp;gt; output.log 2&amp;gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 查看日志&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;tail -f output.log&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;&#xA;&lt;p&gt;&lt;em&gt;希望这篇文章对你有帮助！如果觉得有用，欢迎分享给需要的朋友。&lt;/em&gt;&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Linux on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/linux/</link><description>Recent content in Linux on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Wed, 25 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Linux 进程管理实战：从查找、过滤到终止</title><link>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一查找进程ps"&gt;一、查找进程：ps
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;ps&lt;/code&gt;（Process Status）是最常用的进程查看命令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 列出所有进程的详细信息
+ps -ef
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出字段说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;含义&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;UID&lt;/td&gt;
+ &lt;td&gt;进程所属用户&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PID&lt;/td&gt;
+ &lt;td&gt;进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PPID&lt;/td&gt;
+ &lt;td&gt;父进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;STIME&lt;/td&gt;
+ &lt;td&gt;启动时间&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;CMD&lt;/td&gt;
+ &lt;td&gt;启动命令&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="常用组合"&gt;常用组合
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 查看所有进程（BSD 风格，更直观）
+ps aux
+
+# 按内存使用排序（Top 10）
+ps aux --sort=-%mem | head -10
+
+# 按 CPU 使用排序（Top 10）
+ps aux --sort=-%cpu | head -10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二过滤进程grep"&gt;二、过滤进程：grep
+&lt;/h2&gt;&lt;p&gt;在进程列表中精确匹配目标：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;关键字&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;⚠️ 注意：&lt;code&gt;grep&lt;/code&gt; 本身也会出现在结果中，因为命令行参数中包含&amp;quot;关键字&amp;quot;。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;过滤掉 grep 自身：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三提取进程号awk"&gt;三、提取进程号：awk
+&lt;/h2&gt;&lt;p&gt;拿到 PID 后经常需要做进一步操作（比如 kill），用 &lt;code&gt;awk&lt;/code&gt; 提取：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep | awk '{print $2}'
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;awk '{print $2}'&lt;/code&gt;：提取每行的第二个字段，即 PID&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="四终止进程kill"&gt;四、终止进程：kill
+&lt;/h2&gt;&lt;h3 id="优雅终止"&gt;优雅终止
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;kill PID
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;发送 &lt;code&gt;SIGTERM&lt;/code&gt;（15）信号，进程可以自行清理资源后退出。&lt;/p&gt;
+&lt;h3 id="强制终止"&gt;强制终止
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;kill -9 PID
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;发送 &lt;code&gt;SIGKILL&lt;/code&gt;（9）信号，进程无法捕获，立即被系统终止。&lt;strong&gt;慎用&lt;/strong&gt; ，可能导致数据丢失。&lt;/p&gt;
+&lt;h3 id="终止一组进程"&gt;终止一组进程
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 终止所有 java 进程
+kill -9 $(ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep | awk '{print $2}')
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="五程序后台运行nohup"&gt;五、程序后台运行：nohup
+&lt;/h2&gt;&lt;p&gt;SSH 登录服务器启动程序后，关闭终端进程就死了。用 &lt;code&gt;nohup&lt;/code&gt; 解决：&lt;/p&gt;
+&lt;h3 id="基本格式"&gt;基本格式
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;nohup &amp;lt;command&amp;gt; &amp;gt; output.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;拆解说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;部分&lt;/th&gt;
+ &lt;th&gt;作用&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;nohup&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;防止 SIGHUP 信号杀死进程&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;&amp;gt; output.log&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;标准输出重定向到日志文件&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;2&amp;gt;&amp;amp;1&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;标准错误合并到标准输出&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;&amp;amp;&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;放入后台运行&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="实际示例"&gt;实际示例
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;# 后台运行 MySQL
+nohup mysql --user=root --password=my_pass &amp;gt; mysql.log 2&amp;gt;&amp;amp;1 &amp;amp;
+
+# 后台运行 Python 脚本
+nohup python3 app.py &amp;gt; app.log 2&amp;gt;&amp;amp;1 &amp;amp;
+
+# 后台运行 Java 应用
+nohup java -jar myapp.jar &amp;gt; myapp.log 2&amp;gt;&amp;amp;1 &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="查看-nohup-启动的进程"&gt;查看 nohup 启动的进程
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;ps aux | grep &amp;quot;app.py&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="查看输出日志"&gt;查看输出日志
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;tail -f output.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="六日志分析goaccess"&gt;六、日志分析：Goaccess
+&lt;/h2&gt;&lt;p&gt;用 Goaccess 生成 Nginx 访问日志的可视化报告：&lt;/p&gt;
+&lt;h3 id="实时-html-报告"&gt;实时 HTML 报告
+&lt;/h3&gt;&lt;pre&gt;&lt;code&gt;goaccess /var/log/nginx/access.log \
+ -o /usr/local/nginx/html/report.html \
+ --real-time-html \
+ --time-format='%H:%M:%S' \
+ --date-format='%d/%b/%Y' \
+ --log-format=COMBINED
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="自定义日志格式"&gt;自定义日志格式
+&lt;/h3&gt;&lt;p&gt;如果你的 Nginx 日志格式不是标准 COMBINED，可以用正则自定义：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;goaccess access.log \
+ -o /usr/local/nginx/html/report.html \
+ --log-format='~h{, } %^[%d:%t %^] &amp;quot;%r&amp;quot; %s %b &amp;quot;%R&amp;quot; &amp;quot;%u&amp;quot;' \
+ --date-format=%d/%b/%Y \
+ --time-format=%T
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;~h{, }&lt;/code&gt;：匹配可选协议头&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;%d:%t&lt;/code&gt;：自定义日期时间解析&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;quot;%r&amp;quot;&lt;/code&gt;：匹配原始请求行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="-速查表"&gt;📋 速查表
+&lt;/h2&gt;&lt;pre&gt;&lt;code&gt;# 查找进程
+ps -ef | grep &amp;quot;关键词&amp;quot; | grep -v grep
+
+# 提取 PID
+ps -ef | grep &amp;quot;关键词&amp;quot; | grep -v grep | awk '{print $2}'
+
+# 终止进程
+kill PID # 优雅终止
+kill -9 PID # 强制终止
+
+# 后台运行
+nohup command &amp;gt; output.log 2&amp;gt;&amp;amp;1 &amp;amp;
+
+# 查看日志
+tail -f output.log
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;希望这篇文章对你有帮助！如果觉得有用，欢迎分享给需要的朋友。&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

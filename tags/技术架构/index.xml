@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>技术架构 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/</link><description>Recent content in 技术架构 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 开发实战笔记：技术选型与架构思考</title><link>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</guid><description>&lt;h2 id="前言为什么-ai-agent-值得关注"&gt;前言：为什么 AI Agent 值得关注
+&lt;/h2&gt;&lt;p&gt;最近公司计划在总部启动一个 AI Agent 相关的开发项目，我作为参与者之一，需要提前做技术调研和储备。&lt;/p&gt;
+&lt;p&gt;说实话，半年前我对 AI Agent 的理解还停留在&amp;quot;套壳聊天机器人&amp;quot;的层面。但深入研究之后发现，Agent 和传统的&amp;quot;调 API 返回结果&amp;quot;完全不是一回事——它关乎&lt;strong&gt;规划、记忆、工具调用、多步推理&lt;/strong&gt; ，是让 AI 从&amp;quot;能对话&amp;quot;进化到&amp;quot;能干活&amp;quot;的关键一步。&lt;/p&gt;
+&lt;p&gt;这篇文章记录了我调研过程中对主流技术框架的理解和对比，希望能给同样在关注这个方向的朋友一些参考。不保证全对，但保证真实。&lt;/p&gt;
+&lt;h2 id="一什么是-ai-agent"&gt;一、什么是 AI Agent？
+&lt;/h2&gt;&lt;p&gt;先简单定义一下：&lt;strong&gt;AI Agent = 大模型 + 规划能力 + 工具调用 + 记忆系统&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通的大模型调用是：&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;用户提问 → 模型回答 → 结束&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;Agent 是：&lt;/p&gt;
+
+ &lt;blockquote&gt;
+ &lt;p&gt;用户提出目标 → Agent 拆解任务 → 选择工具 → 执行操作 → 观察结果 → 调整策略 → 返回最终结果&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;p&gt;区别在于 Agent 有&amp;quot;自主性&amp;quot;——它不只是回答问题，而是&lt;strong&gt;完成任务&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;举个具体例子：你说&amp;quot;帮我查一下明天北京到上海的机票并订最便宜的&amp;quot;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;普通 ChatBot&lt;/strong&gt; ：只能告诉你怎么查，或者给你一个链接&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Agent&lt;/strong&gt; ：自己去调用航班查询 API → 筛选结果 → 调用订票接口 → 返回确认信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是 Agent 的核心价值：&lt;strong&gt;把自然语言意图转化为具体的行动序列&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h2 id="二核心技术栈拆解"&gt;二、核心技术栈拆解
+&lt;/h2&gt;&lt;p&gt;开发一个 Agent，本质上要解决四个问题：&lt;/p&gt;
+&lt;h3 id="21-大模型大脑"&gt;2.1 大模型（大脑）
+&lt;/h3&gt;&lt;p&gt;模型是 Agent 的推理引擎，当前（2026年3月）主流选择：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;模型&lt;/th&gt;
+ &lt;th&gt;特点&lt;/th&gt;
+ &lt;th&gt;适用场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GPT-5.4&lt;/td&gt;
+ &lt;td&gt;OpenAI 最新旗舰，原生计算机操控，105万 token 上下文&lt;/td&gt;
+ &lt;td&gt;对质量要求最高的企业级应用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Claude Opus 4.6&lt;/td&gt;
+ &lt;td&gt;SWE-Bench 领先，100万 token 上下文，多 Agent 并行协作&lt;/td&gt;
+ &lt;td&gt;复杂代码工程、长文档处理&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Gemini 3.1 Pro&lt;/td&gt;
+ &lt;td&gt;综合基准最强，原生多模态，Google 生态深度集成，性价比高&lt;/td&gt;
+ &lt;td&gt;多模态场景、Google Workspace 联动&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;DeepSeek V4&lt;/td&gt;
+ &lt;td&gt;开源可私有化部署，MoE 架构，推理能力强&lt;/td&gt;
+ &lt;td&gt;数据安全要求高、成本敏感&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GLM-5&lt;/td&gt;
+ &lt;td&gt;智谱旗舰，744B MoE，中文能力和 Agent 能力突出&lt;/td&gt;
+ &lt;td&gt;中文场景、国内合规要求&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Qwen 3.5&lt;/td&gt;
+ &lt;td&gt;首个原生多模态开源权重模型，Agent 导向设计&lt;/td&gt;
+ &lt;td&gt;私有化部署、定制微调&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Llama 4&lt;/td&gt;
+ &lt;td&gt;Meta 开源，Agent 能力原生支持，完全自主部署&lt;/td&gt;
+ &lt;td&gt;对供应商零依赖的开源方案&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;选型建议&lt;/strong&gt; ：如果是企业内部使用，优先考虑支持私有化部署的模型（DeepSeek V4、Qwen 3.5、Llama 4），数据不出域更安全。如果是对外产品，GPT-5.4、Claude 4.6 和 Gemini 3.1 Pro 是当前的三强。&lt;/p&gt;
+&lt;p&gt;值得一提的是，2026年3月 OpenAI 刚发布了 GPT-5.4 mini 和 nano，针对编码和子 Agent 场景优化，成本更低，适合处理简单任务的 Agent 节点。&lt;/p&gt;
+&lt;h3 id="22-工具调用tool-use--function-calling"&gt;2.2 工具调用（Tool Use / Function Calling）
+&lt;/h3&gt;&lt;p&gt;这是 Agent 最核心的能力——让模型能调用外部工具。主流实现方式：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;1. 原生 Function Calling&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;OpenAI、Anthropic、Google 都在模型 API 层面支持了 Function Calling。你只需要定义一个 JSON Schema 描述工具的输入输出格式，模型会自动判断何时调用、传什么参数。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+ &amp;quot;name&amp;quot;: &amp;quot;search_flights&amp;quot;,
+ &amp;quot;description&amp;quot;: &amp;quot;搜索航班信息&amp;quot;,
+ &amp;quot;parameters&amp;quot;: {
+ &amp;quot;departure&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;出发城市&amp;quot;},
+ &amp;quot;destination&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;目的城市&amp;quot;},
+ &amp;quot;date&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;出发日期&amp;quot;}
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;2. MCP（Model Context Protocol）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;这是 Anthropic 在 2024 年底推出的开放协议，如今已成为事实标准——截至 2026 年 3 月，MCP SDK 月下载量已达 &lt;strong&gt;9700 万次&lt;/strong&gt; ，生态中有 &lt;strong&gt;5800+ 个 MCP Server&lt;/strong&gt; ，已有 5 家以上主流 AI 厂商采纳。&lt;/p&gt;
+&lt;p&gt;MCP 定义了模型和外部工具/数据源之间的标准通信协议，类似于 AI 领域的 USB 接口。核心优势：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;标准化&lt;/strong&gt; ：一次接入，所有支持 MCP 的客户端/模型都能用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;生态丰富&lt;/strong&gt; ：5800+ 现成 Server 可直接使用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全可控&lt;/strong&gt; ：权限管理、沙箱隔离&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;如果你在做 Agent 开发，MCP 是必须深入研究的方向。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;3. ReAct 模式&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Reasoning + Acting。模型交替进行&amp;quot;思考&amp;quot;和&amp;quot;行动&amp;quot;：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Thought: 我需要先查询数据库获取订单信息
+Action: query_database(&amp;quot;SELECT * FROM orders WHERE id=123&amp;quot;)
+Observation: 返回订单数据...
+Thought: 根据订单数据，我需要计算退款金额
+Action: calculate_refund(order_data)
+Observation: 退款金额为 ¥299
+Thought: 现在可以给用户一个完整的回复了
+Answer: 您的退款金额为 ¥299，预计 3 个工作日到账。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="23-记忆系统memory"&gt;2.3 记忆系统（Memory）
+&lt;/h3&gt;&lt;p&gt;没有记忆的 Agent 就像金鱼，每次对话都要从头开始。记忆分为三层：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;层级&lt;/th&gt;
+ &lt;th&gt;作用&lt;/th&gt;
+ &lt;th&gt;实现方式&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;短期记忆&lt;/td&gt;
+ &lt;td&gt;当前对话上下文&lt;/td&gt;
+ &lt;td&gt;放在 prompt 中（各模型上下文已普遍达到百万级 token）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;中期记忆&lt;/td&gt;
+ &lt;td&gt;跨会话工作记忆&lt;/td&gt;
+ &lt;td&gt;向量数据库（Milvus、Chroma、Qdrant）+ 语义检索&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;长期记忆&lt;/td&gt;
+ &lt;td&gt;持久化知识/偏好&lt;/td&gt;
+ &lt;td&gt;文件系统 + 结构化存储（数据库、知识图谱）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;实践建议&lt;/strong&gt; ：得益于各模型上下文窗口大幅扩展（GPT-5.4 和 Claude 4.6 都支持百万级 token），短期记忆已不再是主要瓶颈。中期记忆用轻量级向量库足够；长期记忆看具体需求，不要过度设计。&lt;/p&gt;
+&lt;h3 id="24-规划与编排orchestration"&gt;2.4 规划与编排（Orchestration）
+&lt;/h3&gt;&lt;p&gt;当任务复杂到需要多步推理、条件分支、错误恢复时，就需要编排框架。这是 Agent 区别于简单&amp;quot;Tool + LLM&amp;quot;组合的关键。&lt;/p&gt;
+&lt;h2 id="三主流框架对比"&gt;三、主流框架对比
+&lt;/h2&gt;&lt;h3 id="31-编排框架orchestration"&gt;3.1 编排框架（Orchestration）
+&lt;/h3&gt;&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;框架&lt;/th&gt;
+ &lt;th&gt;语言&lt;/th&gt;
+ &lt;th&gt;特点&lt;/th&gt;
+ &lt;th&gt;适合场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;LangGraph&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Python/JS&lt;/td&gt;
+ &lt;td&gt;LangChain 团队出品，基于图的状态机模型，支持循环、分支、人工介入&lt;/td&gt;
+ &lt;td&gt;复杂多步骤工作流&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;CrewAI&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Python&lt;/td&gt;
+ &lt;td&gt;多 Agent 协作，角色+任务+团队组织方式&lt;/td&gt;
+ &lt;td&gt;多角色协作场景&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;AutoGen&lt;/strong&gt; （微软）&lt;/td&gt;
+ &lt;td&gt;Python&lt;/td&gt;
+ &lt;td&gt;多 Agent 对话式协作，支持人类参与&lt;/td&gt;
+ &lt;td&gt;多 Agent 讨论决策&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;OpenAI Agents SDK&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;Python&lt;/td&gt;
+ &lt;td&gt;OpenAI 官方，轻量，支持 Handoffs、Guardrails&lt;/td&gt;
+ &lt;td&gt;用 OpenAI 模型快速原型&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Dify&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;开源平台&lt;/td&gt;
+ &lt;td&gt;可视化编排 + RAG 引擎，低代码&lt;/td&gt;
+ &lt;td&gt;快速搭建 AI 应用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Coze（扣子）&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;字节出品&lt;/td&gt;
+ &lt;td&gt;可视化搭建，国内生态好&lt;/td&gt;
+ &lt;td&gt;国内用户快速搭建 Bot&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="32-我的选型思考"&gt;3.2 我的选型思考
+&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;底层能力&lt;/strong&gt; ：优先国产模型（合规），兼容 OpenAI 接口格式；工具调用采用 MCP 协议标准；向量数据库用 Milvus。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;编排层&lt;/strong&gt; ：单一任务流水线用 LangGraph；多角色协作用 CrewAI 或 AutoGen；快速原型用 Dify。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;基础设施&lt;/strong&gt; ：Docker 容器化、API Gateway 统一管理、完整的可观测性日志。&lt;/p&gt;
+&lt;h2 id="四踩坑预警"&gt;四、踩坑预警
+&lt;/h2&gt;&lt;h3 id="坑一模型幻觉导致工具调用错误"&gt;坑一：模型&amp;quot;幻觉&amp;quot;导致工具调用错误
+&lt;/h3&gt;&lt;p&gt;模型不是每次都能正确判断该调什么工具、传什么参数。工具多时容易&amp;quot;搞混&amp;quot;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：工具描述清晰简洁；同时暴露的工具不超过 10 个；关键操作加参数校验和人工确认。&lt;/p&gt;
+&lt;h3 id="坑二成本失控"&gt;坑二：成本失控
+&lt;/h3&gt;&lt;p&gt;Agent 多步推理意味着多次 API 调用，成本可能比普通对话高 5-10 倍。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：简单任务用小模型（GPT-5.4 mini、Gemini 3.1 Flash Lite）；缓存中间结果；设定最大步数上限防死循环。&lt;/p&gt;
+&lt;h3 id="坑三调试困难"&gt;坑三：调试困难
+&lt;/h3&gt;&lt;p&gt;Agent 行为不像传统程序那样确定，同样输入可能输出不同执行路径。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：记录完整推理链路日志；用 LangSmith 或自建可观测平台追踪；关键路径加断点和人工审批。&lt;/p&gt;
+&lt;h3 id="坑四上下文窗口管理"&gt;坑四：上下文窗口管理
+&lt;/h3&gt;&lt;p&gt;多步任务中工具返回结果和中间推理会快速膨胀。虽然各模型上下文已大幅扩展，但&amp;quot;能塞下&amp;quot;和&amp;quot;塞得高效&amp;quot;是两回事——上下文越长，模型越容易丢失关键信息。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;对策&lt;/strong&gt; ：中间结果做摘要压缩；长文档走外部存储；善用各模型的专长处理复杂输入。&lt;/p&gt;
+&lt;h2 id="五写在最后"&gt;五、写在最后
+&lt;/h2&gt;&lt;p&gt;AI Agent 领域仍处于快速迭代期，每月都有新框架、新协议、新模型出现。我的策略是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;先跑通最小闭环&lt;/strong&gt; ：不要一上来就搞多 Agent 协作，先用&amp;quot;模型 + Function Calling + 单一任务&amp;quot;跑通&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;关注标准协议&lt;/strong&gt; ：MCP 已成为事实标准，值得深入投入&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;可观测性优先&lt;/strong&gt; ：能观察才能优化，日志和追踪从第一天就设计好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全底线&lt;/strong&gt; ：Agent 能调用工具就能操作真实系统，权限控制和人工兜底必须有&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;接下来到了总部之后，我会把实际选型和开发中的踩坑记录持续更新，敬请关注。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;如果你也在做 AI Agent 相关的开发，欢迎交流探讨。技术选型没有银弹，适合自己业务场景的才是最好的。&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>
