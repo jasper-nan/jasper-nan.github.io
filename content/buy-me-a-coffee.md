@@ -8,11 +8,11 @@ date: 2026-04-21
 
 ## 支付宝
 
-![支付宝收款码](/alipay.jpg)
+<img src="/alipay.jpg" alt="支付宝收款码" width="300">
 
 ## 微信
 
-![微信收款码](/wechat.jpg)
+<img src="/wechat.jpg" alt="微信收款码" width="300">
 
 ---
 

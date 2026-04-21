@@ -40,5 +40,8 @@ theme = "hugo-theme-stack"
     weight = -60
 
 [markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
   [markup.highlight]
     noClasses = false
