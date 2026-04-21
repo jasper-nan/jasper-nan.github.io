@@ -1205,4 +1205,4 @@ tail -f output.log
 &lt;h2 id="小结"&gt;小结
 &lt;/h2&gt;&lt;p&gt;初始化一个Git仓库，使用git init命令。&lt;/p&gt;
 &lt;p&gt;添加文件到Git仓库，分两步：&lt;/p&gt;
-&lt;p&gt;使用命令git add &lt;!-- raw HTML omitted --&gt;，注意，可反复多次使用，添加多个文件；使用命令git commit -m &lt;!-- raw HTML omitted --&gt;，完成。&lt;/p&gt;</description></item></channel></rss>
+&lt;p&gt;使用命令git add &lt;file&gt;，注意，可反复多次使用，添加多个文件；使用命令git commit -m &lt;message&gt;，完成。&lt;/p&gt;</description></item></channel></rss>

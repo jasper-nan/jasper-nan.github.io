@@ -77,7 +77,7 @@
 &lt;p&gt;总之，就是让这个文件回到最近一次git commit或git add时的状态。&lt;/p&gt;
 &lt;h2 id="还原暂存区的修改"&gt;还原暂存区的修改
 &lt;/h2&gt;&lt;p&gt;执行了 git add 还没有 commit 的修改也能撤销&lt;/p&gt;
-&lt;p&gt;Git同样告诉我们，用命令git reset HEAD &lt;!-- raw HTML omitted --&gt;可以把暂存区的修改撤销掉（unstage），重新放回工作区：&lt;/p&gt;
+&lt;p&gt;Git同样告诉我们，用命令git reset HEAD &lt;file&gt;可以把暂存区的修改撤销掉（unstage），重新放回工作区：&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;$ git reset HEAD readme.txtUnstaged changes after reset:M	readme.txt
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;git reset命令既可以回退版本，也可以把暂存区的修改回退到工作区。当我们用HEAD时，表示最新的版本。&lt;/p&gt;
@@ -85,7 +85,7 @@
 &lt;p&gt;再 git checkout – readme.txt 工作区修改也还原了&lt;/p&gt;
 &lt;h2 id="小结-4"&gt;小结
 &lt;/h2&gt;&lt;p&gt;场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令git checkout – file。&lt;/p&gt;
-&lt;p&gt;场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD &lt;!-- raw HTML omitted --&gt;，就回到了场景1，第二步按场景1操作。&lt;/p&gt;
+&lt;p&gt;场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令git reset HEAD &lt;file&gt;，就回到了场景1，第二步按场景1操作。&lt;/p&gt;
 &lt;p&gt;场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退一节，不过前提是没有推送到远程库。&lt;/p&gt;
 &lt;p&gt;删除文件 假如我已经提交的文件，我本地给删除了。如何git库中也进行删除呢？&lt;/p&gt;
 &lt;p&gt;在Git中，删除也是一个修改操作，我们实战一下，先添加一个新文件test.txt到Git并且提交：&lt;/p&gt;
