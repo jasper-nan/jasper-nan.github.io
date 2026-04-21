@@ -33,6 +33,11 @@ theme = "hugo-theme-stack"
     name = "分类"
     url = "/categories/"
     weight = -70
+  [[menu.main]]
+    identifier = "coffee"
+    name = "☕ 请我喝咖啡"
+    url = "/buy-me-a-coffee/"
+    weight = -60
 
 [markup]
   [markup.highlight]
