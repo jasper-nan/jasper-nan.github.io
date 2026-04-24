@@ -1,4 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jasper's Blog</title><link>https://jasper-nan.github.io/</link><description>Recent content on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 21 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>32 岁程序员的体检觉醒：高血压后的运动与健康管理</title><link>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
+<item>
+  <title>LLM 到底是什么？从原理到 Prompt 工程入门</title>
+  <link>https://jasper-nan.github.io/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/</link>
+  <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
+  <guid>https://jasper-nan.github.io/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/</guid>
+  <description>&lt;p&gt;一句话理解 LLM 大语言模型（Large Language Model，LLM）本质上是一个超级高级的"猜词机"。你给它一句话，它猜下一个词应该是什么；把这个词接回去，再猜下一个，以此类推，直到生成完整的回答。 这个"猜"不是瞎猜，而是基于海量文本训练出的概率分布。模型见过互联网上几乎所有的公开文字——维基百科、书籍、论文、代码、论坛帖子——它学会了什么样的词跟在什么样的上下文后面最合理。 三个核心概念 1. Token：模型的"原子" LLM 不是按"字"或"词"来处理文本的，而是按 Token。Token 可以是半个字、一个字，也可以是多个字的组合。比如： "Hello" = 1 Tok...&lt;/p&gt;</description>
+</item><title>Jasper's Blog</title><link>https://jasper-nan.github.io/</link><description>Recent content on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Fri, 24 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>32 岁程序员的体检觉醒：高血压后的运动与健康管理</title><link>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</guid><description>
  &lt;blockquote&gt;
  &lt;p&gt;体检前：我还年轻，熬点夜算什么。&lt;br&gt;
 体检后：收缩压 160+，医嘱要求立即服药控制。&lt;/p&gt;

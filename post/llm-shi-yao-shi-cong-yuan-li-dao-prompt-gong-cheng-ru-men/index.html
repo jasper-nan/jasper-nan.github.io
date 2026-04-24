@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-cn"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="不用懂数学，也能理解大语言模型的工作方式——以及怎么跟它高效对话" name="description"/><title>LLM 到底是什么？从原理到 Prompt 工程入门</title><link href="https://jasper-nan.github.io/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/" rel="canonical"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="preload"/><link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet"/><link href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css" rel="stylesheet"/><meta content="LLM 到底是什么？从原理到 Prompt 工程入门" property="og:title"/><meta content="不用懂数学，也能理解大语言模型的工作方式——以及怎么跟它高效对话" property="og:description"/><meta content="https://jasper-nan.github.io/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/" property="og:url"/><meta content="Jasper's Blog" property="og:site_name"/><meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="LLM" property="article:tag"/><meta content="AI" property="article:tag"/><meta content="Prompt Engineering" property="article:tag"/><meta content="大模型" property="article:tag"/><meta content="Python" property="article:tag"/><meta content="2026-04-24T00:00:00+00:00" property="article:published_time"/><meta content="2026-04-24T00:00:00+00:00" property="article:modified_time"/><meta content="国内 AI Coding Plan 横评：DeepSeek、智谱 GLM、通义千问、MiniMax、Kimi" name="twitter:title"/><meta content="作为一个 OpenClaw 用户，模型选择直接决定了两个核心体验：响应速度 和钱包厚度" name="twitter:description"/></head><body class="article-page"><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button aria-label="" class="hamburger hamburger--spin" id="toggle-menu" type="button">
+<span class="hamburger-box"><span class="hamburger-inner"></span></span></button><header><div class="site-meta"><h1 class="site-name"><a href="/">Jasper's Blog</a></h1><h2 class="site-description">致良知</h2></div></header><ol class="menu" id="main-menu"><li><a href="/"><span>首页</span></a></li><li><a href="/post/"><span>文章</span></a></li><li><a href="/tags/"><span>标签</span></a></li><li><a href="/categories/"><span>分类</span></a></li><li><a href="/buy-me-a-coffee/"><span>☕ 请我喝咖啡</span></a></li><li class="menu-bottom-section"><ol class="menu"><li id="dark-mode-toggle"><svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="8" cy="12" r="2"></circle><rect height="12" rx="6" width="20" x="2" y="6"></rect></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="16" cy="12" r="2"></circle><rect height="12" rx="6" width="20" x="2" y="6"></rect></svg>
+<span></span></li></ol></li></ol></aside><main class="main full-width"><article class="main-article"><header class="article-header"><div class="article-details"><div class="article-title-wrapper"><h2 class="article-title"><a href="/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/">LLM 到底是什么？从原理到 Prompt 工程入门</a></h2><h3 class="article-subtitle">不用懂数学，也能理解大语言模型的工作方式——以及怎么跟它高效对话</h3></div><footer class="article-meta"><div class="inline-meta"><svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"></path><circle cx="18" cy="18" r="4"></circle><path d="M15 3v4"></path><path d="M7 3v4"></path><path d="M3 11h16"></path><path d="M18 16.496V18l1 1"></path></svg>
+<time class="article-time--published" datetime="2026-04-24T00:00:00+00:00">Friday, April 24, 2026</time>
+<svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg>
+<time class="article-time--reading"></time></div></footer></div></header><section class="article-content"><h2 id="一句话理解-llm">一句话理解 LLM</h2><p>大语言模型（Large Language Model，LLM）本质上是一个<strong>超级高级的"猜词机"</strong>。你给它一句话，它猜下一个词应该是什么；把这个词接回去，再猜下一个，以此类推，直到生成完整的回答。</p><p>这个"猜"不是瞎猜，而是基于海量文本训练出的概率分布。模型见过互联网上几乎所有的公开文字——维基百科、书籍、论文、代码、论坛帖子——它学会了什么样的词跟在什么样的上下文后面最合理。</p><h2 id="三个核心概念">三个核心概念</h2><h3 id="token">1. Token：模型的"原子"</h3><p>LLM 不是按"字"或"词"来处理文本的，而是按 <strong>Token</strong>。Token 可以是半个字、一个字，也可以是多个字的组合。比如：</p><ul>
+<li>"Hello" = 1 Token</li>
+<li>"中国" ≈ 2 Tokens</li>
+<li>"Transformer" = 1 Token（常见英文词会被整体编码）</li>
+</ul><p>为什么这很重要？因为模型的计费、上下文长度限制，都是按 Token 算的。一篇 2000 字的中文文章，大约等于 3000–4000 Token。</p><h3 id="上下文窗口">2. 上下文窗口：模型的"工作记忆"</h3><p>上下文窗口（Context Window）是模型能同时"看到"的 Token 数量。早期的 GPT-3 只有 4K，现在主流模型（Claude、GPT-4、DeepSeek）已经支持 128K 甚至 200K。</p><p>这意味着你可以一次性塞进去一本短篇小说、一段完整的代码库、或者几十轮对话历史。但注意：<strong>窗口越大，模型越容易"走神"</strong>——后面的内容可能会遗忘前面的关键信息。</p><h3 id="temperature">3. Temperature：创造力的旋钮</h3><p>Temperature（温度）控制模型输出的随机性：</p><ul>
+<li><strong>温度 = 0</strong>：最保守，每次几乎输出相同的答案，适合代码生成、数学计算</li>
+<li><strong>温度 = 0.7</strong>：平衡，既有逻辑又有一定的创造性，适合大多数对话场景</li>
+<li><strong>温度 = 1.0+</strong>：更发散，可能给出意想不到的回答，适合头脑风暴、写作</li>
+</ul><h2 id="prompt-工程入门">Prompt 工程入门</h2><p>Prompt 工程不是"玄学"，而是<strong>如何清晰地向模型表达你的需求</strong>。以下是几个经过验证的技巧：</p><h3 id="角色设定">1. 角色设定（Role Prompting）</h3><p>给模型一个明确的角色，它的回答风格会立刻改变。</p><pre><code>你是一位经验丰富的 Python 后端工程师，擅长 Django 和 FastAPI。
+请帮我 review 下面这段代码，重点关注性能瓶颈和安全漏洞。</code></pre><h3 id="清晰的指令">2. 清晰的指令（Clear Instructions）</h3><p>模糊的请求得到模糊的结果。把"写得好一点"改成具体的标准：</p><pre><code>❌ 帮我写个产品说明
+✅ 帮我写一个 200 字的产品说明，目标用户是 25–35 岁的程序员，
+   突出"无需配置即可使用"和"支持私有化部署"两个卖点，语气专业但不呆板。</code></pre><h3 id="few-shot">3. 提供示例（Few-shot Learning）</h3><p>模型擅长模仿。给几个输入-输出对，它比长篇大论的解释学得更快。</p><pre><code>把下面的口语化描述改写成正式的 Git commit message。
+
+输入：改了登录接口，修复了手机号验证的 bug
+输出：fix(auth): 修复登录接口手机号验证逻辑
+
+输入：加了个新功能，用户现在可以导出 Excel 了
+输出：feat(export): 新增用户数据 Excel 导出功能
+
+输入：重构了订单模块的代码，抽了个公共方法出来
+输出：</code></pre><h3 id="思维链">4. 思维链（Chain of Thought）</h3><p>对于复杂推理任务，让模型"一步步想"，准确率会显著提升。</p><pre><code>请解决下面的问题，并在给出最终答案前，先展示你的推理过程。
+
+一个水池有 A、B 两个进水管，A 管单独注满需要 6 小时，
+B 管单独注满需要 4 小时。同时打开 A、B 两管，注满需要几小时？</code></pre><h3 id="结构化输出">5. 结构化输出（Structured Output）</h3><p>如果你需要把模型的输出接入程序，明确要求 JSON、Markdown 表格等格式，并给出字段说明。</p><pre><code>请分析以下用户评论的情感倾向，并以 JSON 格式输出：
+{
+  "sentiment": "positive|neutral|negative",
+  "confidence": 0.0-1.0,
+  "keywords": ["关键词1", "关键词2"],
+  "summary": "一句话总结"
+}</code></pre><h2 id="常见误区">常见误区</h2><ul>
+<li><strong>误区一：Prompt 越长越好</strong> —— 冗长的提示反而会让模型迷失重点，关键信息要前置</li>
+<li><strong>误区二：一次问完所有问题</strong> —— 复杂任务拆成多轮对话，每轮聚焦一个子问题，效果通常更好</li>
+<li><strong>误区三：模型什么都知道</strong> —— LLM 的知识有截止日期，对最新事件、私有数据、实时信息无能为力，需要配合 RAG（检索增强生成）</li>
+<li><strong>误区四：同样的 Prompt 适用于所有模型</strong> —— Claude 喜欢详细说明，GPT-4 对结构化提示响应更好，国产模型对中文指令优化更到位</li>
+</ul><h2 id="写在最后">写在最后</h2><p>LLM 不是魔法，它是一个概率引擎；Prompt 工程也不是黑盒艺术，而是<strong>清晰沟通的技术</strong>。</p><p>你不需要理解 Transformer 架构中的自注意力机制数学公式，也能用好这些工具。关键是：知道它能做什么、不能做什么，以及怎么把你的需求翻译成一个它"听得懂"的指令。</p><p>如果你刚开始接触 AI 开发，建议从实际场景出发——先写一个你日常工作/生活中真的需要的 Prompt，然后迭代优化它。实践比任何理论都有效。</p></section><footer class="article-meta article-footer"><section class="article-tags"><a href="/tags/llm/">LLM</a>
+<a href="/tags/ai/">AI</a>
+<a href="/tags/prompt-engineering/">Prompt Engineering</a>
+<a href="/tags/大模型/">大模型</a>
+<a href="/tags/python/">Python</a>
+</section></footer></article><aside><h2 class="section-title"></h2><div class="subsection-list"><div class="article-list--tile"><article><a href="/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/"><div class="article-details"><h2 class="article-title">AI Agent 开发实战笔记：技术选型与架构思考</h2></div></a></article><article><a href="/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/"><div class="article-details"><h2 class="article-title">CAN 总线日志分析入门：自动驾驶测试必备技能</h2></div></a></article><article><a href="/post/python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E4%BB%8E0%E5%88%B01/"><div class="article-details"><h2 class="article-title">Python 接口自动化测试从 0 到 1</h2></div></a></article><article><a href="/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/"><div class="article-details"><h2 class="article-title">AI 助手实战：我用 OpenClaw 打造个人自动化系统</h2></div></a></article><article><a href="/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/"><div class="article-details"><h2 class="article-title">帮你部署 OpenClaw AI 助手 — 一杯咖啡钱拥有私人智能管家</h2></div></a></article></div></div></aside><div class="disqus-container"></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class="site-footer"><section class="copyright">©
+2019 -
+2026 Jasper's Blog</section><section class="powerby"><br/></section></footer><script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script defer="" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" type="text/javascript"></script></body></html>
