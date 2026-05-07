@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-cn"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="从零搭建 RAG 系统：文档切片、向量检索、重排序，让大模型拥有你的私有知识" name="description"/><title>RAG 检索增强生成实战：让 LLM 读懂你的私有文档</title><link href="https://jasper-nan.github.io/post/rag-jian-suo-zeng-qiang-sheng-cheng-shi-zhan-rang-llm-du-dong-ni-de-si-you-wen-dang/" rel="canonical"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="preload"/><link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet"/><link href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css" rel="stylesheet"/><meta content="RAG 检索增强生成实战：让 LLM 读懂你的私有文档" property="og:title"/><meta content="从零搭建 RAG 系统：文档切片、向量检索、重排序，让大模型拥有你的私有知识" property="og:description"/><meta content="https://jasper-nan.github.io/post/rag-jian-suo-zeng-qiang-sheng-cheng-shi-zhan-rang-llm-du-dong-ni-de-si-you-wen-dang/" property="og:url"/><meta content="Jasper's Blog" property="og:site_name"/><meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="RAG" property="article:tag"/><meta content="LLM" property="article:tag"/><meta content="向量数据库" property="article:tag"/><meta content="Python" property="article:tag"/><meta content="AI" property="article:tag"/><meta content="2026-05-07T00:00:00+00:00" property="article:published_time"/><meta content="2026-05-07T00:00:00+00:00" property="article:modified_time"/><meta content="RAG 检索增强生成实战：让 LLM 读懂你的私有文档" name="twitter:title"/><meta content="从零搭建 RAG 系统：文档切片、向量检索、重排序，让大模型拥有你的私有知识" name="twitter:description"/></head><body class="article-page"><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme";const e=localStorage.getItem(t)||"auto";const n=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";const o=e==="auto"?n:e;document.documentElement.setAttribute("data-scheme",o)})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button><header><div class="site-meta"><h1 class="site-name"><a href="/">Jasper's Blog</a></h1><h2 class="site-description">致良知</h2></div></header><ol class="menu" id="main-menu"><li><a href="/"><span>首页</span></a></li><li><a href="/post/"><span>文章</span></a></li><li><a href="/tags/"><span>标签</span></a></li><li><a href="/categories/"><span>分类</span></a></li><li><a href="/buy-me-a-coffee/"><span>☕ 请我喝咖啡</span></a></li><li class="menu-bottom-section"><ol class="menu"><li id="dark-mode-toggle"><svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="8" cy="12" r="2"></circle><rect height="12" rx="6" width="20" x="2" y="6"></rect></svg><svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="16" cy="12" r="2"></circle><rect height="12" rx="6" width="20" x="2" y="6"></rect></svg><span></span></li></ol></li></ol></aside><main class="main full-width"><article class="main-article"><header class="article-header"><div class="article-details"><div class="article-title-wrapper"><h2 class="article-title"><a href="/post/rag-jian-suo-zeng-qiang-sheng-cheng-shi-zhan-rang-llm-du-dong-ni-de-si-you-wen-dang/">RAG 检索增强生成实战：让 LLM 读懂你的私有文档</a></h2><h3 class="article-subtitle">从零搭建 RAG 系统：文档切片、向量检索、重排序，让大模型拥有你的私有知识</h3></div><footer class="article-meta"><div class="inline-meta"><svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"></path><circle cx="18" cy="18" r="4"></circle><path d="M15 3v4"></path><path d="M7 3v4"></path><path d="M3 11h16"></path><path d="M18 16.496V18l1 1"></path></svg><time class="article-time--published" datetime="2026-05-07T00:00:00+00:00">Wednesday, May 7, 2026</time><svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg><time class="article-time--reading"></time></div></footer></div></header><section class="article-content"><h2 id="一句话理解-rag">一句话理解 RAG</h2><p>RAG（Retrieval-Augmented Generation，检索增强生成）就是<strong>给大模型配一个"外接硬盘"</strong>。模型本身记不住你的私有文档、公司内部资料、最新产品手册，但 RAG 能先把这些文档切片存进向量数据库，当你提问时，先检索最相关的片段，再让模型基于这些片段回答。</p><p>简单说：<strong>RAG = 文档检索 + 上下文注入 + LLM 生成</strong></p><h2 id="rag-解决了什么问题">RAG 解决了什么问题</h2><p>大模型有三个天然短板：</p><ul><li><strong>知识截止日期</strong>：模型训练数据有截止时间，对最新事件一无所知</li><li><strong>没有私有数据</strong>：你的公司内部文档、产品手册、客户记录，模型从来没见过</li><li><strong>幻觉问题</strong>：模型会一本正经地编造不存在的信息</li></ul><p>RAG 的解决思路很直接：<strong>不依赖模型记住所有知识，而是让它按需查阅资料</strong>。就像开卷考试——学生不需要背下整本教科书，只要会快速翻到相关章节就行。</p><h2 id="rag-系统架构拆解">RAG 系统架构拆解</h2><h3 id="1-文档加载与切片">1. 文档加载与切片（Ingestion）</h3><p>第一步是把各种格式的文档读进来，切成模型能消化的小块。</p><pre><code># 用 LangChain 加载 PDF
+from langchain.document_loaders import PyPDFLoader
+
+loader = PyPDFLoader("产品手册.pdf")
+pages = loader.load()  # 每页一个 Document 对象
+
+# 切片：按字符数切，保留上下文重叠
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=500,      # 每块 500 字符
+    chunk_overlap=50,    # 重叠 50 字符，防止断句
+    separators=["\n\n", "\n", "。", " ", ""]  # 优先按段落切
+)
+chunks = splitter.split_documents(pages)
+print(f"切成 {len(chunks)} 块")
+</code></pre><p><strong>切片策略很关键</strong>：</p><ul><li>Chunk 太大：检索精度下降，无关内容多</li><li>Chunk 太小：上下文断裂，模型理解不了</li><li>一般 300-800 字符为宜，技术文档可以按标题层级切</li></ul><h3 id="2-向量化与存储">2. 向量化与存储（Embedding + Vector DB）</h3><p>把文本块变成向量（高维数字数组），存入向量数据库。相似语义的文本在向量空间里距离更近。</p><pre><code># 使用 OpenAI 的 Embedding API
+from langchain.embeddings import OpenAIEmbeddings
+
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+
+# 存入向量数据库（以 Chroma 为例）
+from langchain.vectorstores import Chroma
+
+vectorstore = Chroma.from_documents(
+    documents=chunks,
+    embedding=embeddings,
+    persist_directory="./chroma_db"  # 持久化到本地
+)
+</code></pre><p><strong>向量数据库选型</strong>：</p><table><thead><tr><th>数据库</th><th>特点</th><th>适用场景</th></tr></thead><tbody><tr><td>Chroma</td><td>轻量、本地优先、开箱即用</td><td>原型开发、个人项目</td></tr><tr><td>Milvus</td><td>分布式、高性能、云原生</td><td>企业级生产环境</td></tr><tr><td>Qdrant</td><td>Rust 编写、过滤查询强</td><td>需要元数据过滤的场景</td></tr><tr><td>Weaviate</td><td>GraphQL 接口、模块化</td><td>需要复杂查询语法</td></tr></tbody></table><h3 id="3-检索">3. 检索（Retrieval）</h3><p>用户提问时，先把问题向量化，然后在向量库里找最相似的文档块。</p><pre><code># 相似度检索：返回 top-k 最相关的块
+query = "产品的退款政策是什么？"
+retrieved_chunks = vectorstore.similarity_search(query, k=5)
+
+for chunk in retrieved_chunks:
+    print(f"相似度分数: {chunk.metadata.get('score')}")
+    print(f"内容: {chunk.page_content[:200]}...")
+    print("---")
+</code></pre><p><strong>检索优化技巧</strong>：</p><ul><li><strong>MMR（最大边际相关性）</strong>：在相关性和多样性之间平衡，避免返回内容重复的块</li><li><strong>元数据过滤</strong>：先按文件名、日期、标签过滤，再向量检索</li><li><strong>混合检索</strong>：向量相似度 + 关键词匹配（BM25）结合，召回率更高</li></ul><h3 id="4-重排序">4. 重排序（Re-ranking）</h3><p>向量检索速度快但精度有限。用更重的模型对初步结果二次排序，能显著提升相关性。</p><pre><code># 使用 Cross-Encoder 重排序
+from sentence_transformers import CrossEncoder
+
+reranker = CrossEncoder('BAAI/bge-reranker-base')
+
+# 对检索结果重排
+pairs = [[query, chunk.page_content] for chunk in retrieved_chunks]
+scores = reranker.predict(pairs)
+
+# 按重排分数排序
+reranked = sorted(
+    zip(retrieved_chunks, scores),
+    key=lambda x: x[1],
+    reverse=True
+)
+
+# 只保留前 3 个最相关的
+final_chunks = [chunk for chunk, score in reranked[:3]]
+</code></pre><p>重排序模型（如 bge-reranker、cohere-rerank）专门训练来判断"问题和文档的相关性"，比通用 Embedding 模型更精准。</p><h3 id="5-生成回答">5. 生成回答（Generation）</h3><p>把检索到的文档块拼接成上下文，塞进 Prompt，让模型回答。</p><pre><code>from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
+
+llm = ChatOpenAI(model="gpt-4", temperature=0)
+
+# 构建 RAG Chain
+qa_chain = RetrievalQA.from_chain_type(
+    llm=llm,
+    chain_type="stuff",  # 把所有文档块塞进一个 prompt
+    retriever=vectorstore.as_retriever(search_kwargs={"k": 3}),
+    return_source_documents=True  # 返回引用的文档来源
+)
+
+# 提问
+result = qa_chain({"query": "退款需要多久到账？"})
+print(result["result"])
+print("\n引用来源:")
+for doc in result["source_documents"]:
+    print(f"- {doc.metadata.get('source', '未知')}")
+</code></pre><h2 id="完整代码示例">完整代码示例</h2><p>一个最小可用的 RAG 系统，不到 50 行：</p><pre><code>import os
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import Chroma
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import RetrievalQA
+
+# 1. 加载文档
+loader = TextLoader("faq.txt")
+docs = loader.load()
+
+# 2. 切片
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+chunks = splitter.split_documents(docs)
+
+# 3. 存入向量库
+embeddings = OpenAIEmbeddings()
+vectorstore = Chroma.from_documents(chunks, embeddings)
+
+# 4. 构建问答链
+llm = ChatOpenAI(temperature=0)
+qa = RetrievalQA.from_chain_type(llm=llm, retriever=vectorstore.as_retriever())
+
+# 5. 提问
+print(qa.run("如何申请退款？"))
+</code></pre><h2 id="进阶优化方向">进阶优化方向</h2><table><thead><tr><th>优化点</th><th>方法</th><th>效果</th></tr></thead><tbody><tr><td>查询改写</td><td>HyDE（假设文档嵌入）、查询扩展</td><td>提升检索召回率</td></tr><tr><td>多路召回</td><td>向量检索 + BM25 + 图谱检索</td><td>覆盖不同查询类型</td></tr><tr><td>上下文压缩</td><td>LLMLingua、选择性上下文</td><td>减少 Token 消耗，提升精度</td></tr><tr><td>自适应切片</td><td>按语义边界切（而非固定长度）</td><td>保持段落完整性</td></tr><tr><td>Agentic RAG</td><td>让 Agent 决定是否需要检索、检索什么</td><td>复杂多步推理场景</td></tr></tbody></table><h2 id="写在最后">写在最后</h2><p>RAG 不是银弹，但它是<strong>让 LLM 落地企业场景最有效的路径</strong>。不需要微调模型，不需要准备大量标注数据，只要把文档整理好、切片合理、检索精准，就能让一个通用大模型变成你的"领域专家"。</p><p>如果你刚开始接触 RAG，建议先用 LangChain + Chroma 搭一个最小原型，跑通自己的文档。优化是第二步，<strong>先让系统转起来，比追求完美架构更重要</strong>。</p></section><footer class="article-meta article-footer"><section class="article-tags"><a href="/tags/rag/">RAG</a><a href="/tags/llm/">LLM</a><a href="/tags/向量数据库/">向量数据库</a><a href="/tags/python/">Python</a><a href="/tags/ai/">AI</a></section></footer></article><aside><h2 class="section-title"></h2><div class="subsection-list"><div class="article-list--tile"><article><a href="/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/"><div class="article-details"><h2 class="article-title">LLM 到底是什么？从原理到 Prompt 工程入门</h2></div></a></article><article><a href="/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/"><div class="article-details"><h2 class="article-title">AI Agent 开发实战笔记：技术选型与架构思考</h2></div></a></article><article><a href="/post/openclaw-da-mo-xing-jia-ge-yu-neng-li-quan-mian-dui-bi-2026/"><div class="article-details"><h2 class="article-title">OpenClaw 大模型价格与能力全面对比 2026</h2></div></a></article><article><a href="/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/"><div class="article-details"><h2 class="article-title">AI 助手实战：我用 OpenClaw 打造个人自动化系统</h2></div></a></article><article><a href="/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/"><div class="article-details"><h2 class="article-title">OpenClaw 插件与 Skill 优化实战</h2></div></a></article></div></div></aside><div class="disqus-container"></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class="site-footer"><section class="copyright">© 2019 - 2026 Jasper's Blog</section><section class="powerby"><br/></section></footer><script type="module">import gallery from '/ts/gallery.js';const articleContent = document.querySelector('.article-content');const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);if (shouldLoad) {gallery(articleContent);const PhotoSwipeLightbox = (await import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js")).default;const styleHref = "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css";const styleTag = document.createElement('link');styleTag.rel = 'stylesheet';styleTag.href = styleHref;document.head.appendChild(styleTag);const lightbox = new PhotoSwipeLightbox({gallerySelector: '.article-content',childSelector: 'figure a.image-link',pswpModule: () => import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")});lightbox.init();}</script></main></div><script defer="" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" type="text/javascript"></script></body></html>

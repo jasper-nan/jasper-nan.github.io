@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-cn"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="用 LoRA 和 QLoRA 微调大模型：从原理到代码，低成本定制你的专属 AI" name="description"/><title>大模型微调入门：用 LoRA 低成本定制你的专属 AI</title><link href="https://jasper-nan.github.io/post/llm-wei-tiao-ru-men-yong-lora-di-cheng-ben-ding-zhi-ni-de-zhuan-shu-ai/" rel="canonical"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="preload"/><link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&amp;display=swap" rel="stylesheet"/><link href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css" rel="stylesheet"/><meta content="大模型微调入门：用 LoRA 低成本定制你的专属 AI" property="og:title"/><meta content="用 LoRA 和 QLoRA 微调大模型：从原理到代码，低成本定制你的专属 AI" property="og:description"/><meta content="https://jasper-nan.github.io/post/llm-wei-tiao-ru-men-yong-lora-di-cheng-ben-ding-zhi-ni-de-zhuan-shu-ai/" property="og:url"/><meta content="Jasper's Blog" property="og:site_name"/><meta content="article" property="og:type"/><meta content="Post" property="article:section"/><meta content="微调" property="article:tag"/><meta content="Fine-tuning" property="article:tag"/><meta content="LoRA" property="article:tag"/><meta content="QLoRA" property="article:tag"/><meta content="LLM" property="article:tag"/><meta content="AI" property="article:tag"/><meta content="2026-05-07T00:00:00+00:00" property="article:published_time"/><meta content="2026-05-07T00:00:00+00:00" property="article:modified_time"/><meta content="大模型微调入门：用 LoRA 低成本定制你的专属 AI" name="twitter:title"/><meta content="用 LoRA 和 QLoRA 微调大模型：从原理到代码，低成本定制你的专属 AI" name="twitter:description"/></head><body class="article-page"><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme";const e=localStorage.getItem(t)||"auto";const n=window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";const o=e==="auto"?n:e;document.documentElement.setAttribute("data-scheme",o)})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu"><span class="hamburger-box"><span class="hamburger-inner"></span></span></button><header><div class="site-meta"><h1 class="site-name"><a href="/">Jasper's Blog</a></h1><h2 class="site-description">致良知</h2></div></header><ol class="menu" id="main-menu"><li><a href="/"><span>首页</span></a></li><li><a href="/post/"><span>文章</span></a></li><li><a href="/tags/"><span>标签</span></a></li><li><a href="/categories/"><span>分类</span></a></li><li><a href="/buy-me-a-coffee/"><span>☕ 请我喝咖啡</span></a></li><li class="menu-bottom-section"><ol class="menu"><li id="dark-mode-toggle"><svg class="icon icon-tabler icon-tabler-toggle-left" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="8" cy="12" r="2"></circle><rect height="12" rx="6" width="20" x="2" y="6"></rect></svg><svg class="icon icon-tabler icon-tabler-toggle-right" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="16" cy="12" r="2"></circle><rect height="12" rx="6" width="20" x="2" y="6"></rect></svg><span></span></li></ol></li></ol></aside><main class="main full-width"><article class="main-article"><header class="article-header"><div class="article-details"><div class="article-title-wrapper"><h2 class="article-title"><a href="/post/llm-wei-tiao-ru-men-yong-lora-di-cheng-ben-ding-zhi-ni-de-zhuan-shu-ai/">大模型微调入门：用 LoRA 低成本定制你的专属 AI</a></h2><h3 class="article-subtitle">用 LoRA 和 QLoRA 微调大模型：从原理到代码，低成本定制你的专属 AI</h3></div><footer class="article-meta"><div class="inline-meta"><svg class="icon icon-tabler icon-tabler-calendar-time" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"></path><circle cx="18" cy="18" r="4"></circle><path d="M15 3v4"></path><path d="M7 3v4"></path><path d="M3 11h16"></path><path d="M18 16.496V18l1 1"></path></svg><time class="article-time--published" datetime="2026-05-07T00:00:00+00:00">Wednesday, May 7, 2026</time><svg class="icon icon-tabler icon-tabler-clock" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" stroke="none"></path><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15 15"></polyline></svg><time class="article-time--reading"></time></div></footer></div></header><section class="article-content"><h2 id="为什么需要微调">为什么需要微调</h2><p>通用大模型（如 GPT-4、Llama、Qwen）知识面广，但在<strong>特定领域</strong>往往表现不佳：</p><ul><li>医疗场景：分不清不同病症的用药禁忌</li><li>法律场景：引用已废止的法条</li><li>企业内部：完全不懂你的业务术语和流程</li></ul><p>微调（Fine-tuning）的本质是<strong>让模型在你的专属数据上继续学习</strong>，调整内部参数以适应特定任务。但全量微调一个 70B 参数模型需要数百 GB 显存，成本极高。</p><p>这就是 <strong>LoRA</strong> 的价值——它让微调变得平民化。</p><h2 id="lora-原理图解">LoRA 原理图解</h2><p>LoRA（Low-Rank Adaptation，低秩适配）的核心思想非常优雅：</p><blockquote><p>模型在特定任务上的权重更新，往往是<strong>低秩</strong>的。</p></blockquote><p>什么意思？假设原模型有一个权重矩阵 W（比如 4096×4096），全量微调要更新所有 1600 万个参数。但 LoRA 发现：实际需要的更新 ΔW 可以用两个更小的矩阵近似：</p><pre><code>ΔW = A × B
+# A: 4096 × r
+# B: r × 4096
+# r 是秩（rank），通常取 8、16、64</code></pre><p>当 r=16 时，参数量从 1600 万降到 13 万（4096×16 + 16×4096），<strong>减少了 99%</strong>！</p><p>推理时，直接把 LoRA 权重加到原权重上：</p><pre><code>W_new = W + ΔW = W + A × B</code></pre><p>这样既保留了原模型的通用能力，又注入了领域知识。</p><h2 id="qlora-量化版-lora">QLoRA：量化版 LoRA</h2><p>LoRA 减少了训练参数，但原模型本身还是占显存。QLoRA 更进一步：</p><ul><li><strong>4-bit 量化</strong>：把模型权重压缩到 4 位（原 16 位），显存占用降到 1/4</li><li><strong>双量化</strong>：对量化常数再量化，进一步节省</li><li><strong>分页优化器</strong>：显存不足时自动把优化器状态换到 CPU</li></ul><p>效果惊人：一个 70B 参数的 Llama 模型，QLoRA 微调只需要 <strong>48GB 显存</strong>（单张 A6000 或 2 张 3090），而全量微调需要 500GB+。</p><h2 id="实战用-qlora-微调-qwen-7b">实战：用 QLoRA 微调 Qwen-7B</h2><p>下面是一个完整的微调流程，基于 Hugging Face 生态。</p><h3 id="1-环境准备">1. 环境准备</h3><pre><code># 需要的关键库
+pip install transformers peft bitsandbytes accelerate datasets</code></pre><h3 id="2-加载量化模型">2. 加载量化模型</h3><pre><code>from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+# 4-bit 量化配置
+bnb_config = BitsAndBytesConfig(
+    load_in_4bit=True,
+    bnb_4bit_quant_type="nf4",           # 4-bit Normal Float
+    bnb_4bit_compute_dtype="bfloat16",   # 计算用 bfloat16
+    bnb_4bit_use_double_quant=True,      # 嵌套量化
+)
+
+model = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen-7B-Chat",
+    quantization_config=bnb_config,
+    device_map="auto",  # 自动分配层到 GPU/CPU
+    trust_remote_code=True,
+)
+
+tokenizer = AutoTokenizer.from_pretrained(
+    "Qwen/Qwen-7B-Chat",
+    trust_remote_code=True,
+)</code></pre><h3 id="3-准备训练数据">3. 准备训练数据</h3><p>微调数据格式通常是 "指令-输入-输出" 三元组：</p><pre><code>from datasets import Dataset
+
+train_data = [
+    {
+        "instruction": "请解释什么是 LoRA",
+        "input": "",
+        "output": "LoRA（Low-Rank Adaptation）是一种参数高效的微调方法..."
+    },
+    {
+        "instruction": "对比 LoRA 和全量微调",
+        "input": "",
+        "output": "LoRA 只训练少量适配器参数，显存占用低..."
+    },
+    # ... 更多样本
+]
+
+dataset = Dataset.from_list(train_data)
+
+# 格式化为模型输入
+def format_prompt(example):
+    prompt = f"""### 指令:
+{example['instruction']}
+
+### 输入:
+{example['input']}
+
+### 输出:
+{example['output']}"""
+    return {"text": prompt}
+
+dataset = dataset.map(format_prompt)</code></pre><h3 id="4-配置-lora">4. 配置 LoRA</h3><pre><code>from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+
+# 准备模型（梯度检查点、归一化层训练等）
+model = prepare_model_for_kbit_training(model)
+
+# LoRA 配置
+lora_config = LoraConfig(
+    r=16,                    # 低秩维度
+    lora_alpha=32,           # 缩放系数，通常 2*r
+    target_modules=[         # 要注入 LoRA 的层
+        "q_proj", "k_proj", "v_proj", "o_proj",  # Attention
+        "gate_proj", "up_proj", "down_proj",      # MLP
+    ],
+    lora_dropout=0.05,       # 防止过拟合
+    bias="none",
+    task_type="CAUSAL_LM",   # 因果语言模型
+)
+
+# 注入 LoRA
+model = get_peft_model(model, lora_config)
+
+# 查看可训练参数
+model.print_trainable_parameters()
+# 输出: trainable params: 20M || all params: 7.7B || trainable%: 0.26%</code></pre><h3 id="5-训练">5. 训练</h3><pre><code>from transformers import TrainingArguments, Trainer
+
+training_args = TrainingArguments(
+    output_dir="./qwen-lora-output",
+    num_train_epochs=3,
+    per_device_train_batch_size=4,
+    gradient_accumulation_steps=4,      # 等效 batch_size=16
+    learning_rate=2e-4,
+    warmup_steps=100,
+    logging_steps=10,
+    save_steps=500,
+    fp16=True,
+    optim="paged_adamw_8bit",           # QLoRA 专用优化器
+    group_by_length=True,               # 加速训练
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    train_dataset=dataset,
+    data_collator=lambda x: tokenizer(
+        [d["text"] for d in x],
+        padding=True,
+        truncation=True,
+        max_length=512,
+        return_tensors="pt",
+    ),
+)
+
+trainer.train()</code></pre><h3 id="6-保存与推理">6. 保存与推理</h3><pre><code># 只保存 LoRA 权重（很小，通常几十 MB）
+model.save_pretrained("./qwen-lora-adapter")
+
+# 推理时加载
+from peft import PeftModel
+
+base_model = AutoModelForCausalLM.from_pretrained("Qwen/Qwen-7B-Chat")
+model = PeftModel.from_pretrained(base_model, "./qwen-lora-adapter")
+
+# 合并权重（可选，推理更快）
+model = model.merge_and_unload()
+
+# 生成
+inputs = tokenizer("请解释 LoRA 的原理", return_tensors="pt")
+outputs = model.generate(**inputs, max_new_tokens=200)
+print(tokenizer.decode(outputs[0]))</code></pre><h2 id="微调-vs-rag-怎么选">微调 vs RAG，怎么选</h2><table><thead><tr><th>维度</th><th>LoRA 微调</th><th>RAG</th></tr></thead><tbody><tr><td><strong>知识更新</strong></td><td>需要重新训练</td><td>直接换文档，实时更新</td></tr><tr><td><strong>成本</strong></td><td>一次性训练成本</td><td>持续向量化和检索成本</td></tr><tr><td><strong>适用场景</strong></td><td>风格、格式、推理模式</td><td>事实性知识、文档问答</td></tr><tr><td><strong>数据量</strong></td><td>几百到几千条即可</td><td>文档越多越好</td></tr><tr><td><strong>可解释性</strong></td><td>黑盒，难追溯</td><td>可查看引用来源</td></tr></tbody></table><p><strong>最佳实践：两者结合</strong>。用 LoRA 微调让模型学会你的业务风格和推理方式，用 RAG 注入实时知识。这样既有"大脑"（微调后的模型），又有"图书馆"（向量数据库）。</p><h2 id="常见坑与避坑指南">常见坑与避坑指南</h2><ul><li><strong>过拟合</strong>：训练数据太少（<100 条）或轮数太多。观察验证集 loss，早停。</li><li><strong>灾难性遗忘</strong>：模型学了新知识，忘了旧知识。保留一部分通用数据一起训练。</li><li><strong>学习率太高</strong>：LoRA 通常用 1e-4 ~ 2e-4，太高会训崩。</li><li><strong>rank 选太大</strong>：r=64 不一定比 r=16 好，可能过拟合。先从 8 或 16 试起。</li><li><strong>不 freeze 基础模型</strong>：确保 base model 参数不更新，只训 LoRA 权重。</li></ul><h2 id="写在最后">写在最后</h2><p>LoRA/QLoRA 的出现，让个人开发者和中小企业也能定制大模型。<strong>你不需要买 8 张 A100，一张 4090 就能微调 7B-13B 模型</strong>。</p><p>建议从 Qwen-7B 或 Llama-3-8B 开始，准备 500-1000 条高质量标注数据，先用默认参数跑通一个 baseline，再逐步优化。微调的魅力在于：同样的基础模型，经过你的数据训练后，它会变成"懂你家业务"的专属助手。</p></section><footer class="article-meta article-footer"><section class="article-tags"><a href="/tags/微调/">微调</a><a href="/tags/fine-tuning/">Fine-tuning</a><a href="/tags/lora/">LoRA</a><a href="/tags/qlora/">QLoRA</a><a href="/tags/llm/">LLM</a><a href="/tags/ai/">AI</a></section></footer></article><aside><h2 class="section-title"></h2><div class="subsection-list"><div class="article-list--tile"><article><a href="/post/llm-shi-yao-shi-cong-yuan-li-dao-prompt-gong-cheng-ru-men/"><div class="article-details"><h2 class="article-title">LLM 到底是什么？从原理到 Prompt 工程入门</h2></div></a></article><article><a href="/post/rag-jian-suo-zeng-qiang-sheng-cheng-shi-zhan-rang-llm-du-dong-ni-de-si-you-wen-dang/"><div class="article-details"><h2 class="article-title">RAG 检索增强生成实战：让 LLM 读懂你的私有文档</h2></div></a></article><article><a href="/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/"><div class="article-details"><h2 class="article-title">AI Agent 开发实战笔记：技术选型与架构思考</h2></div></a></article><article><a href="/post/openclaw-da-mo-xing-jia-ge-yu-neng-li-quan-mian-dui-bi-2026/"><div class="article-details"><h2 class="article-title">OpenClaw 大模型价格与能力全面对比 2026</h2></div></a></article><article><a href="/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/"><div class="article-details"><h2 class="article-title">AI 助手实战：我用 OpenClaw 打造个人自动化系统</h2></div></a></article></div></div></aside><div class="disqus-container"></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class="site-footer"><section class="copyright">© 2019 - 2026 Jasper's Blog</section><section class="powerby"><br/></section></footer><script type="module">import gallery from '/ts/gallery.js';const articleContent = document.querySelector('.article-content');const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);if (shouldLoad) {gallery(articleContent);const PhotoSwipeLightbox = (await import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.min.js")).default;const styleHref = "https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.css";const styleTag = document.createElement('link');styleTag.rel = 'stylesheet';styleTag.href = styleHref;document.head.appendChild(styleTag);const lightbox = new PhotoSwipeLightbox({gallerySelector: '.article-content',childSelector: 'figure a.image-link',pswpModule: () => import("https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.esm.min.js")});lightbox.init();}</script></main></div><script defer="" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" type="text/javascript"></script></body></html>
