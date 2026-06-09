@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>家庭自动化 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E5%AE%B6%E5%BA%AD%E8%87%AA%E5%8A%A8%E5%8C%96/</link><description>Recent content in 家庭自动化 on Jasper's Blog</description><generator>Hugo -- gohugo.io</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E5%AE%B6%E5%BA%AD%E8%87%AA%E5%8A%A8%E5%8C%96/index.xml" rel="self" type="application/rss+xml"/><item><title>Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置</title><link>https://jasper-nan.github.io/post/hermes-skill-caldav-guide/</link><pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/hermes-skill-caldav-guide/</guid><description>
+ &lt;blockquote&gt;
+ &lt;p&gt;最近给老婆配置 CalDAV 日历同步技能时，发现很多人对 Hermes（原 OpenClaw）的 Skill 系统还不够熟悉。这篇文章从 Skill 创建原理讲起，到 CalDAV 日历同步的实战配置，再到如何给家庭成员快速部署，希望能帮你把 AI 助手从&amp;quot;个人玩具&amp;quot;变成&amp;quot;家庭基础设施&amp;quot;。&lt;/p&gt;
+
+ &lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一hermes-skill-是什么为什么重要"&gt;一、Hermes Skill 是什么？为什么重要？
+&lt;/h2&gt;&lt;h3 id="11-从插件到技能ai-助手的进化"&gt;1.1 从插件到技能：AI 助手的进化
+&lt;/h3&gt;&lt;p&gt;传统的软件扩展叫&amp;quot;插件&amp;quot;（Plugin），强调的是&lt;strong&gt;功能叠加&lt;/strong&gt;。而 Hermes 的 Skill 是&lt;strong&gt;工作流封装&lt;/strong&gt;——它不只是加一个新功能，而是把&amp;quot;如何完成一件事&amp;quot;的完整逻辑打包交给 AI。&lt;/p&gt;
+&lt;p&gt;举个例子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;插件思维&lt;/strong&gt;：装一个日历插件，能看日程&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skill 思维&lt;/strong&gt;：说一句&amp;quot;帮我查下周三的会议&amp;quot;，AI 自动调用 CalDAV 查询、解析时间语义、返回格式化结果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Skill 的核心价值在于&lt;strong&gt;降低使用门槛&lt;/strong&gt;。你不需要记住命令，用自然语言表达意图就行。&lt;/p&gt;
+&lt;h3 id="12-skill-的底层结构"&gt;1.2 Skill 的底层结构
+&lt;/h3&gt;&lt;p&gt;每个 Skill 本质上是一个目录，包含：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/.hermes/skills/&amp;lt;category&amp;gt;/&amp;lt;skill-name&amp;gt;/
+├── SKILL.md # 技能定义文件（必需）
+├── references/ # 参考文档
+├── templates/ # 模板文件
+├── scripts/ # 可执行脚本
+└── assets/ # 图片等资源
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最核心的就是 &lt;code&gt;SKILL.md&lt;/code&gt;，它采用 YAML Frontmatter + Markdown 的格式：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;caldav-sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;description&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Manage calendar events via CalDAV&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1.0.0&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Your Name&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;# CalDAV Sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;## Configuration&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;Set these environment variables&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;```bash&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_URL=&amp;#34;https://caldav.example.com:9999&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_USERNAME=&amp;#34;your-username&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="usage"&gt;Usage
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Add event: &lt;code&gt;caldav_add --title &amp;quot;Meeting&amp;quot; --start &amp;quot;2024-01-01T10:00:00&amp;quot; ...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;List events: &lt;code&gt;caldav_list [--days 7]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;
+Hermes 在启动时会扫描 `~/.hermes/skills/` 目录，自动加载所有有效的 Skill。
+
+### 1.3 Skill 的三种类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **内置技能** | Hermes 官方提供，随安装附带 | web_search, terminal, file |
+| **社区技能** | 通过 `hermes skills install` 安装 | caldav-sync, blogwatcher |
+| **自定义技能** | 用户自己创建的 SKILL.md | 个人记账、家庭日历 |
+
+* * *
+
+## 二、手把手创建一个 Skill
+
+### 2.1 最简单的 Skill：Hello World
+
+```bash
+# 创建目录
+mkdir -p ~/.hermes/skills/custom/hello-world
+
+# 编写 SKILL.md
+cat &amp;gt; ~/.hermes/skills/custom/hello-world/SKILL.md &amp;lt;&amp;lt; &amp;#39;EOF&amp;#39;
+---
+name: hello-world
+description: A simple hello world skill to demonstrate the structure
+version: 1.0.0
+---
+
+# Hello World
+
+This skill demonstrates the basic structure of a Hermes skill.
+
+## Usage
+
+Simply say &amp;#34;hello&amp;#34; and the agent will respond with a greeting.
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启 Hermes 或执行 &lt;code&gt;hermes skills reload&lt;/code&gt;，这个技能就生效了。&lt;/p&gt;
+&lt;h3 id="22-带脚本的-skill系统监控"&gt;2.2 带脚本的 Skill：系统监控
+&lt;/h3&gt;&lt;p&gt;如果 Skill 需要执行代码，可以在 &lt;code&gt;scripts/&lt;/code&gt; 目录放脚本：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir -p ~/.hermes/skills/custom/system-monitor/scripts
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;cat &amp;gt; ~/.hermes/skills/custom/system-monitor/scripts/check-disk.sh &lt;span class="s"&gt;&amp;lt;&amp;lt; &amp;#39;EOF&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;#!/bin/bash
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;df -h / | awk &amp;#39;NR==2 {print &amp;#34;磁盘使用率: &amp;#34;$5&amp;#34; (&amp;#34;$3&amp;#34;/&amp;#34;$2&amp;#34;)&amp;#34;}&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="s"&gt;EOF&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;chmod +x ~/.hermes/skills/custom/system-monitor/scripts/check-disk.sh
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然后在 &lt;code&gt;SKILL.md&lt;/code&gt; 中引用：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-markdown" data-lang="markdown"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="gu"&gt;## Tools
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="k"&gt;-&lt;/span&gt; &lt;span class="sb"&gt;`check_disk`&lt;/span&gt;: Check disk usage
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;-&lt;/span&gt; Script: &lt;span class="sb"&gt;`scripts/check-disk.sh`&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; &lt;span class="k"&gt;-&lt;/span&gt; Usage: Run directly to get disk usage info
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="23-带配置的-skillcaldav-日历同步"&gt;2.3 带配置的 Skill：CalDAV 日历同步
+&lt;/h3&gt;&lt;p&gt;更复杂的 Skill 需要环境变量配置。以 CalDAV 为例：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;mkdir -p ~/.hermes/skills/openclaw-imports/caldav-sync
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;SKILL.md&lt;/code&gt; 内容：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;caldav-sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;description&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Manage calendar events via CalDAV — add, list, query calendar events&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1.0.0&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;OpenClaw&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;# CalDAV Sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;Connect to CalDAV server to manage calendar events.&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;## Configuration&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;Set these environment variables in `~/.hermes/.env` or your shell profile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;```bash&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_URL=&amp;#34;https://caldav.laji.fun:9999&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_USERNAME=&amp;#34;your-username&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="tools"&gt;Tools
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;caldav_add&lt;/code&gt;: Add a new event
+&lt;ul&gt;
+&lt;li&gt;Usage: &lt;code&gt;caldav_add --title &amp;quot;Meeting&amp;quot; --start &amp;quot;2024-01-01T10:00:00&amp;quot; --end &amp;quot;2024-01-01T11:00:00&amp;quot; [--description &amp;quot;Notes&amp;quot;]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;caldav_list&lt;/code&gt;: List upcoming events
+&lt;ul&gt;
+&lt;li&gt;Usage: &lt;code&gt;caldav_list [--days 7]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;caldav_query&lt;/code&gt;: Query events in date range
+&lt;ul&gt;
+&lt;li&gt;Usage: &lt;code&gt;caldav_query --from &amp;quot;2024-01-01&amp;quot; --to &amp;quot;2024-01-31&amp;quot;&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="examples"&gt;Examples
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Add event: &amp;ldquo;帮我添加明天下午3点到4点的会议&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;List events: &amp;ldquo;查看最近一周的日程&amp;rdquo;&lt;/li&gt;
+&lt;li&gt;Query range: &amp;ldquo;查询6月1日到6月15日的所有事件&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;
+* * *
+
+## 三、CalDAV 日历同步原理详解
+
+### 3.1 什么是 CalDAV？
+
+CalDAV（Calendar Distributed Authoring and Versioning）是基于 WebDAV 的日历访问协议，让你可以通过网络读写日历数据。
+
+**核心特点**：
+- **标准化**：RFC 4791 定义，Apple、Google、Nextcloud 等都支持
+- **双向同步**：本地修改同步到服务器，服务器变更同步到本地
+- **多客户端**：iPhone、Android、Mac、Web 都能访问同一日历
+
+### 3.2 CalDAV 的工作流程
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;┌─────────────┐ HTTP/HTTPS ┌─────────────┐
+│ Hermes │ ◄─────────────────► │ CalDAV │
+│ (Client) │ PROPFIND/REPORT │ Server │
+│ │ ◄─────────────────► │ (Baikal/ │
+│ │ PUT/DELETE │ Radicale/ │
+│ │ │ Nextcloud) │
+└─────────────┘ └─────────────┘&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;
+常用操作对应的 HTTP 方法：
+
+| 操作 | HTTP 方法 | 说明 |
+|------|-----------|------|
+| 发现日历 | `PROPFIND` | 查询用户有哪些日历 |
+| 读取事件 | `REPORT` | 按时间范围查询事件 |
+| 添加事件 | `PUT` | 上传 .ics 文件 |
+| 删除事件 | `DELETE` | 删除指定事件 |
+| 修改事件 | `PUT` | 覆盖更新 .ics 文件 |
+
+### 3.3 我们的 CalDAV 服务器
+
+我家用的是自托管方案：
+
+- **服务器**：`https://caldav.laji.fun:9999`
+- **软件**：Baikal（轻量级 CalDAV/CardDAV 服务器）
+- **部署**：Docker + Nginx 反向代理
+- **用户**：每人一个独立账户
+
+**为什么选择自托管？**
+1. **隐私**：家庭日程不上第三方云
+2. **成本**：一次性配置，无订阅费
+3. **灵活**：想加用户就加用户
+
+* * *
+
+## 四、家庭部署实战：给我老婆配置日历技能
+
+### 4.1 场景需求
+
+- 我老婆也需要通过 Hermes 管理日程
+- 她的 CalDAV 账户是独立的（`zhaoyilei`）
+- 需要快速部署，不能让她折腾配置
+
+### 4.2 一键安装脚本
+
+我给她准备了一段命令，复制粘贴就能用：
+
+```bash
+# 创建技能目录
+mkdir -p ~/.hermes/skills/openclaw-imports/caldav-sync
+
+# 写入技能文件
+cat &amp;gt; ~/.hermes/skills/openclaw-imports/caldav-sync/SKILL.md &amp;lt;&amp;lt; &amp;#39;EOF&amp;#39;
+---
+name: caldav-sync
+description: Manage calendar events via CalDAV
+version: 1.0.0
+---
+
+# CalDAV Sync
+
+## Configuration
+
+```bash
+export CALDAV_URL=&amp;#34;https://caldav.laji.fun:9999&amp;#34;
+export CALDAV_USERNAME=&amp;#34;zhaoyilei&amp;#34;
+export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id="usage-1"&gt;Usage
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Add event: &lt;code&gt;caldav_add --title &amp;quot;Meeting&amp;quot; --start &amp;quot;2024-01-01T10:00:00&amp;quot; ...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;List events: &lt;code&gt;caldav_list [--days 7]&lt;/code&gt;
+EOF&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id="重启-hermes-生效"&gt;重启 Hermes 生效
+&lt;/h1&gt;&lt;p&gt;hermes skills reload&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;
+### 4.3 环境变量配置建议
+
+不要把密码直接写在 SKILL.md 里！推荐做法：
+
+**方法 1：`.env` 文件**
+
+```bash
+# ~/.hermes/.env
+CALDAV_URL=https://caldav.laji.fun:9999
+CALDAV_USERNAME=zhaoyilei
+CALDAV_PASSWORD=your-password
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;方法 2：Shell 配置文件&lt;/strong&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# ~/.zshrc 或 ~/.bashrc&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_URL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;https://caldav.laji.fun:9999&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;zhaoyilei&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_PASSWORD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;your-password&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="44-使用示例"&gt;4.4 使用示例
+&lt;/h3&gt;&lt;p&gt;配置完成后，自然语言就能操作日历：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;你说&lt;/th&gt;
+ &lt;th&gt;AI 执行&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&amp;ldquo;帮我添加明天下午3点的会议&amp;rdquo;&lt;/td&gt;
+ &lt;td&gt;解析时间 → 调用 &lt;code&gt;caldav_add&lt;/code&gt; → 返回确认&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&amp;ldquo;查看最近一周的日程&amp;rdquo;&lt;/td&gt;
+ &lt;td&gt;调用 &lt;code&gt;caldav_list --days 7&lt;/code&gt; → 格式化输出&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&amp;ldquo;下周三有空吗？&amp;rdquo;&lt;/td&gt;
+ &lt;td&gt;查询该日事件 → 判断空闲时段 → 回复&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&amp;ldquo;把明天的会议改到周五&amp;rdquo;&lt;/td&gt;
+ &lt;td&gt;查询原事件 → 删除 → 新建 → 确认&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="五进阶skill-版本管理与共享"&gt;五、进阶：Skill 版本管理与共享
+&lt;/h2&gt;&lt;h3 id="51-版本控制"&gt;5.1 版本控制
+&lt;/h3&gt;&lt;p&gt;建议把自定义 Skill 用 Git 管理：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ~/.hermes/skills/custom
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git init
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git add .
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git commit -m &lt;span class="s2"&gt;&amp;#34;init custom skills&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="52-家庭共享方案"&gt;5.2 家庭共享方案
+&lt;/h3&gt;&lt;p&gt;我们家的 Skill 共享流程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;我创建/更新 Skill&lt;/strong&gt; → 推送到私有 Git 仓库&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;老婆执行更新命令&lt;/strong&gt;：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ~/.hermes/skills/openclaw-imports/caldav-sync
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;git pull
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;hermes skills reload
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;或者更简单的&lt;/strong&gt;：直接发她一段命令，复制粘贴即可&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="53-技能市场安装"&gt;5.3 技能市场安装
+&lt;/h3&gt;&lt;p&gt;如果 Skill 发布到社区：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 官方市场&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;hermes skills install caldav-sync
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 从 URL 安装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;hermes skills install https://example.com/skills/caldav-sync.md
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 从 Git 仓库安装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;hermes skills install git+https://github.com/user/hermes-caldav-skill.git
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="六常见问题排查"&gt;六、常见问题排查
+&lt;/h2&gt;&lt;h3 id="q1-skill-安装后没有生效"&gt;Q1: Skill 安装后没有生效？
+&lt;/h3&gt;&lt;p&gt;检查清单：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; 目录结构是否正确？&lt;code&gt;~/.hermes/skills/&amp;lt;cat&amp;gt;/&amp;lt;name&amp;gt;/SKILL.md&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; YAML Frontmatter 是否完整？必须有 &lt;code&gt;name&lt;/code&gt; 和 &lt;code&gt;description&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; 是否执行了 &lt;code&gt;hermes skills reload&lt;/code&gt;？&lt;/li&gt;
+&lt;li&gt;&lt;input disabled="" type="checkbox"&gt; Hermes 日志是否有加载错误？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="q2-caldav-连接失败"&gt;Q2: CalDAV 连接失败？
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 测试服务器连通性&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;curl -I https://caldav.laji.fun:9999
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 测试认证&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;curl -u username:password &lt;span class="se"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -X PROPFIND &lt;span class="se"&gt;\
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; https://caldav.laji.fun:9999/calendars/username/
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;常见问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;证书错误&lt;/strong&gt;：自签名证书需要信任&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;404 错误&lt;/strong&gt;：URL 路径不对，检查 discovery 路径&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;401 错误&lt;/strong&gt;：用户名或密码错误&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="q3-如何查看-skill-加载日志"&gt;Q3: 如何查看 Skill 加载日志？
+&lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 查看 Hermes 日志&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;hermes logs
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 或启动时加调试参数&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;hermes --debug
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;hr&gt;
+&lt;h2 id="七总结"&gt;七、总结
+&lt;/h2&gt;&lt;p&gt;Hermes 的 Skill 系统让 AI 助手从&amp;quot;聊天机器人&amp;quot;变成了&amp;quot;工作流引擎&amp;quot;。通过简单的 Markdown 文件，你就能：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;封装重复操作&lt;/strong&gt; —— 把常用命令变成自然语言指令&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;连接外部服务&lt;/strong&gt; —— CalDAV、Notion、GitHub 等&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;家庭共享配置&lt;/strong&gt; —— 一人创建，全家受益&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;CalDAV 日历同步只是开始。你可以用同样的思路创建：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;家庭记账 Skill（连接你的记账系统）&lt;/li&gt;
+&lt;li&gt;智能家居 Skill（控制 Home Assistant）&lt;/li&gt;
+&lt;li&gt;健康管理 Skill（同步运动数据、提醒吃药）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;AI 助手的终极形态，不是它有多聪明，而是它有多懂你的生活。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;本文同步发布于 &lt;a class="link" href="https://jasper-nan.github.io/" target="_blank" rel="noopener"
+ &gt;jasper-nan.github.io&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;如果你也想搭建家庭 CalDAV 服务器，可以参考我的另一篇文章《群晖 NAS 新手入门完全指南》中的 Docker 部署章节。&lt;/em&gt;&lt;/p&gt;</description></item></channel></rss>

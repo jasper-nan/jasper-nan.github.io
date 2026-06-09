@@ -1,0 +1,255 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="详解 Hermes/OpenClaw 技能系统的创建方法，以及如何通过 CalDAV 实现家庭日历同步，让 AI 助手真正成为全家人的效率工具。"><title>Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置</title><link rel=canonical href=https://jasper-nan.github.io/post/hermes-skill-caldav-guide/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css><meta property='og:title' content="Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置"><meta property='og:description' content="详解 Hermes/OpenClaw 技能系统的创建方法，以及如何通过 CalDAV 实现家庭日历同步，让 AI 助手真正成为全家人的效率工具。"><meta property='og:url' content='https://jasper-nan.github.io/post/hermes-skill-caldav-guide/'><meta property='og:site_name' content="Jasper's Blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='Hermes'><meta property='article:tag' content='OpenClaw'><meta property='article:tag' content='CalDAV'><meta property='article:tag' content='AI 助手'><meta property='article:tag' content='家庭自动化'><meta property='article:tag' content='技能开发'><meta property='article:published_time' content='2026-06-09T00:00:00+00:00'><meta property='article:modified_time' content='2026-06-09T00:00:00+00:00'><meta name=twitter:title content="Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置"><meta name=twitter:description content="详解 Hermes/OpenClaw 技能系统的创建方法，以及如何通过 CalDAV 实现家庭日历同步，让 AI 助手真正成为全家人的效率工具。"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>Jasper's Blog</a></h1><h2 class=site-description>致良知</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>首页</span></a></li><li><a href=/post/><span>文章</span></a></li><li><a href=/tags/><span>标签</span></a></li><li><a href=/categories/><span>分类</span></a></li><li><a href=/buy-me-a-coffee/><span>☕ 请我喝咖啡</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/hermes-skill-caldav-guide/>Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置</a></h2><h3 class=article-subtitle>详解 Hermes/OpenClaw 技能系统的创建方法，以及如何通过 CalDAV 实现家庭日历同步，让 AI 助手真正成为全家人的效率工具。</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-06-09T00:00:00Z>Tuesday, June 9, 2026</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><section class=article-content><blockquote><p>最近给老婆配置 CalDAV 日历同步技能时，发现很多人对 Hermes（原 OpenClaw）的 Skill 系统还不够熟悉。这篇文章从 Skill 创建原理讲起，到 CalDAV 日历同步的实战配置，再到如何给家庭成员快速部署，希望能帮你把 AI 助手从"个人玩具"变成"家庭基础设施"。</p></blockquote><hr><h2 id=一hermes-skill-是什么为什么重要>一、Hermes Skill 是什么？为什么重要？</h2><h3 id=11-从插件到技能ai-助手的进化>1.1 从插件到技能：AI 助手的进化</h3><p>传统的软件扩展叫"插件"（Plugin），强调的是<strong>功能叠加</strong>。而 Hermes 的 Skill 是<strong>工作流封装</strong>——它不只是加一个新功能，而是把"如何完成一件事"的完整逻辑打包交给 AI。</p><p>举个例子：</p><ul><li><strong>插件思维</strong>：装一个日历插件，能看日程</li><li><strong>Skill 思维</strong>：说一句"帮我查下周三的会议"，AI 自动调用 CalDAV 查询、解析时间语义、返回格式化结果</li></ul><p>Skill 的核心价值在于<strong>降低使用门槛</strong>。你不需要记住命令，用自然语言表达意图就行。</p><h3 id=12-skill-的底层结构>1.2 Skill 的底层结构</h3><p>每个 Skill 本质上是一个目录，包含：</p><pre tabindex=0><code>~/.hermes/skills/&lt;category&gt;/&lt;skill-name&gt;/
+├── SKILL.md          # 技能定义文件（必需）
+├── references/       # 参考文档
+├── templates/        # 模板文件
+├── scripts/          # 可执行脚本
+└── assets/           # 图片等资源
+</code></pre><p>最核心的就是 <code>SKILL.md</code>，它采用 YAML Frontmatter + Markdown 的格式：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>caldav-sync</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Manage calendar events via CalDAV</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>1.0.0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>author</span><span class=p>:</span><span class=w> </span><span class=l>Your Name</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c># CalDAV Sync</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c>## Configuration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>Set these environment variables</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>```bash</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>export CALDAV_URL=&#34;https://caldav.example.com:9999&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>export CALDAV_USERNAME=&#34;your-username&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>export CALDAV_PASSWORD=&#34;your-password&#34;</span><span class=w>
+</span></span></span></code></pre></div><h2 id=usage>Usage</h2><ul><li>Add event: <code>caldav_add --title "Meeting" --start "2024-01-01T10:00:00" ...</code></li><li>List events: <code>caldav_list [--days 7]</code></li></ul><pre tabindex=0><code>
+Hermes 在启动时会扫描 `~/.hermes/skills/` 目录，自动加载所有有效的 Skill。
+
+### 1.3 Skill 的三种类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **内置技能** | Hermes 官方提供，随安装附带 | web_search, terminal, file |
+| **社区技能** | 通过 `hermes skills install` 安装 | caldav-sync, blogwatcher |
+| **自定义技能** | 用户自己创建的 SKILL.md | 个人记账、家庭日历 |
+
+* * *
+
+## 二、手把手创建一个 Skill
+
+### 2.1 最简单的 Skill：Hello World
+
+```bash
+# 创建目录
+mkdir -p ~/.hermes/skills/custom/hello-world
+
+# 编写 SKILL.md
+cat &gt; ~/.hermes/skills/custom/hello-world/SKILL.md &lt;&lt; &#39;EOF&#39;
+---
+name: hello-world
+description: A simple hello world skill to demonstrate the structure
+version: 1.0.0
+---
+
+# Hello World
+
+This skill demonstrates the basic structure of a Hermes skill.
+
+## Usage
+
+Simply say &#34;hello&#34; and the agent will respond with a greeting.
+EOF
+</code></pre><p>重启 Hermes 或执行 <code>hermes skills reload</code>，这个技能就生效了。</p><h3 id=22-带脚本的-skill系统监控>2.2 带脚本的 Skill：系统监控</h3><p>如果 Skill 需要执行代码，可以在 <code>scripts/</code> 目录放脚本：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>mkdir -p ~/.hermes/skills/custom/system-monitor/scripts
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>cat &gt; ~/.hermes/skills/custom/system-monitor/scripts/check-disk.sh <span class=s>&lt;&lt; &#39;EOF&#39;
+</span></span></span><span class=line><span class=cl><span class=s>#!/bin/bash
+</span></span></span><span class=line><span class=cl><span class=s>df -h / | awk &#39;NR==2 {print &#34;磁盘使用率: &#34;$5&#34; (&#34;$3&#34;/&#34;$2&#34;)&#34;}&#39;
+</span></span></span><span class=line><span class=cl><span class=s>EOF</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>chmod +x ~/.hermes/skills/custom/system-monitor/scripts/check-disk.sh
+</span></span></code></pre></div><p>然后在 <code>SKILL.md</code> 中引用：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-markdown data-lang=markdown><span class=line><span class=cl><span class=gu>## Tools
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>-</span> <span class=sb>`check_disk`</span>: Check disk usage
+</span></span><span class=line><span class=cl>  <span class=k>-</span> Script: <span class=sb>`scripts/check-disk.sh`</span>
+</span></span><span class=line><span class=cl>  <span class=k>-</span> Usage: Run directly to get disk usage info
+</span></span></code></pre></div><h3 id=23-带配置的-skillcaldav-日历同步>2.3 带配置的 Skill：CalDAV 日历同步</h3><p>更复杂的 Skill 需要环境变量配置。以 CalDAV 为例：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>mkdir -p ~/.hermes/skills/openclaw-imports/caldav-sync
+</span></span></code></pre></div><p><code>SKILL.md</code> 内容：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>caldav-sync</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>description</span><span class=p>:</span><span class=w> </span><span class=l>Manage calendar events via CalDAV — add, list, query calendar events</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>version</span><span class=p>:</span><span class=w> </span><span class=m>1.0.0</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>author</span><span class=p>:</span><span class=w> </span><span class=l>OpenClaw</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nn>---</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c># CalDAV Sync</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>Connect to CalDAV server to manage calendar events.</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=c>## Configuration</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=nt>Set these environment variables in `~/.hermes/.env` or your shell profile</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>```bash</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>export CALDAV_URL=&#34;https://caldav.laji.fun:9999&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>export CALDAV_USERNAME=&#34;your-username&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=l>export CALDAV_PASSWORD=&#34;your-password&#34;</span><span class=w>
+</span></span></span></code></pre></div><h2 id=tools>Tools</h2><ul><li><code>caldav_add</code>: Add a new event<ul><li>Usage: <code>caldav_add --title "Meeting" --start "2024-01-01T10:00:00" --end "2024-01-01T11:00:00" [--description "Notes"]</code></li></ul></li><li><code>caldav_list</code>: List upcoming events<ul><li>Usage: <code>caldav_list [--days 7]</code></li></ul></li><li><code>caldav_query</code>: Query events in date range<ul><li>Usage: <code>caldav_query --from "2024-01-01" --to "2024-01-31"</code></li></ul></li></ul><h2 id=examples>Examples</h2><ul><li>Add event: &ldquo;帮我添加明天下午3点到4点的会议&rdquo;</li><li>List events: &ldquo;查看最近一周的日程&rdquo;</li><li>Query range: &ldquo;查询6月1日到6月15日的所有事件&rdquo;</li></ul><pre tabindex=0><code>
+* * *
+
+## 三、CalDAV 日历同步原理详解
+
+### 3.1 什么是 CalDAV？
+
+CalDAV（Calendar Distributed Authoring and Versioning）是基于 WebDAV 的日历访问协议，让你可以通过网络读写日历数据。
+
+**核心特点**：
+- **标准化**：RFC 4791 定义，Apple、Google、Nextcloud 等都支持
+- **双向同步**：本地修改同步到服务器，服务器变更同步到本地
+- **多客户端**：iPhone、Android、Mac、Web 都能访问同一日历
+
+### 3.2 CalDAV 的工作流程
+</code></pre><p>┌─────────────┐ HTTP/HTTPS ┌─────────────┐
+│ Hermes │ ◄─────────────────► │ CalDAV │
+│ (Client) │ PROPFIND/REPORT │ Server │
+│ │ ◄─────────────────► │ (Baikal/ │
+│ │ PUT/DELETE │ Radicale/ │
+│ │ │ Nextcloud) │
+└─────────────┘ └─────────────┘</p><pre tabindex=0><code>
+常用操作对应的 HTTP 方法：
+
+| 操作 | HTTP 方法 | 说明 |
+|------|-----------|------|
+| 发现日历 | `PROPFIND` | 查询用户有哪些日历 |
+| 读取事件 | `REPORT` | 按时间范围查询事件 |
+| 添加事件 | `PUT` | 上传 .ics 文件 |
+| 删除事件 | `DELETE` | 删除指定事件 |
+| 修改事件 | `PUT` | 覆盖更新 .ics 文件 |
+
+### 3.3 我们的 CalDAV 服务器
+
+我家用的是自托管方案：
+
+- **服务器**：`https://caldav.laji.fun:9999`
+- **软件**：Baikal（轻量级 CalDAV/CardDAV 服务器）
+- **部署**：Docker + Nginx 反向代理
+- **用户**：每人一个独立账户
+
+**为什么选择自托管？**
+1. **隐私**：家庭日程不上第三方云
+2. **成本**：一次性配置，无订阅费
+3. **灵活**：想加用户就加用户
+
+* * *
+
+## 四、家庭部署实战：给我老婆配置日历技能
+
+### 4.1 场景需求
+
+- 我老婆也需要通过 Hermes 管理日程
+- 她的 CalDAV 账户是独立的（`zhaoyilei`）
+- 需要快速部署，不能让她折腾配置
+
+### 4.2 一键安装脚本
+
+我给她准备了一段命令，复制粘贴就能用：
+
+```bash
+# 创建技能目录
+mkdir -p ~/.hermes/skills/openclaw-imports/caldav-sync
+
+# 写入技能文件
+cat &gt; ~/.hermes/skills/openclaw-imports/caldav-sync/SKILL.md &lt;&lt; &#39;EOF&#39;
+---
+name: caldav-sync
+description: Manage calendar events via CalDAV
+version: 1.0.0
+---
+
+# CalDAV Sync
+
+## Configuration
+
+```bash
+export CALDAV_URL=&#34;https://caldav.laji.fun:9999&#34;
+export CALDAV_USERNAME=&#34;zhaoyilei&#34;
+export CALDAV_PASSWORD=&#34;your-password&#34;
+</code></pre><h2 id=usage-1>Usage</h2><ul><li>Add event: <code>caldav_add --title "Meeting" --start "2024-01-01T10:00:00" ...</code></li><li>List events: <code>caldav_list [--days 7]</code>
+EOF</li></ul><h1 id=重启-hermes-生效>重启 Hermes 生效</h1><p>hermes skills reload</p><pre tabindex=0><code>
+### 4.3 环境变量配置建议
+
+不要把密码直接写在 SKILL.md 里！推荐做法：
+
+**方法 1：`.env` 文件**
+
+```bash
+# ~/.hermes/.env
+CALDAV_URL=https://caldav.laji.fun:9999
+CALDAV_USERNAME=zhaoyilei
+CALDAV_PASSWORD=your-password
+</code></pre><p><strong>方法 2：Shell 配置文件</strong></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># ~/.zshrc 或 ~/.bashrc</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>CALDAV_URL</span><span class=o>=</span><span class=s2>&#34;https://caldav.laji.fun:9999&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>CALDAV_USERNAME</span><span class=o>=</span><span class=s2>&#34;zhaoyilei&#34;</span>
+</span></span><span class=line><span class=cl><span class=nb>export</span> <span class=nv>CALDAV_PASSWORD</span><span class=o>=</span><span class=s2>&#34;your-password&#34;</span>
+</span></span></code></pre></div><h3 id=44-使用示例>4.4 使用示例</h3><p>配置完成后，自然语言就能操作日历：</p><div class=table-wrapper><table><thead><tr><th>你说</th><th>AI 执行</th></tr></thead><tbody><tr><td>&ldquo;帮我添加明天下午3点的会议&rdquo;</td><td>解析时间 → 调用 <code>caldav_add</code> → 返回确认</td></tr><tr><td>&ldquo;查看最近一周的日程&rdquo;</td><td>调用 <code>caldav_list --days 7</code> → 格式化输出</td></tr><tr><td>&ldquo;下周三有空吗？&rdquo;</td><td>查询该日事件 → 判断空闲时段 → 回复</td></tr><tr><td>&ldquo;把明天的会议改到周五&rdquo;</td><td>查询原事件 → 删除 → 新建 → 确认</td></tr></tbody></table></div><hr><h2 id=五进阶skill-版本管理与共享>五、进阶：Skill 版本管理与共享</h2><h3 id=51-版本控制>5.1 版本控制</h3><p>建议把自定义 Skill 用 Git 管理：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>cd</span> ~/.hermes/skills/custom
+</span></span><span class=line><span class=cl>git init
+</span></span><span class=line><span class=cl>git add .
+</span></span><span class=line><span class=cl>git commit -m <span class=s2>&#34;init custom skills&#34;</span>
+</span></span></code></pre></div><h3 id=52-家庭共享方案>5.2 家庭共享方案</h3><p>我们家的 Skill 共享流程：</p><ol><li><p><strong>我创建/更新 Skill</strong> → 推送到私有 Git 仓库</p></li><li><p><strong>老婆执行更新命令</strong>：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>cd</span> ~/.hermes/skills/openclaw-imports/caldav-sync
+</span></span><span class=line><span class=cl>git pull
+</span></span><span class=line><span class=cl>hermes skills reload
+</span></span></code></pre></div></li><li><p><strong>或者更简单的</strong>：直接发她一段命令，复制粘贴即可</p></li></ol><h3 id=53-技能市场安装>5.3 技能市场安装</h3><p>如果 Skill 发布到社区：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 官方市场</span>
+</span></span><span class=line><span class=cl>hermes skills install caldav-sync
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 从 URL 安装</span>
+</span></span><span class=line><span class=cl>hermes skills install https://example.com/skills/caldav-sync.md
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 从 Git 仓库安装</span>
+</span></span><span class=line><span class=cl>hermes skills install git+https://github.com/user/hermes-caldav-skill.git
+</span></span></code></pre></div><hr><h2 id=六常见问题排查>六、常见问题排查</h2><h3 id=q1-skill-安装后没有生效>Q1: Skill 安装后没有生效？</h3><p>检查清单：</p><ul><li><input disabled type=checkbox> 目录结构是否正确？<code>~/.hermes/skills/&lt;cat>/&lt;name>/SKILL.md</code></li><li><input disabled type=checkbox> YAML Frontmatter 是否完整？必须有 <code>name</code> 和 <code>description</code></li><li><input disabled type=checkbox> 是否执行了 <code>hermes skills reload</code>？</li><li><input disabled type=checkbox> Hermes 日志是否有加载错误？</li></ul><h3 id=q2-caldav-连接失败>Q2: CalDAV 连接失败？</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 测试服务器连通性</span>
+</span></span><span class=line><span class=cl>curl -I https://caldav.laji.fun:9999
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 测试认证</span>
+</span></span><span class=line><span class=cl>curl -u username:password <span class=se>\
+</span></span></span><span class=line><span class=cl>  -X PROPFIND <span class=se>\
+</span></span></span><span class=line><span class=cl>  https://caldav.laji.fun:9999/calendars/username/
+</span></span></code></pre></div><p>常见问题：</p><ul><li><strong>证书错误</strong>：自签名证书需要信任</li><li><strong>404 错误</strong>：URL 路径不对，检查 discovery 路径</li><li><strong>401 错误</strong>：用户名或密码错误</li></ul><h3 id=q3-如何查看-skill-加载日志>Q3: 如何查看 Skill 加载日志？</h3><div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=c1># 查看 Hermes 日志</span>
+</span></span><span class=line><span class=cl>hermes logs
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># 或启动时加调试参数</span>
+</span></span><span class=line><span class=cl>hermes --debug
+</span></span></code></pre></div><hr><h2 id=七总结>七、总结</h2><p>Hermes 的 Skill 系统让 AI 助手从"聊天机器人"变成了"工作流引擎"。通过简单的 Markdown 文件，你就能：</p><ol><li><strong>封装重复操作</strong> —— 把常用命令变成自然语言指令</li><li><strong>连接外部服务</strong> —— CalDAV、Notion、GitHub 等</li><li><strong>家庭共享配置</strong> —— 一人创建，全家受益</li></ol><p>CalDAV 日历同步只是开始。你可以用同样的思路创建：</p><ul><li>家庭记账 Skill（连接你的记账系统）</li><li>智能家居 Skill（控制 Home Assistant）</li><li>健康管理 Skill（同步运动数据、提醒吃药）</li></ul><p><strong>AI 助手的终极形态，不是它有多聪明，而是它有多懂你的生活。</strong></p><hr><p><em>本文同步发布于 <a class=link href=https://jasper-nan.github.io/ target=_blank rel=noopener>jasper-nan.github.io</a></em></p><p><em>如果你也想搭建家庭 CalDAV 服务器，可以参考我的另一篇文章《群晖 NAS 新手入门完全指南》中的 Docker 部署章节。</em></p></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/hermes/>Hermes</a>
+<a href=/tags/openclaw/>OpenClaw</a>
+<a href=/tags/caldav/>CalDAV</a>
+<a href=/tags/ai-%E5%8A%A9%E6%89%8B/>AI 助手</a>
+<a href=/tags/%E5%AE%B6%E5%BA%AD%E8%87%AA%E5%8A%A8%E5%8C%96/>家庭自动化</a>
+<a href=/tags/%E6%8A%80%E8%83%BD%E5%BC%80%E5%8F%91/>技能开发</a></section></footer></article><aside><h2 class=section-title></h2><div class=subsection-list><div class=article-list--tile><article><a href=/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/><div class=article-details><h2 class=article-title>OpenClaw 插件与 Skill 优化实战：从堆功能到真好用</h2></div></a></article><article><a href=/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/><div class=article-details><h2 class=article-title>AI 助手实战：我用 OpenClaw 打造个人自动化系统</h2></div></a></article><article><a href=/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/><div class=article-details><h2 class=article-title>国内 AI Coding Plan 横评：DeepSeek、智谱 GLM、通义千问、MiniMax、Kimi</h2></div></a></article><article><a href=/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/><div class=article-details><h2 class=article-title>帮你部署 OpenClaw AI 助手 — 一杯咖啡钱拥有私人智能管家</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2019 -
+2026 Jasper's Blog</section><section class=powerby><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>
