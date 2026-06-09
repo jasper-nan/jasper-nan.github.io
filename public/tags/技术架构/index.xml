@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>技术架构 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/</link><description>Recent content in 技术架构 on Jasper's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 29 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/index.xml" rel="self" type="application/rss+xml"/><item><title>AI Agent 开发实战笔记：技术选型与架构思考</title><link>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</guid><description>&lt;h2 id="前言为什么-ai-agent-值得关注"&gt;前言：为什么 AI Agent 值得关注&lt;/h2&gt;
+&lt;p&gt;最近公司计划在总部启动一个 AI Agent 相关的开发项目，我作为参与者之一，需要提前做技术调研和储备。&lt;/p&gt;
+&lt;p&gt;说实话，半年前我对 AI Agent 的理解还停留在&amp;quot;套壳聊天机器人&amp;quot;的层面。但深入研究之后发现，Agent 和传统的&amp;quot;调 API 返回结果&amp;quot;完全不是一回事——它关乎&lt;strong&gt;规划、记忆、工具调用、多步推理&lt;/strong&gt; ，是让 AI 从&amp;quot;能对话&amp;quot;进化到&amp;quot;能干活&amp;quot;的关键一步。&lt;/p&gt;
+&lt;p&gt;这篇文章记录了我调研过程中对主流技术框架的理解和对比，希望能给同样在关注这个方向的朋友一些参考。不保证全对，但保证真实。&lt;/p&gt;
+&lt;h2 id="一什么是-ai-agent"&gt;一、什么是 AI Agent？&lt;/h2&gt;
+&lt;p&gt;先简单定义一下：&lt;strong&gt;AI Agent = 大模型 + 规划能力 + 工具调用 + 记忆系统&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通的大模型调用是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用户提问 → 模型回答 → 结束&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Agent 是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用户提出目标 → Agent 拆解任务 → 选择工具 → 执行操作 → 观察结果 → 调整策略 → 返回最终结果&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;区别在于 Agent 有&amp;quot;自主性&amp;quot;——它不只是回答问题，而是&lt;strong&gt;完成任务&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;举个具体例子：你说&amp;quot;帮我查一下明天北京到上海的机票并订最便宜的&amp;quot;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;普通 ChatBot&lt;/strong&gt; ：只能告诉你怎么查，或者给你一个链接&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Agent&lt;/strong&gt; ：自己去调用航班查询 API → 筛选结果 → 调用订票接口 → 返回确认信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是 Agent 的核心价值：&lt;strong&gt;把自然语言意图转化为具体的行动序列&lt;/strong&gt; 。&lt;/p&gt;</description></item></channel></rss>

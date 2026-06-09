@@ -1,15 +1,2006 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-    <channel>
-        <title>Posts on Jasper&#39;s Blog</title>
-        <link>https://jonnynan.github.io/post/</link>
-        <description>Recent content in Posts on Jasper&#39;s Blog</description>
-        <generator>Hugo -- gohugo.io</generator>
-        <language>zh-cn</language>
-        <lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jonnynan.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
-            <title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title>
-            <link>https://jonnynan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link>
-            <pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://jonnynan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</guid>
-            <description>&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;测试工程师不应该把时间花在&amp;quot;装环境&amp;quot;、&amp;ldquo;等部署&amp;rdquo;、&amp;ldquo;手动提 Bug&amp;quot;上。AI Agent 可以把这些杂活全部自动化，让你专注在真正有价值的事上。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;背景测试工程师的日常痛点&#34;&gt;背景：测试工程师的日常痛点&#xA;&lt;/h2&gt;&lt;p&gt;作为一个在物流科技部门做测试/全栈的工程师，我日常的工作流大概是这样的：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;需要一套测试环境 → 找运维开虚拟机（排队等半天）&lt;/li&gt;&#xA;&lt;li&gt;虚拟机好了 → SSH 上去装环境、拉代码、配服务&lt;/li&gt;&#xA;&lt;li&gt;环境就绪 → 触发 Jenkins 构建、部署&lt;/li&gt;&#xA;&lt;li&gt;跑完测试 → 发现 Bug → 打开缺陷管理平台，手动填一大堆字段&lt;/li&gt;&#xA;&lt;li&gt;修完复测 → 再部署、再验证、再关 Bug&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;这套流程下来，真正用在「测试」上的时间可能不到 40%，剩下全是环境搭建、等部署、填表。尤其是跨版本回归测试，每个版本都要重复一遍。&lt;/p&gt;&#xA;&lt;p&gt;我一直在想：能不能把 AI 引入这条链路，让它帮我干这些重复劳动？&lt;/p&gt;&#xA;&lt;h2 id=&#34;方案用一个-ai-agent-串联整个工作流&#34;&gt;方案：用一个 AI Agent 串联整个工作流&#xA;&lt;/h2&gt;&lt;p&gt;最终方案是用一个开源的 AI Agent 框架，通过自然语言对话触发一整套自动化操作：&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;说一句话 → 创建虚拟机 → 配置环境 → 触发构建 → 发现 Bug 自动提交&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;不用切窗口，不用等审批，不用手动填表。整个链路一个人、一句话搞定。&lt;/p&gt;&#xA;&lt;h2 id=&#34;一esxi-自动创建虚拟机&#34;&gt;一、ESXi 自动创建虚拟机&#xA;&lt;/h2&gt;&lt;h3 id=&#34;痛点&#34;&gt;痛点&#xA;&lt;/h3&gt;&lt;p&gt;以前每次要测试环境，流程是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;登录 vSphere Client&lt;/li&gt;&#xA;&lt;li&gt;找到合适的模板&lt;/li&gt;&#xA;&lt;li&gt;右键 → 从模板克隆&lt;/li&gt;&#xA;&lt;li&gt;改名字、改 IP、改配置&lt;/li&gt;&#xA;&lt;li&gt;开机 → 等 → SSH 上去装环境&lt;/li&gt;&#xA;&lt;li&gt;整个流程 15-30 分钟，如果模板有问题甚至更长&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;解决&#34;&gt;解决&#xA;&lt;/h3&gt;&lt;p&gt;通过 ESXi API + PowerCLI 脚本，AI Agent 可以直接创建和配置虚拟机：&lt;/p&gt;&#xA;&lt;p&gt;我对 Agent 说：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;帮我创建一台测试虚拟机，2C4G，用 ubuntu22 模板，&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;名字叫 test-env-v1.5.3，IP 分配 192.168.x.x&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Agent 在后台执行：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 简化的伪代码逻辑&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;clone_from_template&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;template&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;ubuntu22-template&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;test-env-v1.5.3&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;cpus&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;memory_gb&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;network&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;VM Network&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;n&#34;&gt;ip&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;192.168.x.x&amp;#34;&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;power_on&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;wait_for_ssh&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;n&#34;&gt;configure_env&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;vm&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;# 自动装 Docker、拉代码、配服务&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;**效果：**从 30 分钟缩短到 5 分钟。而且我可以一边喝咖啡一边等，Agent 创建完会主动通知我。&lt;/p&gt;&#xA;&lt;h3 id=&#34;踩坑&#34;&gt;踩坑&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;vSAN 流量和管理流量走了同一张网卡，创建虚拟机时 IO 争抢严重。最终给 vSAN 分了独立 VMkernel 适配器，用 VLAN 隔离解决了&lt;/li&gt;&#xA;&lt;li&gt;IP 地址池管理要注意回收，不然创建多了 IP 冲突&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;二jenkins-自动化构建与部署&#34;&gt;二、Jenkins 自动化构建与部署&#xA;&lt;/h2&gt;&lt;h3 id=&#34;痛点-1&#34;&gt;痛点&#xA;&lt;/h3&gt;&lt;p&gt;以前触发构建的流程：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;打开 Jenkins 网页&lt;/li&gt;&#xA;&lt;li&gt;找到对应的 Job&lt;/li&gt;&#xA;&lt;li&gt;填参数（分支名、环境、构建号等）&lt;/li&gt;&#xA;&lt;li&gt;点构建&lt;/li&gt;&#xA;&lt;li&gt;刷页面等结果&lt;/li&gt;&#xA;&lt;li&gt;构建失败了 → 查日志 → 定位问题&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 id=&#34;解决-1&#34;&gt;解决&#xA;&lt;/h3&gt;&lt;p&gt;Jenkins 提供 REST API 和 CLI，Agent 可以直接调用：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 使用 Jenkins CLI 触发构建&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;java -jar jenkins-cli.jar -s http://jenkins-server:8080/ &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -auth admin:API_TOKEN &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  build my-project &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p &lt;span class=&#34;nv&#34;&gt;BRANCH&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;release/v1.5.3 &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p &lt;span class=&#34;nv&#34;&gt;ENV&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  -p &lt;span class=&#34;nv&#34;&gt;BUILD_NUM&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;127&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;更进一步的玩法 —— 我只需要对 Agent 说：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;触发 v1.5.3 的测试环境构建&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Agent 自动完成：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;调用 Jenkins API 触发构建&lt;/li&gt;&#xA;&lt;li&gt;轮询构建状态&lt;/li&gt;&#xA;&lt;li&gt;构建完成后通知我结果&lt;/li&gt;&#xA;&lt;li&gt;如果失败了，自动拉取日志摘要，告诉我哪个 stage 出了什么错&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;**效果：**不用开浏览器，不用记住 Job 名字和参数。一句话触发，结果主动推送。&lt;/p&gt;&#xA;&lt;h3 id=&#34;实战构建失败自动分析&#34;&gt;实战：构建失败自动分析&#xA;&lt;/h3&gt;&lt;p&gt;这是我觉得最有价值的功能之一。Agent 拿到构建日志后，能自动分析失败原因：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;❌ 构建 #127 失败&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;📍 失败阶段：接口测试&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;🔍 原因：UserService 接口响应超时（timeout 10s）&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;📊 最近 5 次构建：3 次超时，1 次成功，1 次其他错误&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;💡 建议：检查数据库连接池配置，可能连接数不够&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以前我需要自己翻几百行日志找原因，现在 Agent 10 秒钟就给我摘要。&lt;/p&gt;&#xA;&lt;h2 id=&#34;三自动提交-bug-到缺陷管理平台&#34;&gt;三、自动提交 Bug 到缺陷管理平台&#xA;&lt;/h2&gt;&lt;h3 id=&#34;痛点-2&#34;&gt;痛点&#xA;&lt;/h3&gt;&lt;p&gt;提 Bug 是测试工程师最繁琐的工作之一：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;截图、录屏&lt;/li&gt;&#xA;&lt;li&gt;写标题、描述、复现步骤&lt;/li&gt;&#xA;&lt;li&gt;选择模块、严重程度、优先级&lt;/li&gt;&#xA;&lt;li&gt;指派给对应的开发&lt;/li&gt;&#xA;&lt;li&gt;关联测试用例和版本&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;一个 Bug 填下来 5-10 分钟，回归测试一轮能提 20+ 个 Bug，光填表就两小时没了。&lt;/p&gt;&#xA;&lt;h3 id=&#34;解决-2&#34;&gt;解决&#xA;&lt;/h3&gt;&lt;p&gt;Agent 通过缺陷管理平台的 API 自动提交：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;刚才那个构建失败，帮我提个 Bug，&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;标题用&amp;#34;v1.5.3 用户服务接口超时&amp;#34;，&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;指派给后端组&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Agent 自动组装 Bug 信息：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;字段&lt;/th&gt;&#xA;          &lt;th&gt;内容（自动生成）&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;标题&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;v1.5.3 用户服务接口超时&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;严重程度&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;严重（P1）&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;模块&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;用户服务&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;指派&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;后端组负责人&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;复现步骤&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;自动从构建日志和测试报告提取&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;环境信息&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;test-env-v1.5.3 / Ubuntu 22.04&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;关联构建&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;Jenkins #127&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;&lt;strong&gt;日志附件&lt;/strong&gt;&lt;/td&gt;&#xA;          &lt;td&gt;失败日志 + 堆栈信息&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;**效果：**提 Bug 从 10 分钟降到 30 秒。而且格式规范、信息完整，开发不会来找我补信息。&lt;/p&gt;&#xA;&lt;h2 id=&#34;四全链路串联一个实战场景&#34;&gt;四、全链路串联：一个实战场景&#xA;&lt;/h2&gt;&lt;p&gt;把这些能力串起来，实际工作流是这样的：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;我：帮我把 v1.5.3 部署到测试环境，跑完回归测试后把问题都提了&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;Agent：好的，开始执行：&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 创建测试虚拟机 test-env-v1.5.3（2C4G）&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 配置环境并拉取代码&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 触发 Jenkins 构建 #127&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 构建成功，部署完成&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 启动自动化测试（45 条用例）&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ⚠️ 3 条用例失败，2 条跳过&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  ✅ 已提交 3 个 Bug 到缺陷管理平台：&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     - #BUG-1052 用户服务接口超时（P1）→ 指派后端组&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     - #BUG-1053 订单列表分页异常（P2）→ 指派前端组  &#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;     - #BUG-1054 物流轨迹数据重复（P3）→ 指派后端组&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  完整报告已发送到你的飞书。&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以前这个流程我需要：找运维（可能跨天）→ 创建虚拟机 → 部署 → 测试 → 提 Bug → 发通知。&lt;strong&gt;可能要 2-3 天。&lt;/strong&gt;&lt;/p&gt;&#xA;&lt;p&gt;现在一句话，&lt;strong&gt;1 小时内完成&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;五技术架构&#34;&gt;五、技术架构&#xA;&lt;/h2&gt;&lt;p&gt;整体架构并不复杂：&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-text&#34; data-lang=&#34;text&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;┌─────────────┐&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;│  飞书/终端   │  ← 自然语言输入&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└──────┬──────┘&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;       │&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;┌──────▼──────┐&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;│  AI Agent   │  ← 理解意图、编排任务&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;│  (OpenClaw) │&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;└──┬──┬──┬───┘&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   │  │  │&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   │  │  └─── 缺陷管理 API ──→ 提交/管理 Bug&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   │  └───── Jenkins CLI/API ──→ 构建/部署&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;   └──────── ESXi/PowerCLI ──→ 虚拟机管理&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;核心思路：AI Agent 不直接&amp;quot;做&amp;quot;事，而是&lt;strong&gt;调用已有的工具和 API&lt;/strong&gt;。Jenkins、ESXi、缺陷管理平台都有成熟的 API，Agent 只是把它们串起来。&lt;/p&gt;&#xA;&lt;h2 id=&#34;六实际效果与数据&#34;&gt;六、实际效果与数据&#xA;&lt;/h2&gt;&lt;p&gt;用了两三个月后的对比：&lt;/p&gt;&#xA;&lt;table&gt;&#xA;  &lt;thead&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;th&gt;环节&lt;/th&gt;&#xA;          &lt;th&gt;改造前&lt;/th&gt;&#xA;          &lt;th&gt;改造后&lt;/th&gt;&#xA;          &lt;th&gt;提升&lt;/th&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/thead&gt;&#xA;  &lt;tbody&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;申请测试环境&lt;/td&gt;&#xA;          &lt;td&gt;0.5-1 天&lt;/td&gt;&#xA;          &lt;td&gt;5 分钟&lt;/td&gt;&#xA;          &lt;td&gt;90%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;环境配置&lt;/td&gt;&#xA;          &lt;td&gt;30-60 分钟&lt;/td&gt;&#xA;          &lt;td&gt;自动完成&lt;/td&gt;&#xA;          &lt;td&gt;95%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;触发构建部署&lt;/td&gt;&#xA;          &lt;td&gt;5-10 分钟&lt;/td&gt;&#xA;          &lt;td&gt;1 句话&lt;/td&gt;&#xA;          &lt;td&gt;80%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;构建失败分析&lt;/td&gt;&#xA;          &lt;td&gt;15-30 分钟翻日志&lt;/td&gt;&#xA;          &lt;td&gt;10 秒出摘要&lt;/td&gt;&#xA;          &lt;td&gt;95%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;提 Bug&lt;/td&gt;&#xA;          &lt;td&gt;5-10 分钟/个&lt;/td&gt;&#xA;          &lt;td&gt;30 秒/个&lt;/td&gt;&#xA;          &lt;td&gt;90%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;      &lt;tr&gt;&#xA;          &lt;td&gt;版本回归全流程&lt;/td&gt;&#xA;          &lt;td&gt;2-3 天&lt;/td&gt;&#xA;          &lt;td&gt;1-2 小时&lt;/td&gt;&#xA;          &lt;td&gt;85%+&lt;/td&gt;&#xA;      &lt;/tr&gt;&#xA;  &lt;/tbody&gt;&#xA;&lt;/table&gt;&#xA;&lt;p&gt;最关键的提升不是效率，而是&lt;strong&gt;注意力&lt;/strong&gt;。我不需要再在环境、部署、填表这些低价值工作上分心，可以把精力放在测试策略设计、复杂场景分析这些真正需要人的地方。&lt;/p&gt;&#xA;&lt;h2 id=&#34;七踩坑与经验&#34;&gt;七、踩坑与经验&#xA;&lt;/h2&gt;&lt;h3 id=&#34;1-api-权限要最小化原则&#34;&gt;1. API 权限要最小化原则&#xA;&lt;/h3&gt;&lt;p&gt;Agent 有权限调用 Jenkins、ESXi、缺陷管理平台，意味着它有能力&amp;quot;搞破坏&amp;rdquo;。务必：&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;给 Agent 用独立的 API Token，权限严格限制&lt;/li&gt;&#xA;&lt;li&gt;生产环境操作必须二次确认&lt;/li&gt;&#xA;&lt;li&gt;高危操作（删除 VM、回滚等）走审批流程&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;2-容错与重试很重要&#34;&gt;2. 容错与重试很重要&#xA;&lt;/h3&gt;&lt;p&gt;真实环境不稳定：网络抖动、API 超时、资源不足。Agent 需要有合理的重试策略和错误处理，不能一个 API 失败就整个流程挂掉。&lt;/p&gt;&#xA;&lt;h3 id=&#34;3-人机协作不是人机替代&#34;&gt;3. 人机协作，不是人机替代&#xA;&lt;/h3&gt;&lt;p&gt;AI Agent 不是要替代测试工程师，而是接管机械性的重复工作。测试设计、业务理解、风险评估这些还是人的核心价值。Agent 是&amp;quot;副驾驶&amp;quot;，不是&amp;quot;自动驾驶&amp;quot;。&lt;/p&gt;&#xA;&lt;h2 id=&#34;八总结&#34;&gt;八、总结&#xA;&lt;/h2&gt;&lt;p&gt;AI Agent 在测试运维领域的价值不是&amp;quot;写代码&amp;quot;或&amp;quot;跑脚本&amp;quot;，而是&lt;strong&gt;把散落在各个系统中的能力通过自然语言串联起来&lt;/strong&gt;。&lt;/p&gt;&#xA;&lt;p&gt;关键是：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;API 化&lt;/strong&gt;：确保 Jenkins、ESXi、缺陷管理平台都有可用的 API&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;标准化&lt;/strong&gt;：环境模板、构建参数、Bug 模板都要有标准&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;逐步自动化&lt;/strong&gt;：先自动化最痛的点（比如提 Bug），再逐步扩展&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;对于中小团队来说，不需要上复杂的 AI 平台，一个开源 Agent 框架 + 几个 API 脚本就能大幅提效。最重要的不是工具，是想清楚&lt;strong&gt;哪些环节值得自动化&lt;/strong&gt;。&lt;/p&gt;&#xA;</description>
-        </item></channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Jasper's Blog</title><link>https://jasper-nan.github.io/post/</link><description>Recent content in Posts on Jasper's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/post/index.xml" rel="self" type="application/rss+xml"/><item><title>Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置</title><link>https://jasper-nan.github.io/post/hermes-skill-caldav-guide/</link><pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/hermes-skill-caldav-guide/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;最近给老婆配置 CalDAV 日历同步技能时，发现很多人对 Hermes（原 OpenClaw）的 Skill 系统还不够熟悉。这篇文章从 Skill 创建原理讲起，到 CalDAV 日历同步的实战配置，再到如何给家庭成员快速部署，希望能帮你把 AI 助手从&amp;quot;个人玩具&amp;quot;变成&amp;quot;家庭基础设施&amp;quot;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一hermes-skill-是什么为什么重要"&gt;一、Hermes Skill 是什么？为什么重要？&lt;/h2&gt;
+&lt;h3 id="11-从插件到技能ai-助手的进化"&gt;1.1 从插件到技能：AI 助手的进化&lt;/h3&gt;
+&lt;p&gt;传统的软件扩展叫&amp;quot;插件&amp;quot;（Plugin），强调的是&lt;strong&gt;功能叠加&lt;/strong&gt;。而 Hermes 的 Skill 是&lt;strong&gt;工作流封装&lt;/strong&gt;——它不只是加一个新功能，而是把&amp;quot;如何完成一件事&amp;quot;的完整逻辑打包交给 AI。&lt;/p&gt;
+&lt;p&gt;举个例子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;插件思维&lt;/strong&gt;：装一个日历插件，能看日程&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skill 思维&lt;/strong&gt;：说一句&amp;quot;帮我查下周三的会议&amp;quot;，AI 自动调用 CalDAV 查询、解析时间语义、返回格式化结果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Skill 的核心价值在于&lt;strong&gt;降低使用门槛&lt;/strong&gt;。你不需要记住命令，用自然语言表达意图就行。&lt;/p&gt;
+&lt;h3 id="12-skill-的底层结构"&gt;1.2 Skill 的底层结构&lt;/h3&gt;
+&lt;p&gt;每个 Skill 本质上是一个目录，包含：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/.hermes/skills/&amp;lt;category&amp;gt;/&amp;lt;skill-name&amp;gt;/
+├── SKILL.md # 技能定义文件（必需）
+├── references/ # 参考文档
+├── templates/ # 模板文件
+├── scripts/ # 可执行脚本
+└── assets/ # 图片等资源
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最核心的就是 &lt;code&gt;SKILL.md&lt;/code&gt;，它采用 YAML Frontmatter + Markdown 的格式：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;caldav-sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;description&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Manage calendar events via CalDAV&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1.0.0&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Your Name&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;# CalDAV Sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;## Configuration&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;Set these environment variables&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;```bash&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_URL=&amp;#34;https://caldav.example.com:9999&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_USERNAME=&amp;#34;your-username&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Add event: &lt;code&gt;caldav_add --title &amp;quot;Meeting&amp;quot; --start &amp;quot;2024-01-01T10:00:00&amp;quot; ...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;List events: &lt;code&gt;caldav_list [--days 7]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;
+Hermes 在启动时会扫描 `~/.hermes/skills/` 目录，自动加载所有有效的 Skill。
+
+### 1.3 Skill 的三种类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **内置技能** | Hermes 官方提供，随安装附带 | web_search, terminal, file |
+| **社区技能** | 通过 `hermes skills install` 安装 | caldav-sync, blogwatcher |
+| **自定义技能** | 用户自己创建的 SKILL.md | 个人记账、家庭日历 |
+
+* * *
+
+## 二、手把手创建一个 Skill
+
+### 2.1 最简单的 Skill：Hello World
+
+```bash
+# 创建目录
+mkdir -p ~/.hermes/skills/custom/hello-world
+
+# 编写 SKILL.md
+cat &amp;gt; ~/.hermes/skills/custom/hello-world/SKILL.md &amp;lt;&amp;lt; &amp;#39;EOF&amp;#39;
+---
+name: hello-world
+description: A simple hello world skill to demonstrate the structure
+version: 1.0.0
+---
+
+# Hello World
+
+This skill demonstrates the basic structure of a Hermes skill.
+
+## Usage
+
+Simply say &amp;#34;hello&amp;#34; and the agent will respond with a greeting.
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启 Hermes 或执行 &lt;code&gt;hermes skills reload&lt;/code&gt;，这个技能就生效了。&lt;/p&gt;</description></item><item><title>32 岁程序员的体检觉醒：高血压后的运动与健康管理</title><link>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</link><pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/32-sui-cheng-xu-yuan-de-ti-jian-jue-xing/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;体检前：我还年轻，熬点夜算什么。&lt;br&gt;
+体检后：收缩压 160+，医嘱要求立即服药控制。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这不是贩卖焦虑，而是一个普通 32 岁程序员的真实觉醒之路。&lt;/p&gt;
+&lt;h2 id="体检报告那串红色数字"&gt;体检报告：那串红色数字&lt;/h2&gt;
+&lt;p&gt;去年例行体检，我像往常一样以为只是走个过场。直到报告上出现一串红色箭头——&lt;strong&gt;收缩压超过 160 mmHg&lt;/strong&gt;，直接跨入高血压一级区间。&lt;/p&gt;
+&lt;p&gt;医生说得很直接：&amp;ldquo;你这血压，不是亚健康，是已经病了。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;我才意识到，过去几年那些&amp;quot;理所当然&amp;quot;的习惯，身体其实都一笔笔记着账：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;久坐 10 小时+&lt;/strong&gt;：除了上厕所和吃饭，基本粘在工位上&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;外卖重口味&lt;/strong&gt;：高油高盐，还总觉得&amp;quot;年轻人代谢快&amp;quot;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;报复性熬夜&lt;/strong&gt;：白天被会议和代码切碎，晚上舍不得睡，凌晨一两点是常态&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;零运动&lt;/strong&gt;：上一次正经出汗，可能要追溯到大学体育课&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;程序员这个职业，时薪看着不错，但身体时薪可能正在悄悄透支。&lt;/p&gt;
+&lt;h2 id="先吃药同时改变生活方式"&gt;先吃药，同时改变生活方式&lt;/h2&gt;
+&lt;p&gt;医生开了降压药，同时撂下一句话：&amp;ldquo;药可以帮你控制，但想真正逆转，得靠自己。&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;我查了大量资料，也问了几个同样有高血压的朋友。结论是：&lt;strong&gt;原发性高血压一旦确诊，药物控制是底线，生活方式干预才是上限。&lt;/strong&gt; 如果年轻时不把地基打好，后面并发症（心脑肾）的风险会指数级上升。&lt;/p&gt;
+&lt;p&gt;于是我开始了一个为期一年的&amp;quot;身体重建计划&amp;quot;。&lt;/p&gt;
+&lt;h2 id="运动从痛苦任务到每日刚需"&gt;运动：从&amp;quot;痛苦任务&amp;quot;到&amp;quot;每日刚需&amp;quot;&lt;/h2&gt;
+&lt;h3 id="跑步佳明-255-是我的教练"&gt;跑步：佳明 255 是我的教练&lt;/h3&gt;
+&lt;p&gt;最开始跑 1 公里就喘得像条狗。但我发现，只要戴着手表出门，数据本身就有驱动力。&lt;/p&gt;
+&lt;p&gt;我用的 &lt;strong&gt;Garmin Forerunner 255&lt;/strong&gt;，它不会骗我——心率区间、步频、垂直振幅，每一项都在暴露我有多菜。&lt;/p&gt;
+&lt;p&gt;现在的节奏：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;每周 3 次 5 公里&lt;/strong&gt;，配速 6 分左右，不求快，但求心率压在 140 以下&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;周末一次长距离&lt;/strong&gt;，从 3 公里慢慢加到 8 公里，目标是今年完成一次 10 公里&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;关键原则&lt;/strong&gt;：绝不空腹跑、绝不硬撑、压心率比拼配速重要一百倍&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;三个月后，静息心率从 78 降到了 62。这个数据比体重下降更让我有成就感。&lt;/p&gt;
+&lt;h3 id="骑行大行-p8-拯救了通勤时间"&gt;骑行：大行 P8 拯救了通勤时间&lt;/h3&gt;
+&lt;p&gt;跑步对膝盖有一定冲击，我需要一种低冲击的有氧补充。&lt;strong&gt;大行 P8 折叠车&lt;/strong&gt;成了最佳选择。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;单程通勤 30 分钟，正好是有氧心率区间&lt;/li&gt;
+&lt;li&gt;折叠后带进办公室，不怕丢&lt;/li&gt;
+&lt;li&gt;下雨天改坐地铁，灵活无负担&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;现在每周骑行 3–4 次，和跑步交替进行，既保护关节，又保持了有氧总量。&lt;/p&gt;</description></item><item><title>工业级地图可视化实战：用 Konva.js 打造 AGV 车队监控大屏</title><link>https://jasper-nan.github.io/post/konva-js-gong-ye-di-tu-ke-shi-hua-shi-zhan/</link><pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/konva-js-gong-ye-di-tu-ke-shi-hua-shi-zhan/</guid><description>&lt;p&gt;在工业自动化领域，一张好用的地图监控大屏直接影响运维效率。本文记录我在&lt;strong&gt;远舢 AIO（All-in-One）工业自动化管理平台&lt;/strong&gt; 中，使用 &lt;strong&gt;Konva.js&lt;/strong&gt; 实现 AGV 车队地图可视化的完整实践——包括坐标系翻转、贝塞尔曲线拐角、SSE 实时推送等核心方案。&lt;/p&gt;
+&lt;h2 id="项目背景"&gt;项目背景&lt;/h2&gt;
+&lt;p&gt;远舢 AIO 是一个基于 Django 的工业自动化管理系统，核心模块包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;TCS&lt;/strong&gt; ：交通控制系统，负责 AGV 车队调度&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCS Mock&lt;/strong&gt; ：设备模拟器（电梯、穿梭车、输送线）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Outdoor AGV Mock&lt;/strong&gt; ：室外无人车仿真，含 Konva.js 地图可视化大屏&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;地图数据来自真实厂区，包含 469+ 个路径节点、充电桩、停车点、业务区（高架库/醇化库）和限制区域。核心挑战是：&lt;strong&gt;如何用 Canvas 2D 高效渲染复杂工业地图，并支持 50+ 车辆的实时位置更新？&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="为什么选-konvajs"&gt;为什么选 Konva.js&lt;/h2&gt;
+&lt;p&gt;在选型阶段对比了几种方案：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方案&lt;/th&gt;
+ &lt;th&gt;优点&lt;/th&gt;
+ &lt;th&gt;缺点&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Leaflet/Mapbox&lt;/td&gt;
+ &lt;td&gt;地理地图成熟&lt;/td&gt;
+ &lt;td&gt;不适合厂区平面布局，坐标系难以自定义&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;原生 Canvas API&lt;/td&gt;
+ &lt;td&gt;无依赖&lt;/td&gt;
+ &lt;td&gt;交互事件、图层管理全靠自己写，工作量巨大&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Konva.js&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;图层管理完善、事件系统成熟、性能优秀&lt;/td&gt;
+ &lt;td&gt;需自行处理坐标转换&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最终选择 &lt;strong&gt;Konva.js&lt;/strong&gt; （v8.x），因为它在图层隔离、事件委托、动画支持上做得非常到位，且对工业场景的自定义坐标系友好。&lt;/p&gt;
+&lt;h2 id="核心架构多图层分离"&gt;核心架构：多图层分离&lt;/h2&gt;
+&lt;p&gt;不要把所有元素画在一个图层上。我们采用&lt;strong&gt;四图层分离架构&lt;/strong&gt; ：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;this.mapLayer = new Konva.Layer({ name: 'map' }); // 地图连线、节点、区域
+this.labelLayer = new Konva.Layer({ name: 'labels' }); // 文字/图标（不随地图旋转）
+this.vehicleLayer = new Konva.Layer({ name: 'vehicles' }); // 车辆、轨迹
+this.alertLayer = new Konva.Layer({ name: 'alerts' }); // 报警提示
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;分层的好处：&lt;/p&gt;</description></item><item><title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title><link>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;测试工程师不应该把时间花在&amp;quot;装环境&amp;quot;、“等部署”、“手动提 Bug&amp;quot;上。AI Agent 可以把这些杂活全部自动化，让你专注在真正有价值的事上。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="背景测试工程师的日常痛点"&gt;背景：测试工程师的日常痛点&lt;/h2&gt;
+&lt;p&gt;作为一个在物流科技部门做测试/全栈的工程师，我日常的工作流大概是这样的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;需要一套测试环境 → 找运维开虚拟机（排队等半天）&lt;/li&gt;
+&lt;li&gt;虚拟机好了 → SSH 上去装环境、拉代码、配服务&lt;/li&gt;
+&lt;li&gt;环境就绪 → 触发 Jenkins 构建、部署&lt;/li&gt;
+&lt;li&gt;跑完测试 → 发现 Bug → 打开缺陷管理平台，手动填一大堆字段&lt;/li&gt;
+&lt;li&gt;修完复测 → 再部署、再验证、再关 Bug&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这套流程下来，真正用在「测试」上的时间可能不到 40%，剩下全是环境搭建、等部署、填表。尤其是跨版本回归测试，每个版本都要重复一遍。&lt;/p&gt;
+&lt;p&gt;我一直在想：能不能把 AI 引入这条链路，让它帮我干这些重复劳动？&lt;/p&gt;
+&lt;h2 id="方案用一个-ai-agent-串联整个工作流"&gt;方案：用一个 AI Agent 串联整个工作流&lt;/h2&gt;
+&lt;p&gt;最终方案是用一个开源的 AI Agent 框架，通过自然语言对话触发一整套自动化操作：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;说一句话 → 创建虚拟机 → 配置环境 → 触发构建 → 发现 Bug 自动提交&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;不用切窗口，不用等审批，不用手动填表。整个链路一个人、一句话搞定。&lt;/p&gt;
+&lt;h2 id="一esxi-自动创建虚拟机"&gt;一、ESXi 自动创建虚拟机&lt;/h2&gt;
+&lt;h3 id="痛点"&gt;痛点&lt;/h3&gt;
+&lt;p&gt;以前每次要测试环境，流程是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;登录 vSphere Client&lt;/li&gt;
+&lt;li&gt;找到合适的模板&lt;/li&gt;
+&lt;li&gt;右键 → 从模板克隆&lt;/li&gt;
+&lt;li&gt;改名字、改 IP、改配置&lt;/li&gt;
+&lt;li&gt;开机 → 等 → SSH 上去装环境&lt;/li&gt;
+&lt;li&gt;整个流程 15-30 分钟，如果模板有问题甚至更长&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解决"&gt;解决&lt;/h3&gt;
+&lt;p&gt;通过 ESXi API + PowerCLI 脚本，AI Agent 可以直接创建和配置虚拟机：&lt;/p&gt;</description></item><item><title>OpenClaw 插件与 Skill 优化实战：从堆功能到真好用</title><link>https://jasper-nan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;OpenClaw 好玩的地方，不是它“能装很多 Skill”，而是你能不能把它调成一个真正顺手的个人系统。最近正好做了一轮整理：砍掉重复能力、收敛搜索入口、补上健康检查和安全配置。折腾完之后，一个很明显的感受是——&lt;strong&gt;Agent 不是插件市场，Agent 应该是你的工作流延伸&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一先说结论openclaw-不是装得越多越好"&gt;一、先说结论：OpenClaw 不是装得越多越好&lt;/h2&gt;
+&lt;p&gt;很多人刚接触 OpenClaw，第一反应都是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;先装一堆 Skill 再说&lt;/li&gt;
+&lt;li&gt;搜索、浏览器、平台抓取、自动化各来一套&lt;/li&gt;
+&lt;li&gt;能接的消息平台全部接上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;刚开始这样玩很爽，但很快就会遇到几个问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;同一类功能入口太多&lt;/strong&gt; ，模型容易摇摆&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skill 互相重叠&lt;/strong&gt; ，实际价值并没有叠加&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;维护成本上升&lt;/strong&gt; ，更新、兼容、排错都更麻烦&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全面变大&lt;/strong&gt; ，尤其是接了群聊和外部触发后&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以我这次优化的核心思路很简单：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;一个场景只留一个主入口；平台型能力按需补充；能禁用的重复能力就禁用。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二我最后保留了哪些-skill"&gt;二、我最后保留了哪些 Skill&lt;/h2&gt;
+&lt;h3 id="1-multi-search-engine默认网页搜索入口"&gt;1. multi-search-engine：默认网页搜索入口&lt;/h3&gt;
+&lt;p&gt;这是我最后保留下来的默认搜索 Skill。&lt;/p&gt;
+&lt;p&gt;原因很直接：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持多个搜索引擎&lt;/li&gt;
+&lt;li&gt;适合做通用网页检索&lt;/li&gt;
+&lt;li&gt;没有太多平台耦合&lt;/li&gt;
+&lt;li&gt;适合“先搜、再读、再总结”的标准链路&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我现在的策略是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;一般网页搜索 → multi-search-engine&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;只把它当成默认搜索入口&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这件事看起来只是一个偏好问题，实际上会直接影响 Agent 的行为稳定性。默认入口越清晰，模型越不容易在多个工具之间乱跳。&lt;/p&gt;
+&lt;h3 id="2-agent-reach平台型内容搜索"&gt;2. agent-reach：平台型内容搜索&lt;/h3&gt;
+&lt;p&gt;如果说 multi-search-engine 负责搜网页，那 agent-reach 更适合搜平台：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X / Twitter&lt;/li&gt;
+&lt;li&gt;Reddit&lt;/li&gt;
+&lt;li&gt;GitHub&lt;/li&gt;
+&lt;li&gt;B 站&lt;/li&gt;
+&lt;li&gt;小红书&lt;/li&gt;
+&lt;li&gt;播客 / RSS / 一些垂直内容源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以我的分工是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;默认搜索：multi-search-engine&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;平台型搜索：agent-reach&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样做的好处是，模型遇到“帮我搜一下某个网站/平台内容”时，有一个很明确的次级入口，不至于什么都走同一种搜索。&lt;/p&gt;
+&lt;h3 id="3-caldav-sync把日历接入个人系统"&gt;3. caldav-sync：把日历接入个人系统&lt;/h3&gt;
+&lt;p&gt;这个 Skill 的价值不在于炫技，而在于它足够贴近生活流。&lt;/p&gt;</description></item><item><title>30岁程序员的理财实操：从月光到每月定投</title><link>https://jasper-nan.github.io/post/30-sui-cheng-xu-yuan-de-li-cai-shi-cao-cong-yue-guang-dao-mei-yue-ding-tou/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/30-sui-cheng-xu-yuan-de-li-cai-shi-cao-cong-yue-guang-dao-mei-yue-ding-tou/</guid><description>&lt;h2 id="前言30岁我终于开始认真对待钱"&gt;前言：30岁，我终于开始认真对待钱&lt;/h2&gt;
+&lt;p&gt;说实话，30岁之前我从来没认真想过理财这回事。&lt;/p&gt;
+&lt;p&gt;不是不懂，是不敢看。&lt;/p&gt;
+&lt;p&gt;每个月工资到手，还完贷款、交完各种账单，能存下来的不多。&amp;ldquo;理财&amp;quot;两个字听起来像是那种有钱人才需要操心的事，我们这种普通工薪族哪有什么财可理？&lt;/p&gt;
+&lt;p&gt;直到2025年，我30岁，女儿刚上幼儿园，老婆也有自己的工作，岳父岳母那边也各有各的难处。我突然意识到：如果我自己不把财务搞清楚，整个家庭就像一艘没有导航的船，随时可能触礁。&lt;/p&gt;
+&lt;p&gt;这篇文章，我想用最接地气的方式，记录我从&amp;quot;糊里糊涂&amp;quot;到&amp;quot;心里有数&amp;quot;的转变过程。没有暴富故事，没有荐股荐基，只有一个普通程序员在某新一线城市的真实财务探索。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="一那个让所有程序员都焦虑的30岁"&gt;一、那个让所有程序员都焦虑的30岁&lt;/h2&gt;
+&lt;p&gt;30岁对程序员来说是个坎，这话一点都不夸张。&lt;/p&gt;
+&lt;p&gt;技术更新快，年轻人一波波涌进来，35岁危机的论调甚嚣尘上。我研究生毕业工作几年后，职级上不去下不来，薪资涨不动，身体倒是一年不如一年——久坐带来的腰酸背痛、熬夜改bug留下的黑眼圈，都在提醒我：你已经不是那个通宵写代码第二天还能接着干的毛头小子了。&lt;/p&gt;
+&lt;p&gt;但真正让我开始思考财务问题的，不是因为年龄焦虑，而是三件事：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一件，孩子上了幼儿园。&lt;/strong&gt; 教育成本一下子飙升，兴趣班、学费、日常开销，每一笔都是真金白银。随着家庭责任的增加，我越来越意识到：如果财务没有规划，会非常被动。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二件，父母的医疗费用。&lt;/strong&gt; 父母年纪渐长，看病吃药的钱只会越来越多。不提前规划，等到事到临头就来不及了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三件，我开始认真读了一本理财书。&lt;/strong&gt; 书架上吃灰很久的《金钱心理学》，随手翻开看了几页，突然被一句话击中：&lt;strong&gt;&amp;ldquo;财富是你看不见的那些钱。&amp;rdquo;&lt;/strong&gt; 意思是，真正有钱的人不是你看到他花了多少，而是他默默存下来、让钱继续为他工作的那一部分。&lt;/p&gt;
+&lt;p&gt;那一刻我决定，不能再稀里糊涂地活了。钱的事，得算清楚。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二资产盘点先把家底翻出来晒一晒"&gt;二、资产盘点：先把家底翻出来晒一晒&lt;/h2&gt;
+&lt;p&gt;理财的第一步，说起来简单做起来难：&lt;strong&gt;把你的钱全部数一遍。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;很多人不敢做这件事，因为怕面对那个数字。但我发现，只要开始认真梳理，反而有一种奇怪的踏实感——至少你知道自己在哪，不用再靠猜测和想象过日子。&lt;/p&gt;
+&lt;p&gt;下面是我的财务清单，数字是最近的真实数据（有些做了适度模糊，但差距不超过10%）。&lt;/p&gt;
+&lt;h3 id="21-资产端"&gt;2.1 资产端&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;资产项&lt;/th&gt;
+ &lt;th&gt;金额&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;自住房（商品房）&lt;/td&gt;
+ &lt;td&gt;~250万&lt;/td&gt;
+ &lt;td&gt;某新一线城市，贷款还剩不少&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;一套写字楼&lt;/td&gt;
+ &lt;td&gt;~50万&lt;/td&gt;
+ &lt;td&gt;出租中，每月有租金收入&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;流动资金（存款+理财）&lt;/td&gt;
+ &lt;td&gt;~12万&lt;/td&gt;
+ &lt;td&gt;含银行理财、货币基金等&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;合计总资产&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;~323万&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="22-负债端"&gt;2.2 负债端&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;负债项&lt;/th&gt;
+ &lt;th&gt;金额&lt;/th&gt;
+ &lt;th&gt;利率&lt;/th&gt;
+ &lt;th&gt;备注&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;交通银行商业房贷&lt;/td&gt;
+ &lt;td&gt;~75万&lt;/td&gt;
+ &lt;td&gt;3.2%&lt;/td&gt;
+ &lt;td&gt;还剩不少年限&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;公积金贷款&lt;/td&gt;
+ &lt;td&gt;~65万&lt;/td&gt;
+ &lt;td&gt;2.6%&lt;/td&gt;
+ &lt;td&gt;利率比商贷低&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;车贷&lt;/td&gt;
+ &lt;td&gt;~8万&lt;/td&gt;
+ &lt;td&gt;~4%&lt;/td&gt;
+ &lt;td&gt;计划近期一次性还清&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;合计总负债&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;~148万&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="23-净资产160万"&gt;2.3 净资产：¥160万&lt;/h3&gt;
+&lt;p&gt;160万的净资产听起来不少，但拆开一看：房子占了绝大多数，真正的流动资产只有12万多。&lt;/p&gt;
+&lt;p&gt;这让我意识到一个很重要的问题：&lt;strong&gt;净资产高不等于财务健康。&lt;/strong&gt; 关键看资产结构——房产占比过高，流动性就差；负债看着不多，但每个月还贷压力其实不小。&lt;/p&gt;
+&lt;h3 id="盘点方法推荐"&gt;盘点方法推荐&lt;/h3&gt;
+&lt;p&gt;我用的是最简单的&lt;strong&gt;Excel表格法&lt;/strong&gt; ：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;开一个Sheet，列：资产/负债、名称、金额、利率/收益率、每月现金流（正或负）&lt;/li&gt;
+&lt;li&gt;每个季度更新一次&lt;/li&gt;
+&lt;li&gt;重点关注两个数字：&lt;strong&gt;月度净现金流&lt;/strong&gt; 和 &lt;strong&gt;流动资产/月支出&lt;/strong&gt; （建议至少保留3-6个月生活费）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;不用搞得特别复杂，核心就一个：&lt;strong&gt;让你对钱在哪、欠谁、每月进多少出多少，有一个清醒的认知。&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>AI Agent 开发实战笔记：技术选型与架构思考</title><link>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</guid><description>&lt;h2 id="前言为什么-ai-agent-值得关注"&gt;前言：为什么 AI Agent 值得关注&lt;/h2&gt;
+&lt;p&gt;最近公司计划在总部启动一个 AI Agent 相关的开发项目，我作为参与者之一，需要提前做技术调研和储备。&lt;/p&gt;
+&lt;p&gt;说实话，半年前我对 AI Agent 的理解还停留在&amp;quot;套壳聊天机器人&amp;quot;的层面。但深入研究之后发现，Agent 和传统的&amp;quot;调 API 返回结果&amp;quot;完全不是一回事——它关乎&lt;strong&gt;规划、记忆、工具调用、多步推理&lt;/strong&gt; ，是让 AI 从&amp;quot;能对话&amp;quot;进化到&amp;quot;能干活&amp;quot;的关键一步。&lt;/p&gt;
+&lt;p&gt;这篇文章记录了我调研过程中对主流技术框架的理解和对比，希望能给同样在关注这个方向的朋友一些参考。不保证全对，但保证真实。&lt;/p&gt;
+&lt;h2 id="一什么是-ai-agent"&gt;一、什么是 AI Agent？&lt;/h2&gt;
+&lt;p&gt;先简单定义一下：&lt;strong&gt;AI Agent = 大模型 + 规划能力 + 工具调用 + 记忆系统&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通的大模型调用是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用户提问 → 模型回答 → 结束&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Agent 是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用户提出目标 → Agent 拆解任务 → 选择工具 → 执行操作 → 观察结果 → 调整策略 → 返回最终结果&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;区别在于 Agent 有&amp;quot;自主性&amp;quot;——它不只是回答问题，而是&lt;strong&gt;完成任务&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;举个具体例子：你说&amp;quot;帮我查一下明天北京到上海的机票并订最便宜的&amp;quot;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;普通 ChatBot&lt;/strong&gt; ：只能告诉你怎么查，或者给你一个链接&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Agent&lt;/strong&gt; ：自己去调用航班查询 API → 筛选结果 → 调用订票接口 → 返回确认信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是 Agent 的核心价值：&lt;strong&gt;把自然语言意图转化为具体的行动序列&lt;/strong&gt; 。&lt;/p&gt;</description></item><item><title>AI 助手实战：我用 OpenClaw 打造个人自动化系统</title><link>https://jasper-nan.github.io/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;凌晨两点，Mac mini 的风扇安静地转着，客厅的小机器正在替我操心一堆杂事：检查基金净值、整理今天的步数、给我推送一篇值得读的周报文章。这事说起来挺魔幻的——大概半年前我还在手动复制粘贴各种数据，现在这些全自动化了。&lt;/p&gt;
+&lt;p&gt;这篇文章想跟你聊聊我是怎么用 &lt;strong&gt;OpenClaw&lt;/strong&gt; 搭建这套系统的，中间踩了哪些坑，以及它现在到底帮我省了多少时间。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="先说说背景我是谁我想要什么"&gt;先说说背景：我是谁，我想要什么&lt;/h2&gt;
+&lt;p&gt;我叫 Jasper，30 岁，在某科技公司做全栈开发。原来是测试工程师出身，写了几年自动化脚本后来转了开发，对&amp;quot;让机器做重复的事&amp;quot;这件事有天然的执念。&lt;/p&gt;
+&lt;p&gt;坐标某新一线城市，家里有一台 Mac mini（M4 Pro 那款，部署 OpenClaw 主力机），两台 NAS（一台 8 盘位飞牛 + 一台 4 盘位微联通），还有一块 Garmin Fenix 7。&lt;/p&gt;
+&lt;p&gt;我的核心需求很简单：&lt;strong&gt;工作之外的事情，能自动化就自动化，别让我操心&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;具体来说，我想实现这些：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;每天早上 8 点，收到一份简报——今天有什么待办、基金净值怎样、有没有值得看的文章&lt;/li&gt;
+&lt;li&gt;记账不需要手动打开 App，截图就能自动识别写入&lt;/li&gt;
+&lt;li&gt;能随时问 AI 助手问题，搜资料，不需要自己开浏览器&lt;/li&gt;
+&lt;li&gt;运动数据（跑步、骑行、睡眠）能随时调出来&lt;/li&gt;
+&lt;li&gt;家里 NAS 里的文件能方便管理，不用每次都 RDP 过去&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="为什么选-openclaw"&gt;为什么选 OpenClaw&lt;/h2&gt;
+&lt;p&gt;在动手之前我也调研了一圈，最终选 OpenClaw 主要有几个原因。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一个原因是它的通道支持非常全面。&lt;/strong&gt; 我同时用飞书、QQ、微信，之前的方案（比如用企业微信机器人或者单独搭 QQ Bot）每个都要单独部署，维护成本很高。OpenClaw 一个系统把几个通道都接入了，我可以统一管理，这是最吸引我的点。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二个原因是它的 Skill 生态。&lt;/strong&gt; OpenClaw 有 Skills 市场，很多常见需求（天气、提醒、飞书文档、Google 日历等）已经有现成的封装，拿来就能用，不需要从零写 prompt 工程。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三个原因是它跑在本地。&lt;/strong&gt; 我的 Mac mini 7x24 小时开着，数据不经过第三方服务器，隐私相对可控。对于记账、运动数据这些私人信息，这个很重要。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第四个原因是开发者友好。&lt;/strong&gt; OpenClaw 基于 Node.js，配置文件是 YAML/JSON，Python 写 Skill 也完全没问题。我这种会写点代码的人，改起来不吃力。&lt;/p&gt;</description></item><item><title>国内 AI Coding Plan 横评：DeepSeek、智谱 GLM、通义千问、MiniMax、Kimi</title><link>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</guid><description>&lt;h2 id="前言为什么要对比"&gt;前言：为什么要对比？&lt;/h2&gt;
+&lt;p&gt;作为一个 OpenClaw 用户，模型选择直接决定了两个核心体验：&lt;strong&gt;响应速度&lt;/strong&gt; 和&lt;strong&gt;钱包厚度&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;OpenClaw 是个&amp;quot;吃 Token 大户&amp;quot;——每次对话都要带上完整的系统提示、工具定义、记忆文件等上下文，单次请求动辄消耗上万 Token。如果选错了模型或套餐，要么经常被限流搞得体验稀烂，要么月底账单让人心梗。&lt;/p&gt;
+&lt;p&gt;这篇文章对比国内五家主流 AI 厂商的 Coding Plan / API 定价和限流策略，聚焦一个问题：&lt;strong&gt;哪个最适合搭配 OpenClaw 使用？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本文数据截至 2026 年 3 月，价格和限流策略可能随时调整，请以官方最新信息为准。&lt;/p&gt;
+&lt;h2 id="一各家-coding-plan--api-概览"&gt;一、各家 Coding Plan / API 概览&lt;/h2&gt;
+&lt;h3 id="11-智谱-glm-coding-plan"&gt;1.1 智谱 GLM Coding Plan&lt;/h3&gt;
+&lt;p&gt;智谱推出了专门的 Coding Plan 套餐，面向 Cursor、Copilot、OpenClaw 等 AI 编码工具用户。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;套餐&lt;/th&gt;
+ &lt;th&gt;月费&lt;/th&gt;
+ &lt;th&gt;定位&lt;/th&gt;
+ &lt;th&gt;建议并发项目数&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Lite&lt;/td&gt;
+ &lt;td&gt;¥49/月（包年¥34/月）&lt;/td&gt;
+ &lt;td&gt;个人轻量&lt;/td&gt;
+ &lt;td&gt;~80 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pro（最受欢迎）&lt;/td&gt;
+ &lt;td&gt;¥149/月（包年¥104/月）&lt;/td&gt;
+ &lt;td&gt;个人主力&lt;/td&gt;
+ &lt;td&gt;~400 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Max&lt;/td&gt;
+ &lt;td&gt;¥469/月（包年¥328/月）&lt;/td&gt;
+ &lt;td&gt;重度用户&lt;/td&gt;
+ &lt;td&gt;~1,600 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lite 套餐仅支持 GLM-4.7/4.6（GLM-5 需 Pro 及以上）；Pro/Max 才支持 GLM-5（744B MoE），且 GLM-5 消耗 3 倍额度&lt;/li&gt;
+&lt;li&gt;套餐制，不用操心 Token 计费&lt;/li&gt;
+&lt;li&gt;低峰期动态提升并发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>《金钱心理学》读书笔记：7 个颠覆认知的财富洞察</title><link>https://jasper-nan.github.io/post/%E9%87%91%E9%92%B1%E5%BF%83%E7%90%86%E5%AD%A6%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E9%87%91%E9%92%B1%E5%BF%83%E7%90%86%E5%AD%A6%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;这本书不教你怎么看 K 线图或财报，而是教你怎么看清自己。理财的成功与你掌握多少金融知识关系不大，而与你的&lt;strong&gt;行为模式&lt;/strong&gt; 息息相关。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;书名：&lt;/strong&gt; 《金钱心理学》（The Psychology of Money）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作者：&lt;/strong&gt; 摩根·豪泽尔（Morgan Housel）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;一句话总结：&lt;/strong&gt; 金钱不仅是数字的游戏，更是人性的博弈&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="-7-个核心洞察"&gt;📝 7 个核心洞察&lt;/h2&gt;
+&lt;p&gt;这本书由 20 个独立的章节组成，以下是最反直觉、也最重要的 7 个核心逻辑：&lt;/p&gt;
+&lt;h3 id="1-没人是疯子"&gt;1. 没人是疯子&lt;/h3&gt;
+&lt;p&gt;每个人的理财观都是基于他们独特的历史经历和所处环境形成的。&lt;/p&gt;
+&lt;p&gt;经历过大萧条的人和经历过科技繁荣期的人，对&amp;quot;风险&amp;quot;和&amp;quot;股市&amp;quot;的看法截然不同。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;应用：&lt;/strong&gt; 不要轻易评判别人的投资决定，也不要盲目模仿别人。适合别人的策略，未必适合你。&lt;/p&gt;
+&lt;h3 id="2-运气与风险是亲兄弟"&gt;2. 运气与风险是亲兄弟&lt;/h3&gt;
+&lt;p&gt;成功不仅仅是因为努力，失败也不仅仅是因为懒惰。&lt;/p&gt;
+&lt;p&gt;世界太复杂，个人努力往往只占结果的一小部分。比尔·盖茨如果不读那所正好有电脑的中学，可能就没有微软。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;应用：&lt;/strong&gt; 看到别人的成功时，多关注运气成分（保持谦卑）；看到别人的失败时，多关注风险因素（保持宽容）。通过承认运气的存在，我们才能在失败时原谅自己。&lt;/p&gt;
+&lt;h3 id="3-致富-vs-守富"&gt;3. 致富 vs. 守富&lt;/h3&gt;
+&lt;p&gt;这是两项完全不同的技能：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;致富&lt;/strong&gt; 需要：乐观、冒险、激进&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;守富&lt;/strong&gt; 需要：谦卑、敬畏、甚至一点点&lt;strong&gt;偏执（Paranoia）&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;关键是——&lt;strong&gt;活下去（Survival）&lt;/strong&gt; 。只有活得够久，复利才能发挥作用。巴菲特最厉害的不是年化收益率最高，而是他持续投资了 70 多年没有&amp;quot;死掉&amp;quot;。&lt;/p&gt;
+&lt;h3 id="4-复利之谜"&gt;4. 复利之谜&lt;/h3&gt;
+&lt;p&gt;线性思维的人类很难直观理解指数增长。&lt;/p&gt;
+&lt;p&gt;1+1+1 是线性的，但复利是爆炸式的。巴菲特绝大部分的财富都是在 65 岁以后获得的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;应用：&lt;/strong&gt; 投资中最大的秘诀是&lt;strong&gt;耐心&lt;/strong&gt; 。如果你能等待，时间就是你最好的朋友。不需要追求超高回报率，只需要追求&lt;strong&gt;在这个游戏里一直待下去&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h3 id="5-变得富有-vs-保持自由"&gt;5. 变得&amp;quot;富有&amp;quot; vs. 保持&amp;quot;自由&amp;quot;&lt;/h3&gt;
+&lt;p&gt;金钱最大的红利，不是买奢侈品，而是通过它掌控你的时间。&lt;/p&gt;
+&lt;p&gt;豪车、名表带来的快乐很快会消散（享乐适应），但&lt;strong&gt;每天早上醒过来，知道自己可以决定今天做什么&lt;/strong&gt; ，这种快乐是持久的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;金钱的本质：&lt;/strong&gt; 它是你通往独立的工具。&lt;/p&gt;
+&lt;h3 id="6-豪车悖论"&gt;6. 豪车悖论&lt;/h3&gt;
+&lt;p&gt;没人像你那样在乎你的东西。&lt;/p&gt;
+&lt;p&gt;当你开着豪车时，你以为别人在羡慕你。其实别人只是在想：“如果&lt;strong&gt;我&lt;/strong&gt; 开那辆车，我会很酷。”&lt;/p&gt;</description></item><item><title>30岁程序员家庭保险配置指南：不花冤枉钱</title><link>https://jasper-nan.github.io/post/%E5%AE%B6%E5%BA%AD%E4%BF%9D%E9%99%A9%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E5%AE%B6%E5%BA%AD%E4%BF%9D%E9%99%A9%E9%85%8D%E7%BD%AE%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;保险这东西，不买怕出事，买了怕被坑。这篇用最直白的话告诉你：该买什么、不该买什么、怎么不花冤枉钱。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一保险配置的优先级"&gt;一、保险配置的优先级&lt;/h2&gt;
+&lt;p&gt;记住这个顺序，&lt;strong&gt;按重要性递减&lt;/strong&gt; ：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;医保（必须有）
+ ↓
+百万医疗险（核心保障）
+ ↓
+意外险（性价比之王）
+ ↓
+定期寿险（家庭责任）
+ ↓
+重疾险（收入补偿）
+ ↓
+其他（教育金、养老金等）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;核心原则：先保大人，再保小孩。&lt;/strong&gt; 很多新手犯的错误是给孩子买了一堆保险，大人却裸奔。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二必须有的医保"&gt;二、必须有的：医保&lt;/h2&gt;
+&lt;p&gt;这不是商业保险，是国家给的，&lt;strong&gt;一定要交&lt;/strong&gt; 。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;职工医保&lt;/strong&gt; ：公司交，报销比例高&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;居民医保&lt;/strong&gt; ：自己交（380 元/年左右），有总比没有好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;医保是基础，商业保险是补充。两者不冲突。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="三最核心百万医疗险"&gt;三、最核心：百万医疗险&lt;/h2&gt;
+&lt;h3 id="为什么重要"&gt;为什么重要？&lt;/h3&gt;
+&lt;p&gt;一场大病，ICU 一天 1-3 万，住半个月就是几十万。百万医疗险一年只要几百块，却能报销几百万的医疗费。&lt;/p&gt;
+&lt;h3 id="怎么选"&gt;怎么选？&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;要点&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;保额&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;200-400 万够用&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;免赔额&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;1 万（行业标准）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;报销范围&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;选&amp;quot;不限社保目录&amp;quot;的&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;续保&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;选保证续保的（20年最佳）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;价格&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;30 岁：约 300-400 元/年&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="推荐产品2026年参考"&gt;推荐产品（2026年参考）&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;产品&lt;/th&gt;
+ &lt;th&gt;特点&lt;/th&gt;
+ &lt;th&gt;30岁价格&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;人保好医保·长期医疗（旗舰版）&lt;/td&gt;
+ &lt;td&gt;20年保证续保，大公司&lt;/td&gt;
+ &lt;td&gt;~300元/年&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;太平洋医享无忧&lt;/td&gt;
+ &lt;td&gt;20年保证续保&lt;/td&gt;
+ &lt;td&gt;~350元/年&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;平安e生保·长期医疗&lt;/td&gt;
+ &lt;td&gt;20年保证续保&lt;/td&gt;
+ &lt;td&gt;~350元/年&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="有慢性病怎么办"&gt;有慢性病怎么办？&lt;/h3&gt;
+&lt;p&gt;像有慢性病指标（服药控制中），普通百万医疗可能买不了，但有&lt;strong&gt;慢病版&lt;/strong&gt; ：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;太平洋&amp;quot;惠民保&amp;quot;类产品&lt;/li&gt;
+&lt;li&gt;各地惠民保（不限健康状况）&lt;/li&gt;
+&lt;li&gt;部分保险公司有慢病专属百万医疗&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;慢病版百万医疗保费会贵一些（800-1500 元/年），但比裸奔好太多。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="四性价比之王意外险"&gt;四、性价比之王：意外险&lt;/h2&gt;
+&lt;h3 id="为什么重要-1"&gt;为什么重要？&lt;/h3&gt;
+&lt;p&gt;意外无处不在：交通事故、摔伤、烫伤、猫抓狗咬。&lt;/p&gt;</description></item><item><title>CAN 总线日志分析入门：自动驾驶测试必备技能</title><link>https://jasper-nan.github.io/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;如果你从事自动驾驶或智能网联汽车测试，CAN 总线日志分析是绕不开的技能。这篇从基础概念到实战解析，帮你快速上手。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一什么是-can-总线"&gt;一、什么是 CAN 总线？&lt;/h2&gt;
+&lt;p&gt;CAN（Controller Area Network）是汽车内部最主流的通信协议。简单说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;车辆的各个 ECU（电子控制单元）通过 CAN 总线互相&amp;quot;说话&amp;quot;，比如发动机告诉仪表盘转速、方向盘告诉转向灯亮灯。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="核心概念"&gt;核心概念&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;概念&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;报文（Frame）&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;CAN 总线上传输的最小数据单元&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;ID&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;报文的&amp;quot;身份证&amp;quot;，决定优先级，ID 越小优先级越高&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;DLC&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;数据长度（0-8 字节）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Payload&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;实际数据内容&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;周期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;某些报文按固定周期发送（如 10ms、100ms）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="报文结构"&gt;报文结构&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────┬───────┬─────┬──────────┬────────┬─────────┐
+│ Start │ ID │ DLC │ Payload │ CRC │ ACK │
+│ of Frame│ 11bit │ │ 0-8 bytes│ Check │ │
+└─────────┴───────┴─────┴──────────┴────────┴─────────┘
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二can-dbc-文件"&gt;二、CAN DBC 文件&lt;/h2&gt;
+&lt;p&gt;DBC 是 CAN 数据的&amp;quot;字典文件&amp;quot;，定义了每个 ID 对应什么信号、如何解析。&lt;/p&gt;
+&lt;h3 id="dbc-文件长什么样"&gt;DBC 文件长什么样&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;VERSION &amp;quot;&amp;quot;
+
+NS_ :
+
+BS_:
+
+BU_: ECU1 ECU2 ECU3
+
+BO_ 256 SteeringAngle: 7 ECU1
+ SG_ SteeringAngle_Value : 0|15@1+ (0.1,0) [0|6553.5] &amp;quot;deg&amp;quot; Vector__XXX
+ SG_ SteeringAngle_Speed : 16|15@1+ (1,0) [0|32767] &amp;quot;deg/s&amp;quot; Vector__XXX
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;解读：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>Docker 常用命令速查手册</title><link>https://jasper-nan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;Docker 命令又多又杂，这篇按使用场景整理，覆盖 90% 的日常操作。建议收藏，用到时直接查。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一镜像管理"&gt;一、镜像管理&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 搜索镜像
+docker search nginx
+
+# 拉取镜像
+docker pull nginx:latest
+docker pull python:3.11-slim
+
+# 查看本地镜像
+docker images
+docker image ls
+
+# 删除镜像
+docker rmi nginx:latest
+
+# 清理悬空镜像（无标签的）
+docker image prune
+
+# 查看镜像详情（层信息、大小）
+docker history nginx:latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二容器生命周期"&gt;二、容器生命周期&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 创建并运行容器
+docker run -d --name my-nginx -p 80:80 nginx
+
+# -d 后台运行
+# --name 命名
+# -p 端口映射（宿主机:容器）
+# -v 数据卷挂载
+# -e 环境变量
+# --restart 重启策略
+
+# 查看运行中的容器
+docker ps
+
+# 查看所有容器（包括已停止的）
+docker ps -a
+
+# 启动 / 停止 / 重启
+docker start my-nginx
+docker stop my-nginx
+docker restart my-nginx
+
+# 删除容器
+docker rm my-nginx
+
+# 强制删除运行中的容器
+docker rm -f my-nginx
+
+# 进入容器
+docker exec -it my-nginx /bin/bash
+docker exec -it my-nginx /bin/sh # Alpine 镜像用 sh
+
+# 查看容器日志
+docker logs my-nginx
+docker logs -f my-nginx # 实时跟踪
+docker logs --tail 100 my-nginx # 最后100行
+
+# 查看容器资源占用
+docker stats
+docker stats my-nginx
+
+# 查看容器详情（IP、挂载等）
+docker inspect my-nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三docker-run-常用参数"&gt;三、docker run 常用参数&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;docker run -d \
+ --name myapp \
+ -p 8080:80 \
+ -v /data/app:/app/data \
+ -e TZ=Asia/Shanghai \
+ -e MYSQL_ROOT_PASSWORD=123456 \
+ --restart unless-stopped \
+ --network my-net \
+ nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;th&gt;示例&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;后台运行&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-p&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;端口映射&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-p 8080:80&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-v&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;挂载数据卷&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-v /host/path:/container/path&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-e&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;环境变量&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-e MYSQL_ROOT_PASSWORD=xxx&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--name&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;容器名称&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;--name myapp&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--restart&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;重启策略&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;no / on-failure / always / unless-stopped&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--network&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;指定网络&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;--network my-net&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-v $(pwd):/app&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;挂载当前目录&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--rm&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;容器停止后自动删除&lt;/td&gt;
+ &lt;td&gt;适合一次性任务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="四数据卷管理"&gt;四、数据卷管理&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 创建数据卷
+docker volume create mydata
+
+# 查看数据卷列表
+docker volume ls
+
+# 查看数据卷详情
+docker volume inspect mydata
+
+# 删除数据卷
+docker volume rm mydata
+
+# 清理未使用的数据卷
+docker volume prune
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;持久化数据一定要用 &lt;code&gt;-v&lt;/code&gt; 挂载，否则容器删除后数据就丢了。&lt;/p&gt;</description></item><item><title>Jenkins CI/CD 从入门到实战：自动化部署不再难</title><link>https://jasper-nan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;Jenkins 虽然老了，但仍然是企业里用得最多的 CI/CD 工具。掌握 Jenkins Pipeline 是全栈/测试工程师的加分项。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一安装-jenkins"&gt;一、安装 Jenkins&lt;/h2&gt;
+&lt;h3 id="docker-一键安装推荐"&gt;Docker 一键安装（推荐）&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker run -d \
+ --name jenkins \
+ -p 8080:8080 \
+ -p 50000:50000 \
+ -v jenkins_home:/var/jenkins_home \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ --restart unless-stopped \
+ jenkins/jenkins:lts
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;挂载 docker.sock 是为了在 Pipeline 里能用 Docker。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="初始化"&gt;初始化&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;访问 &lt;code&gt;http://your-ip:8080&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;查看初始密码：&lt;code&gt;docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装推荐插件&lt;/li&gt;
+&lt;li&gt;创建管理员账户&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="推荐安装的插件"&gt;推荐安装的插件&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;插件&lt;/th&gt;
+ &lt;th&gt;用途&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Git&lt;/td&gt;
+ &lt;td&gt;代码拉取&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pipeline&lt;/td&gt;
+ &lt;td&gt;流水线定义&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Docker Pipeline&lt;/td&gt;
+ &lt;td&gt;在 Pipeline 中使用 Docker&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Credentials&lt;/td&gt;
+ &lt;td&gt;凭证管理&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Blue Ocean&lt;/td&gt;
+ &lt;td&gt;可视化 Pipeline（已弃用但好看）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Chinese Localization&lt;/td&gt;
+ &lt;td&gt;中文界面&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="二基础概念"&gt;二、基础概念&lt;/h2&gt;
+&lt;h3 id="jenkins-核心术语"&gt;Jenkins 核心术语&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;术语&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Job&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;一个构建任务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Pipeline&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;多阶段流水线（推荐方式）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Stage&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;流水线的一个阶段&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Step&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;阶段中的一个具体操作&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Node / Agent&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;执行构建的机器&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Workspace&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;构建的工作目录&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="pipeline-vs-传统-job"&gt;Pipeline vs 传统 Job&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;传统 Freestyle Job：&lt;/strong&gt; 在网页上点按钮配置，适合简单任务，但不方便版本管理。&lt;/p&gt;</description></item><item><title>Linux 进程管理实战：从查找、过滤到终止</title><link>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一查找进程ps"&gt;一、查找进程：ps&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;ps&lt;/code&gt;（Process Status）是最常用的进程查看命令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 列出所有进程的详细信息
+ps -ef
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出字段说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;含义&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;UID&lt;/td&gt;
+ &lt;td&gt;进程所属用户&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PID&lt;/td&gt;
+ &lt;td&gt;进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PPID&lt;/td&gt;
+ &lt;td&gt;父进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;STIME&lt;/td&gt;
+ &lt;td&gt;启动时间&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;CMD&lt;/td&gt;
+ &lt;td&gt;启动命令&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="常用组合"&gt;常用组合&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 查看所有进程（BSD 风格，更直观）
+ps aux
+
+# 按内存使用排序（Top 10）
+ps aux --sort=-%mem | head -10
+
+# 按 CPU 使用排序（Top 10）
+ps aux --sort=-%cpu | head -10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二过滤进程grep"&gt;二、过滤进程：grep&lt;/h2&gt;
+&lt;p&gt;在进程列表中精确匹配目标：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;关键字&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ 注意：&lt;code&gt;grep&lt;/code&gt; 本身也会出现在结果中，因为命令行参数中包含&amp;quot;关键字&amp;quot;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;过滤掉 grep 自身：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三提取进程号awk"&gt;三、提取进程号：awk&lt;/h2&gt;
+&lt;p&gt;拿到 PID 后经常需要做进一步操作（比如 kill），用 &lt;code&gt;awk&lt;/code&gt; 提取：&lt;/p&gt;</description></item><item><title>Python 接口自动化测试从 0 到 1</title><link>https://jasper-nan.github.io/post/python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E4%BB%8E0%E5%88%B01/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E4%BB%8E0%E5%88%B01/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;接口测试是测试工程师的基本功，但很多人还在用 Postman 手工点。这篇文章教你用 Python 搭一套真正的自动化测试框架。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一为什么用-python-做接口测试"&gt;一、为什么用 Python 做接口测试？&lt;/h2&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方案&lt;/th&gt;
+ &lt;th&gt;优点&lt;/th&gt;
+ &lt;th&gt;缺点&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Postman&lt;/td&gt;
+ &lt;td&gt;简单直观&lt;/td&gt;
+ &lt;td&gt;不方便 CI 集成，团队协作弱&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;JMeter&lt;/td&gt;
+ &lt;td&gt;性能测试强&lt;/td&gt;
+ &lt;td&gt;界面复杂，脚本难维护&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Python&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;灵活、可读性好、CI 友好、免费&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;需要写代码&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Java+RestAssured&lt;/td&gt;
+ &lt;td&gt;企业级&lt;/td&gt;
+ &lt;td&gt;太重了&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;Python 的优势：代码即文档，Git 管理方便，Jenkins 集成简单，学习成本低。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二环境准备"&gt;二、环境准备&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 安装依赖
+pip install requests pytest pytest-html allure-pytest
+
+# 项目结构
+api_test/
+├── config/
+│ └── settings.py # 配置文件（URL、账号等）
+├── common/
+│ ├── base_api.py # 封装的请求方法
+│ └── assertions.py # 自定义断言
+├── testcases/
+│ ├── test_login.py # 登录测试
+│ ├── test_user.py # 用户管理测试
+│ └── test_order.py # 订单测试
+├── data/
+│ └── test_data.yaml # 测试数据
+├── conftest.py # pytest fixtures
+├── pytest.ini # pytest 配置
+└── requirements.txt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三基础封装"&gt;三、基础封装&lt;/h2&gt;
+&lt;h3 id="configsettingspy"&gt;config/settings.py&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;BASE_URL = &amp;quot;https://api.example.com&amp;quot;
+
+# 测试账号
+USERNAME = &amp;quot;test_user&amp;quot;
+PASSWORD = &amp;quot;test_password&amp;quot;
+
+# 超时设置
+TIMEOUT = 10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="commonbase_apipy"&gt;common/base_api.py&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;import requests
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class BaseAPI:
+ &amp;quot;&amp;quot;&amp;quot;封装 requests，统一处理请求和响应&amp;quot;&amp;quot;&amp;quot;
+ 
+ def __init__(self, base_url, token=None):
+ self.base_url = base_url
+ self.session = requests.Session()
+ self.session.headers.update({
+ &amp;quot;Content-Type&amp;quot;: &amp;quot;application/json&amp;quot;,
+ &amp;quot;Accept&amp;quot;: &amp;quot;application/json&amp;quot;,
+ })
+ if token:
+ self.session.headers[&amp;quot;Authorization&amp;quot;] = f&amp;quot;Bearer {token}&amp;quot;
+ 
+ def request(self, method, path, **kwargs):
+ &amp;quot;&amp;quot;&amp;quot;统一请求方法&amp;quot;&amp;quot;&amp;quot;
+ url = f&amp;quot;{self.base_url}{path}&amp;quot;
+ kwargs.setdefault(&amp;quot;timeout&amp;quot;, 10)
+ 
+ logger.info(f&amp;quot;请求: {method} {url}&amp;quot;)
+ logger.debug(f&amp;quot;参数: {kwargs}&amp;quot;)
+ 
+ try:
+ response = self.session.request(method, url, **kwargs)
+ logger.info(f&amp;quot;响应: {response.status_code}&amp;quot;)
+ logger.debug(f&amp;quot;响应体: {response.text[:500]}&amp;quot;)
+ return response
+ except requests.RequestException as e:
+ logger.error(f&amp;quot;请求失败: {e}&amp;quot;)
+ raise
+ 
+ def get(self, path, params=None):
+ return self.request(&amp;quot;GET&amp;quot;, path, params=params)
+ 
+ def post(self, path, json=None, data=None):
+ return self.request(&amp;quot;POST&amp;quot;, path, json=json, data=data)
+ 
+ def put(self, path, json=None):
+ return self.request(&amp;quot;PUT&amp;quot;, path, json=json)
+ 
+ def delete(self, path):
+ return self.request(&amp;quot;DELETE&amp;quot;, path)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="conftestpy"&gt;conftest.py&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;import pytest
+from common.base_api import BaseAPI
+from config.settings import BASE_URL
+
+
+@pytest.fixture(scope=&amp;quot;session&amp;quot;)
+def api():
+ &amp;quot;&amp;quot;&amp;quot;全局 API 实例&amp;quot;&amp;quot;&amp;quot;
+ return BaseAPI(BASE_URL)
+
+
+@pytest.fixture(scope=&amp;quot;session&amp;quot;)
+def auth_api(api):
+ &amp;quot;&amp;quot;&amp;quot;带登录态的 API 实例&amp;quot;&amp;quot;&amp;quot;
+ response = api.post(&amp;quot;/auth/login&amp;quot;, json={
+ &amp;quot;username&amp;quot;: &amp;quot;test_user&amp;quot;,
+ &amp;quot;password&amp;quot;: &amp;quot;test_password&amp;quot;
+ })
+ token = response.json()[&amp;quot;data&amp;quot;][&amp;quot;token&amp;quot;]
+ return BaseAPI(BASE_URL, token=token)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="四编写测试用例"&gt;四、编写测试用例&lt;/h2&gt;
+&lt;h3 id="testcasestest_loginpy"&gt;testcases/test_login.py&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;import pytest
+
+
+class TestLogin:
+ &amp;quot;&amp;quot;&amp;quot;登录接口测试&amp;quot;&amp;quot;&amp;quot;
+ 
+ def test_login_success(self, api):
+ &amp;quot;&amp;quot;&amp;quot;正常登录&amp;quot;&amp;quot;&amp;quot;
+ resp = api.post(&amp;quot;/auth/login&amp;quot;, json={
+ &amp;quot;username&amp;quot;: &amp;quot;test_user&amp;quot;,
+ &amp;quot;password&amp;quot;: &amp;quot;test_password&amp;quot;
+ })
+ 
+ assert resp.status_code == 200
+ data = resp.json()
+ assert data[&amp;quot;code&amp;quot;] == 0
+ assert &amp;quot;token&amp;quot; in data[&amp;quot;data&amp;quot;]
+ assert len(data[&amp;quot;data&amp;quot;][&amp;quot;token&amp;quot;]) &amp;gt; 0
+ 
+ def test_login_wrong_password(self, api):
+ &amp;quot;&amp;quot;&amp;quot;密码错误&amp;quot;&amp;quot;&amp;quot;
+ resp = api.post(&amp;quot;/auth/login&amp;quot;, json={
+ &amp;quot;username&amp;quot;: &amp;quot;test_user&amp;quot;,
+ &amp;quot;password&amp;quot;: &amp;quot;wrong_password&amp;quot;
+ })
+ 
+ assert resp.status_code == 200
+ data = resp.json()
+ assert data[&amp;quot;code&amp;quot;] != 0
+ 
+ def test_login_empty_username(self, api):
+ &amp;quot;&amp;quot;&amp;quot;用户名为空&amp;quot;&amp;quot;&amp;quot;
+ resp = api.post(&amp;quot;/auth/login&amp;quot;, json={
+ &amp;quot;username&amp;quot;: &amp;quot;&amp;quot;,
+ &amp;quot;password&amp;quot;: &amp;quot;test_password&amp;quot;
+ })
+ 
+ assert resp.status_code == 400 # 或 422，取决于接口设计
+ 
+ @pytest.mark.parametrize(&amp;quot;username, password, expected_code&amp;quot;, [
+ (&amp;quot;test_user&amp;quot;, &amp;quot;test_password&amp;quot;, 0),
+ (&amp;quot;test_user&amp;quot;, &amp;quot;wrong&amp;quot;, 1001),
+ (&amp;quot;not_exist&amp;quot;, &amp;quot;test_password&amp;quot;, 1002),
+ ])
+ def test_login_scenarios(self, api, username, password, expected_code):
+ &amp;quot;&amp;quot;&amp;quot;参数化测试：多种登录场景&amp;quot;&amp;quot;&amp;quot;
+ resp = api.post(&amp;quot;/auth/login&amp;quot;, json={
+ &amp;quot;username&amp;quot;: username,
+ &amp;quot;password&amp;quot;: password
+ })
+ 
+ assert resp.json()[&amp;quot;code&amp;quot;] == expected_code
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="testcasestest_userpy"&gt;testcases/test_user.py&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;import pytest
+
+
+class TestUser:
+ &amp;quot;&amp;quot;&amp;quot;用户管理接口测试&amp;quot;&amp;quot;&amp;quot;
+ 
+ def test_get_user_info(self, auth_api):
+ &amp;quot;&amp;quot;&amp;quot;获取当前用户信息&amp;quot;&amp;quot;&amp;quot;
+ resp = auth_api.get(&amp;quot;/user/info&amp;quot;)
+ 
+ assert resp.status_code == 200
+ data = resp.json()
+ assert data[&amp;quot;code&amp;quot;] == 0
+ assert data[&amp;quot;data&amp;quot;][&amp;quot;username&amp;quot;] == &amp;quot;test_user&amp;quot;
+ 
+ def test_update_nickname(self, auth_api):
+ &amp;quot;&amp;quot;&amp;quot;修改昵称&amp;quot;&amp;quot;&amp;quot;
+ resp = auth_api.put(&amp;quot;/user/info&amp;quot;, json={
+ &amp;quot;nickname&amp;quot;: f&amp;quot;test_user_{int(time.time())}&amp;quot;
+ })
+ 
+ assert resp.status_code == 200
+ assert resp.json()[&amp;quot;code&amp;quot;] == 0
+ 
+ def test_get_user_list(self, auth_api):
+ &amp;quot;&amp;quot;&amp;quot;获取用户列表（需要管理员权限）&amp;quot;&amp;quot;&amp;quot;
+ resp = auth_api.get(&amp;quot;/admin/users&amp;quot;, params={&amp;quot;page&amp;quot;: 1, &amp;quot;size&amp;quot;: 10})
+ 
+ assert resp.status_code == 200
+ data = resp.json()
+ assert &amp;quot;list&amp;quot; in data[&amp;quot;data&amp;quot;]
+ assert len(data[&amp;quot;data&amp;quot;][&amp;quot;list&amp;quot;]) &amp;lt;= 10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="五数据驱动测试"&gt;五、数据驱动测试&lt;/h2&gt;
+&lt;h3 id="datatest_datayaml"&gt;data/test_data.yaml&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;login_cases:
+ - name: 正常登录
+ username: test_user
+ password: test_password
+ expected_code: 0
+ - name: 密码错误
+ username: test_user
+ password: wrong123
+ expected_code: 1001
+ - name: 用户不存在
+ username: ghost_user
+ password: any123
+ expected_code: 1002
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="使用-yaml-数据"&gt;使用 YAML 数据&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;import pytest
+import yaml
+
+
+def load_test_data():
+ with open(&amp;quot;data/test_data.yaml&amp;quot;, &amp;quot;r&amp;quot;, encoding=&amp;quot;utf-8&amp;quot;) as f:
+ return yaml.safe_load(f)[&amp;quot;login_cases&amp;quot;]
+
+
+@pytest.mark.parametrize(&amp;quot;case&amp;quot;, load_test_data())
+def test_login_data_driven(api, case):
+ resp = api.post(&amp;quot;/auth/login&amp;quot;, json={
+ &amp;quot;username&amp;quot;: case[&amp;quot;username&amp;quot;],
+ &amp;quot;password&amp;quot;: case[&amp;quot;password&amp;quot;]
+ })
+ assert resp.json()[&amp;quot;code&amp;quot;] == case[&amp;quot;expected_code&amp;quot;]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="六运行测试"&gt;六、运行测试&lt;/h2&gt;
+&lt;h3 id="基本命令"&gt;基本命令&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 运行所有测试
+pytest testcases/ -v
+
+# 运行指定文件
+pytest testcases/test_login.py -v
+
+# 运行指定类
+pytest testcases/test_login.py::TestLogin -v
+
+# 运行指定用例
+pytest testcases/test_login.py::TestLogin::test_login_success -v
+
+# 按标签运行
+pytest -m smoke -v
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="生成报告"&gt;生成报告&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# HTML 报告
+pytest testcases/ --html=report.html --self-contained-html
+
+# Allure 报告（更美观）
+pytest testcases/ --alluredir=allure-results
+allure serve allure-results
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="pytestini-配置"&gt;pytest.ini 配置&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;[pytest]
+testpaths = testcases
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+markers =
+ smoke: 冒烟测试
+ regression: 回归测试
+addopts = -v --tb=short
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="七ci-集成jenkins"&gt;七、CI 集成（Jenkins）&lt;/h2&gt;
+&lt;h3 id="jenkinsfile"&gt;Jenkinsfile&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;pipeline {
+ agent any
+ 
+ stages {
+ stage('安装依赖') {
+ steps {
+ sh 'pip install -r requirements.txt'
+ }
+ }
+ 
+ stage('运行测试') {
+ steps {
+ sh 'pytest testcases/ --html=report.html --junitxml=report.xml'
+ }
+ post {
+ always {
+ junit 'report.xml'
+ publishHTML(target: [
+ allowMissing: true,
+ alwaysLinkToLastBuild: true,
+ keepAll: true,
+ reportDir: '.',
+ reportFiles: 'report.html',
+ reportName: '接口测试报告'
+ ])
+ }
+ }
+ }
+ }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="八进阶技巧"&gt;八、进阶技巧&lt;/h2&gt;
+&lt;h3 id="接口依赖处理"&gt;接口依赖处理&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;class TestOrderFlow:
+ &amp;quot;&amp;quot;&amp;quot;订单流程测试：下单 → 支付 → 查询&amp;quot;&amp;quot;&amp;quot;
+ 
+ def test_order_flow(self, auth_api):
+ # 1. 创建订单
+ resp = auth_api.post(&amp;quot;/orders&amp;quot;, json={&amp;quot;product_id&amp;quot;: 1, &amp;quot;quantity&amp;quot;: 2})
+ order_id = resp.json()[&amp;quot;data&amp;quot;][&amp;quot;order_id&amp;quot;]
+ 
+ # 2. 支付订单
+ resp = auth_api.post(f&amp;quot;/orders/{order_id}/pay&amp;quot;, json={&amp;quot;pay_method&amp;quot;: &amp;quot;alipay&amp;quot;})
+ assert resp.json()[&amp;quot;code&amp;quot;] == 0
+ 
+ # 3. 查询订单状态
+ resp = auth_api.get(f&amp;quot;/orders/{order_id}&amp;quot;)
+ assert resp.json()[&amp;quot;data&amp;quot;][&amp;quot;status&amp;quot;] == &amp;quot;paid&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="接口签名处理"&gt;接口签名处理&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;import hashlib
+import time
+
+
+def generate_sign(params, secret):
+ &amp;quot;&amp;quot;&amp;quot;生成接口签名&amp;quot;&amp;quot;&amp;quot;
+ sorted_params = sorted(params.items())
+ sign_str = &amp;quot;&amp;amp;&amp;quot;.join(f&amp;quot;{k}={v}&amp;quot; for k, v in sorted_params)
+ sign_str += f&amp;quot;&amp;amp;secret={secret}&amp;quot;
+ return hashlib.md5(sign_str.encode()).hexdigest()
+
+
+# 在 BaseAPI 中使用
+class SignedAPI(BaseAPI):
+ def request(self, method, path, **kwargs):
+ params = kwargs.get(&amp;quot;params&amp;quot;, {})
+ params[&amp;quot;timestamp&amp;quot;] = int(time.time())
+ params[&amp;quot;sign&amp;quot;] = generate_sign(params, &amp;quot;your_secret&amp;quot;)
+ kwargs[&amp;quot;params&amp;quot;] = params
+ return super().request(method, path, **kwargs)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;接口自动化不难，难的是坚持维护。一个好的测试框架，代码结构清晰、断言明确、数据分离。从第一个接口开始，慢慢积累，你会越来越得心应手。&lt;/em&gt;&lt;/p&gt;</description></item><item><title>Redmi K90 Pro Max 一个月深度体验：这价格真的卷</title><link>https://jasper-nan.github.io/post/redmi-k90-pro-max%E6%B7%B1%E5%BA%A6%E4%BD%93%E9%AA%8C/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/redmi-k90-pro-max%E6%B7%B1%E5%BA%A6%E4%BD%93%E9%AA%8C/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;用了一个月的 Redmi K90 Pro Max（Denim，16+512GB），聊聊真实感受。不吹不黑，该夸夸该骂骂。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一为什么选-k90-pro-max"&gt;一、为什么选 K90 Pro Max？&lt;/h2&gt;
+&lt;p&gt;买手机的需求很明确：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;预算&lt;/strong&gt; ：4000-5000 档&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;需求&lt;/strong&gt; ：日常流畅 + 拍照够用 + 续航长 + 不折腾&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;备选&lt;/strong&gt; ：一加、iQOO、真我&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最终选 K90 Pro Max 的原因很简单：&lt;strong&gt;同价位配置最均衡，没有明显短板。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二外观与手感"&gt;二、外观与手感&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Denim 配色&lt;/strong&gt; ： AG 磨砂玻璃后盖，手感很好，不沾指纹。颜色是深蓝偏黑，低调耐看&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;重量&lt;/strong&gt; ：220g 左右，比想象中轻，单手可以接受&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;屏幕&lt;/strong&gt; ：2K 直屏，边框控制得不错，正面观感很好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;中框&lt;/strong&gt; ：金属中框，质感在线，没有塑料感&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;唯一缺点&lt;/strong&gt; ：直角边框稍微有点割手，长时间握持会累。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="三屏幕"&gt;三、屏幕&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;6.9 英寸 1.5K 直屏&lt;/strong&gt; ，参数拉满：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分辨率 2608×1200&lt;/li&gt;
+&lt;li&gt;120Hz 刷新率&lt;/li&gt;
+&lt;li&gt;峰值亮度 3500nits&lt;/li&gt;
+&lt;li&gt;DC 调光 + 高频 PWM&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;实际体验：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;显示效果非常细腻，看文字和图片都很舒服&lt;/li&gt;
+&lt;li&gt;阳光下可见度没问题&lt;/li&gt;
+&lt;li&gt;直屏好评，打游戏不误触&lt;/li&gt;
+&lt;li&gt;指纹解锁又快又准，位置偏下刚好&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;小问题：&lt;/strong&gt; 自动亮度偶尔不太灵敏，从室外进室内会亮几秒才降下来。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="四性能"&gt;四、性能&lt;/h2&gt;
+&lt;p&gt;骁龙 8 至尊版 Gen5（最高主频 4.6GHz），16GB 内存，日常使用&lt;strong&gt;完全不卡&lt;/strong&gt; 。&lt;/p&gt;</description></item><item><title>帮你部署 OpenClaw AI 助手 — 一杯咖啡钱拥有私人智能管家</title><link>https://jasper-nan.github.io/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;花不到一顿外卖的钱，拥有一个 7×24 在线的 AI 私人管家。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="什么是-openclaw"&gt;什么是 OpenClaw？&lt;/h2&gt;
+&lt;p&gt;OpenClaw 是一个开源的 AI 助手框架，部署在你自己的设备上（电脑、NAS、服务器都可以）。它不只是聊天机器人，而是真正能&lt;strong&gt;帮你做事&lt;/strong&gt; 的智能助手：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;📱 多平台消息：微信、飞书、Telegram、Discord、QQ……一个助手覆盖所有&lt;/li&gt;
+&lt;li&gt;🌤️ 每日早报：自动推送天气 + 新闻 + 日程&lt;/li&gt;
+&lt;li&gt;📧 邮件管理：自动分类、重要邮件提醒&lt;/li&gt;
+&lt;li&gt;📝 博客写作：帮你写文章、发布&lt;/li&gt;
+&lt;li&gt;🔧 自动化：定时任务、心跳巡检、智能家居控制&lt;/li&gt;
+&lt;li&gt;📚 知识管理：记住你的偏好、日程、待办事项&lt;/li&gt;
+&lt;li&gt;🖼️ 图片/语音：发送图片自动识别、语音对话&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="费用说明"&gt;费用说明&lt;/h2&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;项目&lt;/th&gt;
+ &lt;th&gt;费用&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;部署服务费（一次性）&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;50 元&lt;/strong&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;AI Token 费用（按月）&lt;/td&gt;
+ &lt;td&gt;约 &lt;strong&gt;39-49 元/月&lt;/strong&gt; （自付）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;总计首月&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;约 89-99 元&lt;/strong&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Token 费用由你直接充值到 AI 模型提供商（如智谱、DeepSeek 等），完全透明，没有中间商加价。&lt;/p&gt;
+&lt;h2 id="我提供什么"&gt;我提供什么&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;✅ 远程协助安装 OpenClaw&lt;/li&gt;
+&lt;li&gt;✅ 配置你需要的消息渠道（微信/飞书/Telegram 等）&lt;/li&gt;
+&lt;li&gt;✅ 基础功能调通（对话、定时任务、技能安装）&lt;/li&gt;
+&lt;li&gt;✅ 使用教学 + 常见问题解答&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="需要你准备的"&gt;需要你准备的&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;一台能联网的设备（Mac mini、NAS、树莓派、云服务器都行）&lt;/li&gt;
+&lt;li&gt;能远程操作的权限（SSH 或屏幕共享）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="部署后你能做什么"&gt;部署后你能做什么？&lt;/h2&gt;
+&lt;p&gt;举几个真实用例：&lt;/p&gt;</description></item><item><title>大行 P8 折叠自行车通勤骑行入门指南</title><link>https://jasper-nan.github.io/post/%E5%A4%A7%E8%A1%8Cp8%E6%8A%98%E5%8F%A0%E9%AA%91%E8%A1%8C%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E5%A4%A7%E8%A1%8Cp8%E6%8A%98%E5%8F%A0%E9%AA%91%E8%A1%8C%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;大行（Tern）P8 是折叠自行车里的&amp;quot;神车&amp;quot;——价格亲民、品质靠谱、折叠便携。如果你正在考虑骑车通勤，这篇就是为你准备的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一为什么选-p8"&gt;一、为什么选 P8？&lt;/h2&gt;
+&lt;h3 id="优点"&gt;优点&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;折叠后体积小&lt;/strong&gt; ：可以带上地铁、放进汽车后备箱&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;8速变速&lt;/strong&gt; ：城市通勤完全够用&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;价格亲民&lt;/strong&gt; ：2000-3000 元区间，性价比高&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;品质稳定&lt;/strong&gt; ：大行是折叠车领域的老牌，口碑好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;维护成本低&lt;/strong&gt; ：零部件通用性强，维修方便&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="不适合"&gt;不适合&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;长距离骑行（&amp;gt;50km）—— 轮径小，同样的距离踏频更高&lt;/li&gt;
+&lt;li&gt;颠簸路面 —— 20寸轮径对路面敏感&lt;/li&gt;
+&lt;li&gt;追求速度的公路党&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="p8-vs-其他折叠车"&gt;P8 vs 其他折叠车&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;型号&lt;/th&gt;
+ &lt;th&gt;价格&lt;/th&gt;
+ &lt;th&gt;重量&lt;/th&gt;
+ &lt;th&gt;变速&lt;/th&gt;
+ &lt;th&gt;适合场景&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;P8&lt;/td&gt;
+ &lt;td&gt;~2500&lt;/td&gt;
+ &lt;td&gt;~12kg&lt;/td&gt;
+ &lt;td&gt;8速&lt;/td&gt;
+ &lt;td&gt;通勤、日常&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;P18&lt;/td&gt;
+ &lt;td&gt;~3500&lt;/td&gt;
+ &lt;td&gt;~12kg&lt;/td&gt;
+ &lt;td&gt;18速&lt;/td&gt;
+ &lt;td&gt;长距离、爬坡&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;BYA412&lt;/td&gt;
+ &lt;td&gt;~1500&lt;/td&gt;
+ &lt;td&gt;~11kg&lt;/td&gt;
+ &lt;td&gt;单速&lt;/td&gt;
+ &lt;td&gt;短途代步&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;22速 D7&lt;/td&gt;
+ &lt;td&gt;~3000&lt;/td&gt;
+ &lt;td&gt;~12kg&lt;/td&gt;
+ &lt;td&gt;7速&lt;/td&gt;
+ &lt;td&gt;通勤进阶&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;结论：&lt;/strong&gt; 纯通勤选 P8，预算充足选 P18。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二骑行前的准备"&gt;二、骑行前的准备&lt;/h2&gt;
+&lt;h3 id="必买配件"&gt;必买配件&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;配件&lt;/th&gt;
+ &lt;th&gt;价格&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;头盔&lt;/td&gt;
+ &lt;td&gt;100-300&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;必买！&lt;/strong&gt; 安全第一&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;前灯 + 尾灯&lt;/td&gt;
+ &lt;td&gt;50-100&lt;/td&gt;
+ &lt;td&gt;夜骑必备，建议 USB 充电款&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;车锁&lt;/td&gt;
+ &lt;td&gt;50-150&lt;/td&gt;
+ &lt;td&gt;U 型锁最安全&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;挡泥板&lt;/td&gt;
+ &lt;td&gt;30-50&lt;/td&gt;
+ &lt;td&gt;雨天必备&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;车包/车筐&lt;/td&gt;
+ &lt;td&gt;30-80&lt;/td&gt;
+ &lt;td&gt;放手机、钥匙、水壶&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="建议配件"&gt;建议配件&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;水壶架 + 水壶（夏天骑行必备）&lt;/li&gt;
+&lt;li&gt;手套（防滑、减震）&lt;/li&gt;
+&lt;li&gt;骑行裤（&amp;gt;10km 距离建议穿）&lt;/li&gt;
+&lt;li&gt;码表（记录速度、距离、时间）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="三骑行技巧"&gt;三、骑行技巧&lt;/h2&gt;
+&lt;h3 id="变速使用"&gt;变速使用&lt;/h3&gt;
+&lt;p&gt;P8 的 8 速怎么用？&lt;/p&gt;</description></item><item><title>飞牛 NAS vs 群晖 DSM：真实使用对比，哪个更适合你？</title><link>https://jasper-nan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;群晖 DSM 是 NAS 界的老大哥，飞牛（fnOS）是近年崛起的国产新秀。两个系统我都深度使用过，这篇从实际体验出发帮你对比。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一系统定位"&gt;一、系统定位&lt;/h2&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖 DSM&lt;/th&gt;
+ &lt;th&gt;飞牛 fnOS&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;性质&lt;/td&gt;
+ &lt;td&gt;商业闭源&lt;/td&gt;
+ &lt;td&gt;国产开源免费&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;硬件&lt;/td&gt;
+ &lt;td&gt;群晖自家的 NAS&lt;/td&gt;
+ &lt;td&gt;支持主流 x86 硬件（也支持部分 ARM）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;价格&lt;/td&gt;
+ &lt;td&gt;NAS 硬件贵 + 软件免费&lt;/td&gt;
+ &lt;td&gt;软件免费，硬件自选&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;适合人群&lt;/td&gt;
+ &lt;td&gt;不想折腾、预算充足&lt;/td&gt;
+ &lt;td&gt;喜欢折腾、追求性价比&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;核心区别：&lt;/strong&gt; 群晖卖的是&amp;quot;整套方案&amp;quot;，飞牛提供的是&amp;quot;免费系统 + 你自己选硬件&amp;quot;。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二核心功能对比"&gt;二、核心功能对比&lt;/h2&gt;
+&lt;h3 id="文件管理"&gt;文件管理&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;功能&lt;/th&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Web 文件管理&lt;/td&gt;
+ &lt;td&gt;File Station ✅&lt;/td&gt;
+ &lt;td&gt;文件管理器 ✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;SMB/CIFS 共享&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;NFS&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;WebDAV&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;回收站&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;文件去重&lt;/td&gt;
+ &lt;td&gt;✅（需Btrfs）&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;体验差距不大，都能满足日常需求。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id="docker"&gt;Docker&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;群晖&lt;/th&gt;
+ &lt;th&gt;飞牛&lt;/th&gt;
+ &lt;th&gt;&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;GUI 管理器&lt;/td&gt;
+ &lt;td&gt;Container Manager ✅&lt;/td&gt;
+ &lt;td&gt;Docker 管理器 ✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Portainer 支持&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Compose 支持&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;资源限制设置&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;td&gt;✅&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;平手。&lt;/strong&gt; 两个系统对 Docker 的支持都很完善。&lt;/p&gt;</description></item><item><title>佳明 Forerunner 255 使用心得：跑步数据到底怎么看</title><link>https://jasper-nan.github.io/post/%E4%BD%B3%E6%98%8E255%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E4%BD%B3%E6%98%8E255%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;佳明255是很多跑者的入门首选，但买回来之后，各种数据看着头晕。这篇文章整理了日常使用中最实用的功能和数据解读。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一值得用的核心功能"&gt;一、值得用的核心功能&lt;/h2&gt;
+&lt;h3 id="1-训练状态training-readiness"&gt;1. 训练状态（Training Readiness）&lt;/h3&gt;
+&lt;p&gt;佳明255的杀手级功能。综合你的睡眠、HRV、训练负荷，告诉你今天适合什么强度的训练：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;低&lt;/strong&gt; → 休息或轻松跑&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;中&lt;/strong&gt; → 适度训练&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;高&lt;/strong&gt; → 可以上强度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;不要无视它。状态低的时候硬跑，反而适得其反。&lt;/p&gt;
+&lt;h3 id="2-hrv-状态心率变异性"&gt;2. HRV 状态（心率变异性）&lt;/h3&gt;
+&lt;p&gt;HRV 是衡量身体恢复程度的指标：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;HRV 偏高&lt;/strong&gt; → 身体恢复良好&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;HRV 突然下降&lt;/strong&gt; → 可能疲劳、睡眠不好、快要生病&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;建议每天早上同一时间佩戴测量，&lt;strong&gt;7天以上才有参考价值&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h3 id="3-body-battery身体电量"&gt;3. Body Battery（身体电量）&lt;/h3&gt;
+&lt;p&gt;像手机电量一样显示你的精力值（0-100）：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;早上满电 → 今天状态好&lt;/li&gt;
+&lt;li&gt;上午掉到40以下 → 可能昨晚没睡好或训练过度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;根据电量安排训练强度，比主观感觉更准。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二跑步数据解读"&gt;二、跑步数据解读&lt;/h2&gt;
+&lt;h3 id="配速pace"&gt;配速（Pace）&lt;/h3&gt;
+&lt;p&gt;最基础的指标。不同目标配速参考：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;目标&lt;/th&gt;
+ &lt;th&gt;5km 配速&lt;/th&gt;
+ &lt;th&gt;10km 配速&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;入门&lt;/td&gt;
+ &lt;td&gt;6:30-7:00&lt;/td&gt;
+ &lt;td&gt;7:00-7:30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;中等&lt;/td&gt;
+ &lt;td&gt;5:30-6:00&lt;/td&gt;
+ &lt;td&gt;6:00-6:30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;进阶&lt;/td&gt;
+ &lt;td&gt;4:30-5:00&lt;/td&gt;
+ &lt;td&gt;5:00-5:30&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="心率区间"&gt;心率区间&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;比配速更重要的指标。&lt;/strong&gt; 跑步要控制心率，不要盲目追速度：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;区间&lt;/th&gt;
+ &lt;th&gt;心率（参考）&lt;/th&gt;
+ &lt;th&gt;训练目的&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z1 热身&lt;/td&gt;
+ &lt;td&gt;&amp;lt;130&lt;/td&gt;
+ &lt;td&gt;恢复跑&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z2 有氧&lt;/td&gt;
+ &lt;td&gt;130-150&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;基础有氧（80%的训练在这）&lt;/strong&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z3 节奏&lt;/td&gt;
+ &lt;td&gt;150-165&lt;/td&gt;
+ &lt;td&gt;乳酸阈值训练&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z4 无氧&lt;/td&gt;
+ &lt;td&gt;165-180&lt;/td&gt;
+ &lt;td&gt;间歇跑&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Z5 极限&lt;/td&gt;
+ &lt;td&gt;&amp;gt;180&lt;/td&gt;
+ &lt;td&gt;冲刺（很短）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;记住：&lt;strong&gt;慢就是快。&lt;/strong&gt; 大部分时间待在 Z2，才是有效训练。&lt;/p&gt;</description></item><item><title>群晖 Synology NAS 新手入门完全指南</title><link>https://jasper-nan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;如果你刚入手了一台群晖 NAS，或者正在考虑入手，这篇文章就是为你准备的。从硬件安装到进阶玩法，一步步带你上手。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="-一收到设备后做什么"&gt;📦 一、收到设备后做什么&lt;/h2&gt;
+&lt;h3 id="11-硬件检查"&gt;1.1 硬件检查&lt;/h3&gt;
+&lt;p&gt;确认包装内配件齐全：主机、电源线、网线、硬盘笼螺丝。&lt;/p&gt;
+&lt;p&gt;群晖主机不含硬盘，需自购。推荐：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;希捷酷狼 IronWolf&lt;/strong&gt; — NAS 专用盘，CMR 技术&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;西数红盘 Plus&lt;/strong&gt; — 同样是 NAS 专用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="12-安装硬盘"&gt;1.2 安装硬盘&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;关机并拔掉电源线&lt;/li&gt;
+&lt;li&gt;抽出硬盘架，固定硬盘（3.5 寸用侧面螺丝，2.5 寸用底部螺丝）&lt;/li&gt;
+&lt;li&gt;推回硬盘架，接上电源线和网线&lt;/li&gt;
+&lt;li&gt;开机，等待指示灯变为&lt;strong&gt;绿色常亮&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="13-初始化设置"&gt;1.3 初始化设置&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;在电脑访问 &lt;code&gt;find.synology.com&lt;/code&gt; 或 &lt;code&gt;http://NAS内网IP:5000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;按向导完成 DSM 系统安装&lt;/li&gt;
+&lt;li&gt;设置管理员账户和&lt;strong&gt;强密码&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;选择&amp;quot;自动更新&amp;quot;保持系统最新&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="-二存储池规划shr-新手推荐"&gt;💾 二、存储池规划（SHR 新手推荐）&lt;/h2&gt;
+&lt;h3 id="什么是-shr"&gt;什么是 SHR？&lt;/h3&gt;
+&lt;p&gt;SHR（Synology Hybrid RAID）是群晖自研的智能 RAID，比传统 RAID 更灵活，硬盘利用率更高。&lt;/p&gt;
+&lt;h3 id="硬盘组合建议"&gt;硬盘组合建议&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;硬盘数&lt;/th&gt;
+ &lt;th&gt;推荐模式&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;1 块&lt;/td&gt;
+ &lt;td&gt;Basic&lt;/td&gt;
+ &lt;td&gt;无冗余，但灵活&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;2 块&lt;/td&gt;
+ &lt;td&gt;SHR-1（推荐）&lt;/td&gt;
+ &lt;td&gt;1 块硬盘容错&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;3 块+&lt;/td&gt;
+ &lt;td&gt;SHR-1&lt;/td&gt;
+ &lt;td&gt;1 块硬盘容错&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;4 块+&lt;/td&gt;
+ &lt;td&gt;SHR-2&lt;/td&gt;
+ &lt;td&gt;2 块硬盘容错（安全性更高）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ &lt;strong&gt;新手千万别组 RAID0！&lt;/strong&gt; 一块硬盘损坏 = 所有数据全丢。&lt;/p&gt;</description></item><item><title>文石 Boox Poke6 电纸书折腾指南：Kindle 的完美替代</title><link>https://jasper-nan.github.io/post/%E6%96%87%E7%9F%B3poke6%E7%94%B5%E7%BA%B8%E4%B9%A6%E6%8A%98%E8%85%BE%E6%8C%87%E5%8D%97/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E6%96%87%E7%9F%B3poke6%E7%94%B5%E7%BA%B8%E4%B9%A6%E6%8A%98%E8%85%BE%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;Kindle 退出中国市场后，很多人在找替代品。文石（BOOX）Poke6 是目前 6 寸电纸书里综合体验最好的选择之一。这篇分享入手后的使用心得和优化技巧。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一为什么选-poke6"&gt;一、为什么选 Poke6？&lt;/h2&gt;
+&lt;h3 id="poke6-参数速览"&gt;Poke6 参数速览&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;规格&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;屏幕&lt;/td&gt;
+ &lt;td&gt;6.0 英寸 Carta 1300 电子墨水屏（121.8×90mm）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;分辨率&lt;/td&gt;
+ &lt;td&gt;1448×1072（300ppi）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;处理器&lt;/td&gt;
+ &lt;td&gt;高通八核 2.0GHz&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;内存&lt;/td&gt;
+ &lt;td&gt;2GB LPDDR4X + 32GB eMMC 5.1&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;重量&lt;/td&gt;
+ &lt;td&gt;约 145g&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;外观尺寸&lt;/td&gt;
+ &lt;td&gt;148×108×6.8mm&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;系统&lt;/td&gt;
+ &lt;td&gt;Android 11（可装 App）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;电池&lt;/td&gt;
+ &lt;td&gt;1500mAh&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;WiFi&lt;/td&gt;
+ &lt;td&gt;2.4G &amp;amp; 5G 双频&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;蓝牙&lt;/td&gt;
+ &lt;td&gt;BT 5.0&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;接口&lt;/td&gt;
+ &lt;td&gt;Type-C + TF 卡扩展&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="核心优势"&gt;核心优势&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;300ppi 高清屏&lt;/strong&gt; — Carta 1300 墨水屏，字体锐利，接近纸质书&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Android 11 系统&lt;/strong&gt; — 不像 Kindle 只能用自家的，可以装微信读书、Kindle App 等&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;开放性强&lt;/strong&gt; — 可以装第三方软件、改字体、自定义布局&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;轻薄便携&lt;/strong&gt; — 145g，揣兜里没问题&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;性价比高&lt;/strong&gt; — 1000-1500 元价位&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="不适合"&gt;不适合&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;喜欢看漫画（6 寸太小，建议 10 寸以上）&lt;/li&gt;
+&lt;li&gt;需要手写笔记（建议 Tab 系列）&lt;/li&gt;
+&lt;li&gt;预算充足追求极致（看看文石 Palma 或 Kindle Scribe）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id="二开箱设置"&gt;二、开箱设置&lt;/h2&gt;
+&lt;h3 id="1-基础设置"&gt;1. 基础设置&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;开机 → 选择语言 → 连 WiFi → 注册/登录文石账号&lt;/li&gt;
+&lt;li&gt;建议关闭自动同步和自动更新，手动控制更稳定&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id="2-屏幕优化关键"&gt;2. 屏幕优化（关键！）&lt;/h3&gt;
+&lt;p&gt;默认设置刷新慢、有残影，需要手动调：&lt;/p&gt;</description></item><item><title>旁路由模式下 OpenClash/PassWall 不稳定问题排查指南</title><link>https://jasper-nan.github.io/post/%E6%97%81%E8%B7%AF%E7%94%B1openclash%E4%B8%8D%E7%A8%B3%E5%AE%9A%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97/</link><pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E6%97%81%E8%B7%AF%E7%94%B1openclash%E4%B8%8D%E7%A8%B3%E5%AE%9A%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;旁路由模式下跑 OpenClash 或 PassWall，代理节点&amp;quot;时通时断&amp;quot;，直连却一切正常？这篇文章帮你定位根因并彻底解决。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="-典型网络架构"&gt;📐 典型网络架构&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;光猫 → 爱快路由器(拨号) → 旁路由(OpenWrt) → AC(交换机) → AP → 终端设备
+ .168.1.2 192.168.1.100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="-问题现象"&gt;🔍 问题现象&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;所有节点都会出现&amp;quot;时通时断&amp;quot;现象&lt;/li&gt;
+&lt;li&gt;手机/电脑直连节点（非路由器代理）正常，说明机场节点本身稳定&lt;/li&gt;
+&lt;li&gt;OpenClash 和 PassWall 两个插件都有同样问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="-根因分析"&gt;🎯 根因分析&lt;/h2&gt;
+&lt;p&gt;旁路由模式下，&lt;strong&gt;网关和 DNS 必须同时指向旁路由&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h3 id="错误配置示例"&gt;错误配置示例&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;网关：192.168.1.100（旁路由）✅
+DNS：192.168.1.2（爱快）或运营商 DNS ❌
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="问题后果"&gt;问题后果&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;TCP 流量走旁路由代理 → 部分连接正常&lt;/li&gt;
+&lt;li&gt;DNS 查询绕过旁路由 → 域名解析失败或超时&lt;/li&gt;
+&lt;li&gt;表现为：网站&amp;quot;一会儿能用一会儿超时&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="-快速验证方法"&gt;⚡ 快速验证方法&lt;/h2&gt;
+&lt;p&gt;在需要代理的终端设备上手动设置网络：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;网关：192.168.1.100
+DNS：192.168.1.100（关键！）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置后测试国内外网站，如果稳定则确认是 DNS 配置问题。&lt;/p&gt;
+&lt;h2 id="-解决方案"&gt;🛠️ 解决方案&lt;/h2&gt;
+&lt;h3 id="方案一爱快-dhcp-全局代理推荐"&gt;方案一：爱快 DHCP 全局代理（推荐）&lt;/h3&gt;
+&lt;p&gt;适用场景：希望所有设备都走代理&lt;/p&gt;
+&lt;p&gt;爱快后台 → &lt;strong&gt;DHCP 服务&lt;/strong&gt; ：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;网关地址：192.168.1.100
+DNS 服务器：192.168.1.100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="方案二爱快-dhcp-默认设备手动配置"&gt;方案二：爱快 DHCP 默认，设备手动配置&lt;/h3&gt;
+&lt;p&gt;适用场景：只需部分设备代理&lt;/p&gt;</description></item><item><title>git系列之远程仓库</title><link>https://jasper-nan.github.io/post/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/</link><pubDate>Mon, 19 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-19-git%E7%B3%BB%E5%88%97%E4%B9%8B%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-19-git系列之远程仓库/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="使用github"&gt;使用github&lt;/h2&gt;
+&lt;p&gt;远程仓库有很多，最常用的就是国际上的github。国内也有码云，码市。当然有些公司也会自己搭建git服务器，开源的比如gitlab。但是为了学习远程仓库去自己搭建服务器就有点小题大做了。&lt;/p&gt;
+&lt;h2 id="注册github"&gt;注册github&lt;/h2&gt;
+&lt;p&gt;只要注册一个GitHub账号，就可以免费获得Git远程仓库&lt;/p&gt;
+&lt;h2 id="创建ssh-key"&gt;创建SSH key&lt;/h2&gt;
+&lt;p&gt;由于你的本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以，需要一点设置.&lt;/p&gt;
+&lt;p&gt;第1步：创建SSH Key。在用户主目录下，看看有没有.ssh目录，如果有，再看看这个目录下有没有id_rsa和id_rsa.pub这两个文件，如果已经有了，可直接跳到下一步。如果没有，打开Shell（Windows下打开Git Bash），创建SSH Key：&lt;/p&gt;
+&lt;p&gt;$ ssh-keygen -t rsa -C “youremail@example.com“&lt;/p&gt;
+&lt;p&gt;你需要把邮件地址换成你自己的邮件地址，然后一路回车，使用默认值即可，无需创建密码。&lt;/p&gt;
+&lt;p&gt;如果一切顺利的话，可以在用户主目录里找到.ssh目录，里面有id_rsa和id_rsa.pub两个文件，这两个就是SSH Key的秘钥对，id_rsa是私钥，不能泄露出去，id_rsa.pub是公钥，可以放心地告诉任何人。&lt;/p&gt;
+&lt;p&gt;第2步，登陆GitHub，打开“Account settings”，“SSH Keys”页面：然后，点“Add SSH Key”，填上任意Title，比如『我的macbookpro』在Key文本框里粘贴id_rsa.pub文件的内容.&lt;/p&gt;
+&lt;p&gt;为什么GitHub需要SSH Key呢？因为GitHub需要识别出你推送的提交确实是你推送的，而不是别人冒充的，而Git支持SSH协议，所以，GitHub只要知道了你的公钥，就可以确认只有你自己才能推送。&lt;/p&gt;
+&lt;p&gt;当然，GitHub允许你添加多个Key。假定你有若干电脑，你一会儿在公司提交，一会儿在家里提交，只要把每台电脑的Key都添加到GitHub，就可以在每台电脑上往GitHub推送了。&lt;/p&gt;
+&lt;p&gt;github免费版的仓库默认是公开的，所有人都能看到，所以敏感信息不要放到里面。也可以付费获取隐私空间。当然企业开发大多数都是自己搭建私有的gitlab。&lt;/p&gt;
+&lt;h2 id="添加远程库"&gt;添加远程库&lt;/h2&gt;
+&lt;p&gt;你已经在本地创建了一个Git仓库后，又想在GitHub创建一个Git仓库，并且让这两个仓库进行远程同步，这样，GitHub上的仓库既可以作为备份，又可以让其他人通过该仓库来协作.&lt;/p&gt;
+&lt;p&gt;登录github后，右上角找到“Create a new repo”按钮，创建一个新的仓库.&lt;/p&gt;
+&lt;p&gt;在Repository name填入learngit，其他保持默认设置，点击“Create repository”按钮，就成功地创建了一个新的Git仓库&lt;/p&gt;
+&lt;p&gt;目前，在GitHub上的这个learngit仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库。&lt;/p&gt;
+&lt;h2 id="关联本地库"&gt;关联本地库&lt;/h2&gt;
+&lt;p&gt;git remote add origin &lt;a href="mailto:git@github.com"&gt;git@github.com&lt;/a&gt;:jonnynan/learngit.git&lt;/p&gt;
+&lt;p&gt;请千万注意，把上面的jonnynan替换成你自己的GitHub账户名，否则，你在本地关联的就是我的远程库，关联没有问题，但是你以后推送是推不上去的，因为你的SSH Key公钥不在我的账户列表中。&lt;/p&gt;
+&lt;p&gt;添加后，远程库的名字就是origin，这是Git默认的叫法，也可以改成别的，但是origin这个名字一看就知道是远程库。&lt;/p&gt;
+&lt;p&gt;下一步，就可以把本地库的所有内容推送到远程库上：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git push -u origin masterCounting objects: 20, done.Delta compression using up to 4 threads.Compressing objects: 100% (15/15), done.Writing objects: 100% (20/20), 1.64 KiB | 560.00 KiB/s, done.Total 20 (delta 5), reused 0 (delta 0)remote: Resolving deltas: 100% (5/5), done.To github.com:jonnynan/learngit.git * [new branch] master -&amp;amp;gt; masterBranch 'master' set up to track remote branch 'master' from 'origin'.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;把本地库的内容推送到远程，用git push命令，实际上是把当前分支master推送到远程。&lt;/p&gt;</description></item><item><title>使用Logrotate归档日志</title><link>https://jasper-nan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</link><pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-15-使用Logrotate归档日志/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="创建tomcat的配置文件"&gt;创建tomcat的配置文件&lt;/h2&gt;
+&lt;p&gt;vim /etc/logrotate.d/tomcat&lt;/p&gt;
+&lt;p&gt;内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/application/tomcat/logs/catalina.out &amp;amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数&lt;/p&gt;
+&lt;p&gt;关于每个参数的作用我们可以查看全局文件cat /etc/logrotate.conf 我们可以把配置文件写在/etc/logrotate.conf里面或者放在/etc/logrotate.d下面&lt;/p&gt;
+&lt;h2 id="参数解释"&gt;参数解释&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="不常用的参数"&gt;不常用的参数&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除&lt;/p&gt;
+&lt;p&gt;测试&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调试 （d = debug）参数为配置文件，不指定则执行全局配置文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;logrotate -d /etc/logrotate.d/tomcat.conf&lt;/p&gt;</description></item><item><title>git系列之时光穿梭</title><link>https://jasper-nan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</link><pubDate>Tue, 13 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-13-git%E7%B3%BB%E5%88%97%E4%B9%8B%E6%97%B6%E5%85%89%E7%A9%BF%E6%A2%AD/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-13-git系列之时光穿梭/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="小结"&gt;小结&lt;/h2&gt;
+&lt;p&gt;要随时掌握工作区的状态，使用git status命令。&lt;/p&gt;
+&lt;p&gt;如果git status告诉你有文件被修改过，用git diff可以查看修改内容。&lt;/p&gt;
+&lt;p&gt;版本回退 git 每次 commit 都会产生一个 版本 commit 编号&lt;/p&gt;
+&lt;p&gt;查看可以使用 git log 命令&lt;/p&gt;
+&lt;p&gt;需要友情提示的是，你看到的一大串类似1094adb…的是commit id（版本号），和SVN不一样，Git的commit id不是1，2，3……递增的数字，而是一个SHA1计算出来的一个非常大的数字，用十六进制表示，而且你看到的commit id和我的肯定不一样，以你自己的为准。为什么commit id需要用这么一大串数字表示呢？因为Git是分布式的版本控制系统，后面我们还要研究多人在同一个版本库里工作，如果大家都用1，2，3……作为版本号，那肯定就冲突了。&lt;/p&gt;
+&lt;p&gt;好了，现在我们启动时光穿梭机，准备把readme.txt回退到上一个版本，也就是add distributed的那个版本，怎么做呢？&lt;/p&gt;
+&lt;p&gt;首先，Git必须知道当前版本是哪个版本，在Git中，用HEAD表示当前版本，也就是最新的提交1094adb…（注意我的提交ID和你的肯定不一样），上一个版本就是HEAD^，上上一个版本就是HEAD^^，当然往上100个版本写100个^比较容易数不过来，所以写成HEAD~100。&lt;/p&gt;
+&lt;p&gt;现在，我们要把当前版本append GPL回退到上一个版本add distributed，就可以使用git reset命令：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;$ git reset --hard HEAD^HEAD is now at e475afc add distributed
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;查看文件可以发现确实已经回到了上个版本提交的内容。&lt;/p&gt;
+&lt;p&gt;此时再次查看git log，会发现最新的版本不再显示了。就好像你从21世纪坐时光穿梭机来到了19世纪，想再回去已经回不去了，肿么办？&lt;/p&gt;
+&lt;p&gt;还是有办法 。再学两个命令：&lt;/p&gt;
+&lt;p&gt;git reflog 查看之前执行的每个命令。找到对应的 commit log&lt;/p&gt;
+&lt;p&gt;然后执行命令 git reset –hard commit_id&lt;/p&gt;
+&lt;p&gt;即可恢复到指定提交版本了。&lt;/p&gt;
+&lt;h2 id="小结-1"&gt;小结&lt;/h2&gt;
+&lt;p&gt;HEAD指向的版本就是当前版本，因此，Git允许我们在版本的历史之间穿梭，使用命令git reset –hard commit_id。&lt;/p&gt;
+&lt;p&gt;穿梭前，用git log可以查看提交历史，以便确定要回退到哪个版本。&lt;/p&gt;
+&lt;p&gt;要重返未来，用git reflog查看命令历史，以便确定要回到未来的哪个版本。&lt;/p&gt;
+&lt;p&gt;工作区和暂存区 核心知识点来了。&lt;/p&gt;</description></item></channel></rss>
