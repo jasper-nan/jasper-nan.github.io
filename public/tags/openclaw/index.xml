@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenClaw on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/openclaw/</link><description>Recent content in OpenClaw on Jasper's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Tue, 09 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/openclaw/index.xml" rel="self" type="application/rss+xml"/><item><title>Hermes Skill 创建指南与 CalDAV 日历同步实战：从个人到家庭的 AI 助手配置</title><link>https://jasper-nan.github.io/post/hermes-skill-caldav-guide/</link><pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/hermes-skill-caldav-guide/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;最近给老婆配置 CalDAV 日历同步技能时，发现很多人对 Hermes（原 OpenClaw）的 Skill 系统还不够熟悉。这篇文章从 Skill 创建原理讲起，到 CalDAV 日历同步的实战配置，再到如何给家庭成员快速部署，希望能帮你把 AI 助手从&amp;quot;个人玩具&amp;quot;变成&amp;quot;家庭基础设施&amp;quot;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一hermes-skill-是什么为什么重要"&gt;一、Hermes Skill 是什么？为什么重要？&lt;/h2&gt;
+&lt;h3 id="11-从插件到技能ai-助手的进化"&gt;1.1 从插件到技能：AI 助手的进化&lt;/h3&gt;
+&lt;p&gt;传统的软件扩展叫&amp;quot;插件&amp;quot;（Plugin），强调的是&lt;strong&gt;功能叠加&lt;/strong&gt;。而 Hermes 的 Skill 是&lt;strong&gt;工作流封装&lt;/strong&gt;——它不只是加一个新功能，而是把&amp;quot;如何完成一件事&amp;quot;的完整逻辑打包交给 AI。&lt;/p&gt;
+&lt;p&gt;举个例子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;插件思维&lt;/strong&gt;：装一个日历插件，能看日程&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skill 思维&lt;/strong&gt;：说一句&amp;quot;帮我查下周三的会议&amp;quot;，AI 自动调用 CalDAV 查询、解析时间语义、返回格式化结果&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Skill 的核心价值在于&lt;strong&gt;降低使用门槛&lt;/strong&gt;。你不需要记住命令，用自然语言表达意图就行。&lt;/p&gt;
+&lt;h3 id="12-skill-的底层结构"&gt;1.2 Skill 的底层结构&lt;/h3&gt;
+&lt;p&gt;每个 Skill 本质上是一个目录，包含：&lt;/p&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;~/.hermes/skills/&amp;lt;category&amp;gt;/&amp;lt;skill-name&amp;gt;/
+├── SKILL.md # 技能定义文件（必需）
+├── references/ # 参考文档
+├── templates/ # 模板文件
+├── scripts/ # 可执行脚本
+└── assets/ # 图片等资源
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最核心的就是 &lt;code&gt;SKILL.md&lt;/code&gt;，它采用 YAML Frontmatter + Markdown 的格式：&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-yaml" data-lang="yaml"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;name&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;caldav-sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;description&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Manage calendar events via CalDAV&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;version&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="m"&gt;1.0.0&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;author&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt; &lt;/span&gt;&lt;span class="l"&gt;Your Name&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nn"&gt;---&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;# CalDAV Sync&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c"&gt;## Configuration&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;Set these environment variables&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;```bash&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_URL=&amp;#34;https://caldav.example.com:9999&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_USERNAME=&amp;#34;your-username&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="usage"&gt;Usage&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Add event: &lt;code&gt;caldav_add --title &amp;quot;Meeting&amp;quot; --start &amp;quot;2024-01-01T10:00:00&amp;quot; ...&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;List events: &lt;code&gt;caldav_list [--days 7]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre tabindex="0"&gt;&lt;code&gt;
+Hermes 在启动时会扫描 `~/.hermes/skills/` 目录，自动加载所有有效的 Skill。
+
+### 1.3 Skill 的三种类型
+
+| 类型 | 说明 | 示例 |
+|------|------|------|
+| **内置技能** | Hermes 官方提供，随安装附带 | web_search, terminal, file |
+| **社区技能** | 通过 `hermes skills install` 安装 | caldav-sync, blogwatcher |
+| **自定义技能** | 用户自己创建的 SKILL.md | 个人记账、家庭日历 |
+
+* * *
+
+## 二、手把手创建一个 Skill
+
+### 2.1 最简单的 Skill：Hello World
+
+```bash
+# 创建目录
+mkdir -p ~/.hermes/skills/custom/hello-world
+
+# 编写 SKILL.md
+cat &amp;gt; ~/.hermes/skills/custom/hello-world/SKILL.md &amp;lt;&amp;lt; &amp;#39;EOF&amp;#39;
+---
+name: hello-world
+description: A simple hello world skill to demonstrate the structure
+version: 1.0.0
+---
+
+# Hello World
+
+This skill demonstrates the basic structure of a Hermes skill.
+
+## Usage
+
+Simply say &amp;#34;hello&amp;#34; and the agent will respond with a greeting.
+EOF
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;重启 Hermes 或执行 &lt;code&gt;hermes skills reload&lt;/code&gt;，这个技能就生效了。&lt;/p&gt;</description></item><item><title>OpenClaw 插件与 Skill 优化实战：从堆功能到真好用</title><link>https://jasper-nan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/</link><pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;OpenClaw 好玩的地方，不是它“能装很多 Skill”，而是你能不能把它调成一个真正顺手的个人系统。最近正好做了一轮整理：砍掉重复能力、收敛搜索入口、补上健康检查和安全配置。折腾完之后，一个很明显的感受是——&lt;strong&gt;Agent 不是插件市场，Agent 应该是你的工作流延伸&lt;/strong&gt; 。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一先说结论openclaw-不是装得越多越好"&gt;一、先说结论：OpenClaw 不是装得越多越好&lt;/h2&gt;
+&lt;p&gt;很多人刚接触 OpenClaw，第一反应都是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;先装一堆 Skill 再说&lt;/li&gt;
+&lt;li&gt;搜索、浏览器、平台抓取、自动化各来一套&lt;/li&gt;
+&lt;li&gt;能接的消息平台全部接上&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;刚开始这样玩很爽，但很快就会遇到几个问题：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;同一类功能入口太多&lt;/strong&gt; ，模型容易摇摆&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Skill 互相重叠&lt;/strong&gt; ，实际价值并没有叠加&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;维护成本上升&lt;/strong&gt; ，更新、兼容、排错都更麻烦&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;安全面变大&lt;/strong&gt; ，尤其是接了群聊和外部触发后&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;所以我这次优化的核心思路很简单：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;一个场景只留一个主入口；平台型能力按需补充；能禁用的重复能力就禁用。&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id="二我最后保留了哪些-skill"&gt;二、我最后保留了哪些 Skill&lt;/h2&gt;
+&lt;h3 id="1-multi-search-engine默认网页搜索入口"&gt;1. multi-search-engine：默认网页搜索入口&lt;/h3&gt;
+&lt;p&gt;这是我最后保留下来的默认搜索 Skill。&lt;/p&gt;
+&lt;p&gt;原因很直接：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持多个搜索引擎&lt;/li&gt;
+&lt;li&gt;适合做通用网页检索&lt;/li&gt;
+&lt;li&gt;没有太多平台耦合&lt;/li&gt;
+&lt;li&gt;适合“先搜、再读、再总结”的标准链路&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我现在的策略是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;一般网页搜索 → multi-search-engine&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;只把它当成默认搜索入口&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这件事看起来只是一个偏好问题，实际上会直接影响 Agent 的行为稳定性。默认入口越清晰，模型越不容易在多个工具之间乱跳。&lt;/p&gt;
+&lt;h3 id="2-agent-reach平台型内容搜索"&gt;2. agent-reach：平台型内容搜索&lt;/h3&gt;
+&lt;p&gt;如果说 multi-search-engine 负责搜网页，那 agent-reach 更适合搜平台：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;X / Twitter&lt;/li&gt;
+&lt;li&gt;Reddit&lt;/li&gt;
+&lt;li&gt;GitHub&lt;/li&gt;
+&lt;li&gt;B 站&lt;/li&gt;
+&lt;li&gt;小红书&lt;/li&gt;
+&lt;li&gt;播客 / RSS / 一些垂直内容源&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以我的分工是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;默认搜索：multi-search-engine&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;平台型搜索：agent-reach&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这样做的好处是，模型遇到“帮我搜一下某个网站/平台内容”时，有一个很明确的次级入口，不至于什么都走同一种搜索。&lt;/p&gt;
+&lt;h3 id="3-caldav-sync把日历接入个人系统"&gt;3. caldav-sync：把日历接入个人系统&lt;/h3&gt;
+&lt;p&gt;这个 Skill 的价值不在于炫技，而在于它足够贴近生活流。&lt;/p&gt;</description></item><item><title>AI 助手实战：我用 OpenClaw 打造个人自动化系统</title><link>https://jasper-nan.github.io/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-zhu-shou-shi-zhan-wo-yong-openclaw-da-zao-ge-ren-zi-dong-hua-xi-tong/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;凌晨两点，Mac mini 的风扇安静地转着，客厅的小机器正在替我操心一堆杂事：检查基金净值、整理今天的步数、给我推送一篇值得读的周报文章。这事说起来挺魔幻的——大概半年前我还在手动复制粘贴各种数据，现在这些全自动化了。&lt;/p&gt;
+&lt;p&gt;这篇文章想跟你聊聊我是怎么用 &lt;strong&gt;OpenClaw&lt;/strong&gt; 搭建这套系统的，中间踩了哪些坑，以及它现在到底帮我省了多少时间。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="先说说背景我是谁我想要什么"&gt;先说说背景：我是谁，我想要什么&lt;/h2&gt;
+&lt;p&gt;我叫 Jasper，30 岁，在某科技公司做全栈开发。原来是测试工程师出身，写了几年自动化脚本后来转了开发，对&amp;quot;让机器做重复的事&amp;quot;这件事有天然的执念。&lt;/p&gt;
+&lt;p&gt;坐标某新一线城市，家里有一台 Mac mini（M4 Pro 那款，部署 OpenClaw 主力机），两台 NAS（一台 8 盘位飞牛 + 一台 4 盘位微联通），还有一块 Garmin Fenix 7。&lt;/p&gt;
+&lt;p&gt;我的核心需求很简单：&lt;strong&gt;工作之外的事情，能自动化就自动化，别让我操心&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;具体来说，我想实现这些：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;每天早上 8 点，收到一份简报——今天有什么待办、基金净值怎样、有没有值得看的文章&lt;/li&gt;
+&lt;li&gt;记账不需要手动打开 App，截图就能自动识别写入&lt;/li&gt;
+&lt;li&gt;能随时问 AI 助手问题，搜资料，不需要自己开浏览器&lt;/li&gt;
+&lt;li&gt;运动数据（跑步、骑行、睡眠）能随时调出来&lt;/li&gt;
+&lt;li&gt;家里 NAS 里的文件能方便管理，不用每次都 RDP 过去&lt;/li&gt;
+&lt;/ol&gt;
+&lt;hr&gt;
+&lt;h2 id="为什么选-openclaw"&gt;为什么选 OpenClaw&lt;/h2&gt;
+&lt;p&gt;在动手之前我也调研了一圈，最终选 OpenClaw 主要有几个原因。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第一个原因是它的通道支持非常全面。&lt;/strong&gt; 我同时用飞书、QQ、微信，之前的方案（比如用企业微信机器人或者单独搭 QQ Bot）每个都要单独部署，维护成本很高。OpenClaw 一个系统把几个通道都接入了，我可以统一管理，这是最吸引我的点。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二个原因是它的 Skill 生态。&lt;/strong&gt; OpenClaw 有 Skills 市场，很多常见需求（天气、提醒、飞书文档、Google 日历等）已经有现成的封装，拿来就能用，不需要从零写 prompt 工程。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第三个原因是它跑在本地。&lt;/strong&gt; 我的 Mac mini 7x24 小时开着，数据不经过第三方服务器，隐私相对可控。对于记账、运动数据这些私人信息，这个很重要。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第四个原因是开发者友好。&lt;/strong&gt; OpenClaw 基于 Node.js，配置文件是 YAML/JSON，Python 写 Skill 也完全没问题。我这种会写点代码的人，改起来不吃力。&lt;/p&gt;</description></item><item><title>国内 AI Coding Plan 横评：DeepSeek、智谱 GLM、通义千问、MiniMax、Kimi</title><link>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</guid><description>&lt;h2 id="前言为什么要对比"&gt;前言：为什么要对比？&lt;/h2&gt;
+&lt;p&gt;作为一个 OpenClaw 用户，模型选择直接决定了两个核心体验：&lt;strong&gt;响应速度&lt;/strong&gt; 和&lt;strong&gt;钱包厚度&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;OpenClaw 是个&amp;quot;吃 Token 大户&amp;quot;——每次对话都要带上完整的系统提示、工具定义、记忆文件等上下文，单次请求动辄消耗上万 Token。如果选错了模型或套餐，要么经常被限流搞得体验稀烂，要么月底账单让人心梗。&lt;/p&gt;
+&lt;p&gt;这篇文章对比国内五家主流 AI 厂商的 Coding Plan / API 定价和限流策略，聚焦一个问题：&lt;strong&gt;哪个最适合搭配 OpenClaw 使用？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本文数据截至 2026 年 3 月，价格和限流策略可能随时调整，请以官方最新信息为准。&lt;/p&gt;
+&lt;h2 id="一各家-coding-plan--api-概览"&gt;一、各家 Coding Plan / API 概览&lt;/h2&gt;
+&lt;h3 id="11-智谱-glm-coding-plan"&gt;1.1 智谱 GLM Coding Plan&lt;/h3&gt;
+&lt;p&gt;智谱推出了专门的 Coding Plan 套餐，面向 Cursor、Copilot、OpenClaw 等 AI 编码工具用户。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;套餐&lt;/th&gt;
+ &lt;th&gt;月费&lt;/th&gt;
+ &lt;th&gt;定位&lt;/th&gt;
+ &lt;th&gt;建议并发项目数&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Lite&lt;/td&gt;
+ &lt;td&gt;¥49/月（包年¥34/月）&lt;/td&gt;
+ &lt;td&gt;个人轻量&lt;/td&gt;
+ &lt;td&gt;~80 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pro（最受欢迎）&lt;/td&gt;
+ &lt;td&gt;¥149/月（包年¥104/月）&lt;/td&gt;
+ &lt;td&gt;个人主力&lt;/td&gt;
+ &lt;td&gt;~400 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Max&lt;/td&gt;
+ &lt;td&gt;¥469/月（包年¥328/月）&lt;/td&gt;
+ &lt;td&gt;重度用户&lt;/td&gt;
+ &lt;td&gt;~1,600 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lite 套餐仅支持 GLM-4.7/4.6（GLM-5 需 Pro 及以上）；Pro/Max 才支持 GLM-5（744B MoE），且 GLM-5 消耗 3 倍额度&lt;/li&gt;
+&lt;li&gt;套餐制，不用操心 Token 计费&lt;/li&gt;
+&lt;li&gt;低峰期动态提升并发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>帮你部署 OpenClaw AI 助手 — 一杯咖啡钱拥有私人智能管家</title><link>https://jasper-nan.github.io/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/openclaw%E7%A7%81%E4%BA%BAai%E5%8A%A9%E6%89%8B%E9%83%A8%E7%BD%B2%E6%9C%8D%E5%8A%A1/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;花不到一顿外卖的钱，拥有一个 7×24 在线的 AI 私人管家。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="什么是-openclaw"&gt;什么是 OpenClaw？&lt;/h2&gt;
+&lt;p&gt;OpenClaw 是一个开源的 AI 助手框架，部署在你自己的设备上（电脑、NAS、服务器都可以）。它不只是聊天机器人，而是真正能&lt;strong&gt;帮你做事&lt;/strong&gt; 的智能助手：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;📱 多平台消息：微信、飞书、Telegram、Discord、QQ……一个助手覆盖所有&lt;/li&gt;
+&lt;li&gt;🌤️ 每日早报：自动推送天气 + 新闻 + 日程&lt;/li&gt;
+&lt;li&gt;📧 邮件管理：自动分类、重要邮件提醒&lt;/li&gt;
+&lt;li&gt;📝 博客写作：帮你写文章、发布&lt;/li&gt;
+&lt;li&gt;🔧 自动化：定时任务、心跳巡检、智能家居控制&lt;/li&gt;
+&lt;li&gt;📚 知识管理：记住你的偏好、日程、待办事项&lt;/li&gt;
+&lt;li&gt;🖼️ 图片/语音：发送图片自动识别、语音对话&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="费用说明"&gt;费用说明&lt;/h2&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;项目&lt;/th&gt;
+ &lt;th&gt;费用&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;部署服务费（一次性）&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;50 元&lt;/strong&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;AI Token 费用（按月）&lt;/td&gt;
+ &lt;td&gt;约 &lt;strong&gt;39-49 元/月&lt;/strong&gt; （自付）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;总计首月&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;&lt;strong&gt;约 89-99 元&lt;/strong&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Token 费用由你直接充值到 AI 模型提供商（如智谱、DeepSeek 等），完全透明，没有中间商加价。&lt;/p&gt;
+&lt;h2 id="我提供什么"&gt;我提供什么&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;✅ 远程协助安装 OpenClaw&lt;/li&gt;
+&lt;li&gt;✅ 配置你需要的消息渠道（微信/飞书/Telegram 等）&lt;/li&gt;
+&lt;li&gt;✅ 基础功能调通（对话、定时任务、技能安装）&lt;/li&gt;
+&lt;li&gt;✅ 使用教学 + 常见问题解答&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="需要你准备的"&gt;需要你准备的&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;一台能联网的设备（Mac mini、NAS、树莓派、云服务器都行）&lt;/li&gt;
+&lt;li&gt;能远程操作的权限（SSH 或屏幕共享）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="部署后你能做什么"&gt;部署后你能做什么？&lt;/h2&gt;
+&lt;p&gt;举几个真实用例：&lt;/p&gt;</description></item></channel></rss>

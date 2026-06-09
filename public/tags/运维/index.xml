@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>运维 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E8%BF%90%E7%BB%B4/</link><description>Recent content in 运维 on Jasper's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Fri, 03 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml"/><item><title>用 AI Agent 打通测试运维全链路：从创建虚拟机到自动提 Bug</title><link>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</link><pubDate>Fri, 03 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-ce-shi-yun-wei-quan-lian-lu/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;测试工程师不应该把时间花在&amp;quot;装环境&amp;quot;、“等部署”、“手动提 Bug&amp;quot;上。AI Agent 可以把这些杂活全部自动化，让你专注在真正有价值的事上。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="背景测试工程师的日常痛点"&gt;背景：测试工程师的日常痛点&lt;/h2&gt;
+&lt;p&gt;作为一个在物流科技部门做测试/全栈的工程师，我日常的工作流大概是这样的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;需要一套测试环境 → 找运维开虚拟机（排队等半天）&lt;/li&gt;
+&lt;li&gt;虚拟机好了 → SSH 上去装环境、拉代码、配服务&lt;/li&gt;
+&lt;li&gt;环境就绪 → 触发 Jenkins 构建、部署&lt;/li&gt;
+&lt;li&gt;跑完测试 → 发现 Bug → 打开缺陷管理平台，手动填一大堆字段&lt;/li&gt;
+&lt;li&gt;修完复测 → 再部署、再验证、再关 Bug&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;这套流程下来，真正用在「测试」上的时间可能不到 40%，剩下全是环境搭建、等部署、填表。尤其是跨版本回归测试，每个版本都要重复一遍。&lt;/p&gt;
+&lt;p&gt;我一直在想：能不能把 AI 引入这条链路，让它帮我干这些重复劳动？&lt;/p&gt;
+&lt;h2 id="方案用一个-ai-agent-串联整个工作流"&gt;方案：用一个 AI Agent 串联整个工作流&lt;/h2&gt;
+&lt;p&gt;最终方案是用一个开源的 AI Agent 框架，通过自然语言对话触发一整套自动化操作：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;说一句话 → 创建虚拟机 → 配置环境 → 触发构建 → 发现 Bug 自动提交&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;不用切窗口，不用等审批，不用手动填表。整个链路一个人、一句话搞定。&lt;/p&gt;
+&lt;h2 id="一esxi-自动创建虚拟机"&gt;一、ESXi 自动创建虚拟机&lt;/h2&gt;
+&lt;h3 id="痛点"&gt;痛点&lt;/h3&gt;
+&lt;p&gt;以前每次要测试环境，流程是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;登录 vSphere Client&lt;/li&gt;
+&lt;li&gt;找到合适的模板&lt;/li&gt;
+&lt;li&gt;右键 → 从模板克隆&lt;/li&gt;
+&lt;li&gt;改名字、改 IP、改配置&lt;/li&gt;
+&lt;li&gt;开机 → 等 → SSH 上去装环境&lt;/li&gt;
+&lt;li&gt;整个流程 15-30 分钟，如果模板有问题甚至更长&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="解决"&gt;解决&lt;/h3&gt;
+&lt;p&gt;通过 ESXi API + PowerCLI 脚本，AI Agent 可以直接创建和配置虚拟机：&lt;/p&gt;</description></item><item><title>Docker 常用命令速查手册</title><link>https://jasper-nan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;Docker 命令又多又杂，这篇按使用场景整理，覆盖 90% 的日常操作。建议收藏，用到时直接查。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一镜像管理"&gt;一、镜像管理&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 搜索镜像
+docker search nginx
+
+# 拉取镜像
+docker pull nginx:latest
+docker pull python:3.11-slim
+
+# 查看本地镜像
+docker images
+docker image ls
+
+# 删除镜像
+docker rmi nginx:latest
+
+# 清理悬空镜像（无标签的）
+docker image prune
+
+# 查看镜像详情（层信息、大小）
+docker history nginx:latest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二容器生命周期"&gt;二、容器生命周期&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 创建并运行容器
+docker run -d --name my-nginx -p 80:80 nginx
+
+# -d 后台运行
+# --name 命名
+# -p 端口映射（宿主机:容器）
+# -v 数据卷挂载
+# -e 环境变量
+# --restart 重启策略
+
+# 查看运行中的容器
+docker ps
+
+# 查看所有容器（包括已停止的）
+docker ps -a
+
+# 启动 / 停止 / 重启
+docker start my-nginx
+docker stop my-nginx
+docker restart my-nginx
+
+# 删除容器
+docker rm my-nginx
+
+# 强制删除运行中的容器
+docker rm -f my-nginx
+
+# 进入容器
+docker exec -it my-nginx /bin/bash
+docker exec -it my-nginx /bin/sh # Alpine 镜像用 sh
+
+# 查看容器日志
+docker logs my-nginx
+docker logs -f my-nginx # 实时跟踪
+docker logs --tail 100 my-nginx # 最后100行
+
+# 查看容器资源占用
+docker stats
+docker stats my-nginx
+
+# 查看容器详情（IP、挂载等）
+docker inspect my-nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三docker-run-常用参数"&gt;三、docker run 常用参数&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;docker run -d \
+ --name myapp \
+ -p 8080:80 \
+ -v /data/app:/app/data \
+ -e TZ=Asia/Shanghai \
+ -e MYSQL_ROOT_PASSWORD=123456 \
+ --restart unless-stopped \
+ --network my-net \
+ nginx
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;参数&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;th&gt;示例&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-d&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;后台运行&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-p&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;端口映射&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-p 8080:80&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-v&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;挂载数据卷&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-v /host/path:/container/path&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-e&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;环境变量&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;-e MYSQL_ROOT_PASSWORD=xxx&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--name&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;容器名称&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;--name myapp&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--restart&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;重启策略&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;no / on-failure / always / unless-stopped&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--network&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;指定网络&lt;/td&gt;
+ &lt;td&gt;&lt;code&gt;--network my-net&lt;/code&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;-v $(pwd):/app&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;挂载当前目录&lt;/td&gt;
+ &lt;td&gt;&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;code&gt;--rm&lt;/code&gt;&lt;/td&gt;
+ &lt;td&gt;容器停止后自动删除&lt;/td&gt;
+ &lt;td&gt;适合一次性任务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="四数据卷管理"&gt;四、数据卷管理&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;# 创建数据卷
+docker volume create mydata
+
+# 查看数据卷列表
+docker volume ls
+
+# 查看数据卷详情
+docker volume inspect mydata
+
+# 删除数据卷
+docker volume rm mydata
+
+# 清理未使用的数据卷
+docker volume prune
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;持久化数据一定要用 &lt;code&gt;-v&lt;/code&gt; 挂载，否则容器删除后数据就丢了。&lt;/p&gt;</description></item><item><title>Jenkins CI/CD 从入门到实战：自动化部署不再难</title><link>https://jasper-nan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;Jenkins 虽然老了，但仍然是企业里用得最多的 CI/CD 工具。掌握 Jenkins Pipeline 是全栈/测试工程师的加分项。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一安装-jenkins"&gt;一、安装 Jenkins&lt;/h2&gt;
+&lt;h3 id="docker-一键安装推荐"&gt;Docker 一键安装（推荐）&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;docker run -d \
+ --name jenkins \
+ -p 8080:8080 \
+ -p 50000:50000 \
+ -v jenkins_home:/var/jenkins_home \
+ -v /var/run/docker.sock:/var/run/docker.sock \
+ --restart unless-stopped \
+ jenkins/jenkins:lts
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;挂载 docker.sock 是为了在 Pipeline 里能用 Docker。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="初始化"&gt;初始化&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;访问 &lt;code&gt;http://your-ip:8080&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;查看初始密码：&lt;code&gt;docker exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安装推荐插件&lt;/li&gt;
+&lt;li&gt;创建管理员账户&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="推荐安装的插件"&gt;推荐安装的插件&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;插件&lt;/th&gt;
+ &lt;th&gt;用途&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Git&lt;/td&gt;
+ &lt;td&gt;代码拉取&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pipeline&lt;/td&gt;
+ &lt;td&gt;流水线定义&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Docker Pipeline&lt;/td&gt;
+ &lt;td&gt;在 Pipeline 中使用 Docker&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Credentials&lt;/td&gt;
+ &lt;td&gt;凭证管理&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Blue Ocean&lt;/td&gt;
+ &lt;td&gt;可视化 Pipeline（已弃用但好看）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Chinese Localization&lt;/td&gt;
+ &lt;td&gt;中文界面&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;hr&gt;
+&lt;h2 id="二基础概念"&gt;二、基础概念&lt;/h2&gt;
+&lt;h3 id="jenkins-核心术语"&gt;Jenkins 核心术语&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;术语&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Job&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;一个构建任务&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Pipeline&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;多阶段流水线（推荐方式）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Stage&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;流水线的一个阶段&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Step&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;阶段中的一个具体操作&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Node / Agent&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;执行构建的机器&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Workspace&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;构建的工作目录&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="pipeline-vs-传统-job"&gt;Pipeline vs 传统 Job&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;传统 Freestyle Job：&lt;/strong&gt; 在网页上点按钮配置，适合简单任务，但不方便版本管理。&lt;/p&gt;</description></item><item><title>Linux 进程管理实战：从查找、过滤到终止</title><link>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/linux%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86%E5%AE%9E%E6%88%98/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;在服务器上部署应用时，进程管理是最基础也最常用的操作。本文整理了日常开发中最高频的几个命令。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一查找进程ps"&gt;一、查找进程：ps&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;ps&lt;/code&gt;（Process Status）是最常用的进程查看命令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# 列出所有进程的详细信息
+ps -ef
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;输出字段说明：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;字段&lt;/th&gt;
+ &lt;th&gt;含义&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;UID&lt;/td&gt;
+ &lt;td&gt;进程所属用户&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PID&lt;/td&gt;
+ &lt;td&gt;进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;PPID&lt;/td&gt;
+ &lt;td&gt;父进程号&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;STIME&lt;/td&gt;
+ &lt;td&gt;启动时间&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;CMD&lt;/td&gt;
+ &lt;td&gt;启动命令&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="常用组合"&gt;常用组合&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 查看所有进程（BSD 风格，更直观）
+ps aux
+
+# 按内存使用排序（Top 10）
+ps aux --sort=-%mem | head -10
+
+# 按 CPU 使用排序（Top 10）
+ps aux --sort=-%cpu | head -10
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二过滤进程grep"&gt;二、过滤进程：grep&lt;/h2&gt;
+&lt;p&gt;在进程列表中精确匹配目标：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;关键字&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;⚠️ 注意：&lt;code&gt;grep&lt;/code&gt; 本身也会出现在结果中，因为命令行参数中包含&amp;quot;关键字&amp;quot;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;过滤掉 grep 自身：&lt;/strong&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ps -ef | grep &amp;quot;java&amp;quot; | grep -v grep
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="三提取进程号awk"&gt;三、提取进程号：awk&lt;/h2&gt;
+&lt;p&gt;拿到 PID 后经常需要做进一步操作（比如 kill），用 &lt;code&gt;awk&lt;/code&gt; 提取：&lt;/p&gt;</description></item><item><title>使用Logrotate归档日志</title><link>https://jasper-nan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</link><pubDate>Thu, 15 Aug 2019 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/2019-08-15-%E4%BD%BF%E7%94%A8logrotate%E5%BD%92%E6%A1%A3%E6%97%A5%E5%BF%97/</guid><description>&lt;p&gt;aliases:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;/posts/2019-08-15-使用Logrotate归档日志/&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="创建tomcat的配置文件"&gt;创建tomcat的配置文件&lt;/h2&gt;
+&lt;p&gt;vim /etc/logrotate.d/tomcat&lt;/p&gt;
+&lt;p&gt;内容：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;/application/tomcat/logs/catalina.out &amp;amp;#123;dailycopytruncaterotate 30compressnotifemptydateextmissingok&amp;amp;#125;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;注意上面内容中大括号前面内容为 待处理日志文件的绝对路径。大括号里面的都是Logrotate工具的参数&lt;/p&gt;
+&lt;p&gt;关于每个参数的作用我们可以查看全局文件cat /etc/logrotate.conf 我们可以把配置文件写在/etc/logrotate.conf里面或者放在/etc/logrotate.d下面&lt;/p&gt;
+&lt;h2 id="参数解释"&gt;参数解释&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;daily 表示每天整理一次rotate 20 表示保留20天的备份文件dateext 文件后缀是日期格式,也就是切割后文件是:xxx.log-20171205.gzcopytruncate 用于还在打开中的日志文件，把当前日志备份并截断compress 通过gzip压缩转储以后的日志（gzip -d xxx.gz解压）missingok 如果日志不存在则忽略该警告信息notifempty 如果是空文件的话，不转储#size 5M #当catalina.out大于5M就进行切割，可用可不用！
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="不常用的参数"&gt;不常用的参数&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;weekly 指定转储周期为每周monthly 指定转储周期为每月nocompress 不需要压缩时，用这个参数nocopytruncate 备份日志文件但是不截断create mode owner group 转储文件，使用指定的文件模式创建新的日志文件nocreate 不建立新的日志文件delaycompress 和 compress 一起使用时，转储的日志文件到下一次转储时才压缩nodelaycompress 覆盖 delaycompress 选项，转储同时压缩errors address 转储时的错误信息发送到指定的Email 地址ifempty 即使是空文件也转储，这个是 logrotate 的缺省选项。mail address 把转储的日志文件发送到指定的E-mail 地址nomail 转储时不发送日志文件olddir directory 转储后的日志文件放入指定的目录，必须和当前日志文件在同一个文件系统noolddir 转储后的日志文件和当前日志文件放在同一个目录prerotate/endscript 在转储以前需要执行的命令可以放入这个对，这两个关键字必须单独成行postrotate/endscript 在转储以后需要执行的命令可以放入这个对，这两个关键字必须单独成行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;温馨提示：配置文件里一定要配置rotate 文件数目这个参数。如果不配置默认是0个，也就是只允许存在一份日志，刚切分出来的日志会马上被删除&lt;/p&gt;
+&lt;p&gt;测试&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;调试 （d = debug）参数为配置文件，不指定则执行全局配置文件&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;logrotate -d /etc/logrotate.d/tomcat.conf&lt;/p&gt;</description></item></channel></rss>

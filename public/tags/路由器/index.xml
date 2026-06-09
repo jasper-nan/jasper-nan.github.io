@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>路由器 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/</link><description>Recent content in 路由器 on Jasper's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Sun, 15 Mar 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/index.xml" rel="self" type="application/rss+xml"/><item><title>旁路由模式下 OpenClash/PassWall 不稳定问题排查指南</title><link>https://jasper-nan.github.io/post/%E6%97%81%E8%B7%AF%E7%94%B1openclash%E4%B8%8D%E7%A8%B3%E5%AE%9A%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97/</link><pubDate>Sun, 15 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/%E6%97%81%E8%B7%AF%E7%94%B1openclash%E4%B8%8D%E7%A8%B3%E5%AE%9A%E6%8E%92%E6%9F%A5%E6%8C%87%E5%8D%97/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;旁路由模式下跑 OpenClash 或 PassWall，代理节点&amp;quot;时通时断&amp;quot;，直连却一切正常？这篇文章帮你定位根因并彻底解决。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="-典型网络架构"&gt;📐 典型网络架构&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;光猫 → 爱快路由器(拨号) → 旁路由(OpenWrt) → AC(交换机) → AP → 终端设备
+ .168.1.2 192.168.1.100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="-问题现象"&gt;🔍 问题现象&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;所有节点都会出现&amp;quot;时通时断&amp;quot;现象&lt;/li&gt;
+&lt;li&gt;手机/电脑直连节点（非路由器代理）正常，说明机场节点本身稳定&lt;/li&gt;
+&lt;li&gt;OpenClash 和 PassWall 两个插件都有同样问题&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="-根因分析"&gt;🎯 根因分析&lt;/h2&gt;
+&lt;p&gt;旁路由模式下，&lt;strong&gt;网关和 DNS 必须同时指向旁路由&lt;/strong&gt; 。&lt;/p&gt;
+&lt;h3 id="错误配置示例"&gt;错误配置示例&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;网关：192.168.1.100（旁路由）✅
+DNS：192.168.1.2（爱快）或运营商 DNS ❌
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="问题后果"&gt;问题后果&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;TCP 流量走旁路由代理 → 部分连接正常&lt;/li&gt;
+&lt;li&gt;DNS 查询绕过旁路由 → 域名解析失败或超时&lt;/li&gt;
+&lt;li&gt;表现为：网站&amp;quot;一会儿能用一会儿超时&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="-快速验证方法"&gt;⚡ 快速验证方法&lt;/h2&gt;
+&lt;p&gt;在需要代理的终端设备上手动设置网络：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;网关：192.168.1.100
+DNS：192.168.1.100（关键！）
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;设置后测试国内外网站，如果稳定则确认是 DNS 配置问题。&lt;/p&gt;
+&lt;h2 id="-解决方案"&gt;🛠️ 解决方案&lt;/h2&gt;
+&lt;h3 id="方案一爱快-dhcp-全局代理推荐"&gt;方案一：爱快 DHCP 全局代理（推荐）&lt;/h3&gt;
+&lt;p&gt;适用场景：希望所有设备都走代理&lt;/p&gt;
+&lt;p&gt;爱快后台 → &lt;strong&gt;DHCP 服务&lt;/strong&gt; ：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;网关地址：192.168.1.100
+DNS 服务器：192.168.1.100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id="方案二爱快-dhcp-默认设备手动配置"&gt;方案二：爱快 DHCP 默认，设备手动配置&lt;/h3&gt;
+&lt;p&gt;适用场景：只需部分设备代理&lt;/p&gt;</description></item></channel></rss>

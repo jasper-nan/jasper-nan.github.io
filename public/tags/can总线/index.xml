@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>CAN总线 on Jasper's Blog</title><link>https://jasper-nan.github.io/tags/can%E6%80%BB%E7%BA%BF/</link><description>Recent content in CAN总线 on Jasper's Blog</description><generator>Hugo</generator><language>zh-cn</language><lastBuildDate>Mon, 20 Apr 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://jasper-nan.github.io/tags/can%E6%80%BB%E7%BA%BF/index.xml" rel="self" type="application/rss+xml"/><item><title>工业级地图可视化实战：用 Konva.js 打造 AGV 车队监控大屏</title><link>https://jasper-nan.github.io/post/konva-js-gong-ye-di-tu-ke-shi-hua-shi-zhan/</link><pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/konva-js-gong-ye-di-tu-ke-shi-hua-shi-zhan/</guid><description>&lt;p&gt;在工业自动化领域，一张好用的地图监控大屏直接影响运维效率。本文记录我在&lt;strong&gt;远舢 AIO（All-in-One）工业自动化管理平台&lt;/strong&gt; 中，使用 &lt;strong&gt;Konva.js&lt;/strong&gt; 实现 AGV 车队地图可视化的完整实践——包括坐标系翻转、贝塞尔曲线拐角、SSE 实时推送等核心方案。&lt;/p&gt;
+&lt;h2 id="项目背景"&gt;项目背景&lt;/h2&gt;
+&lt;p&gt;远舢 AIO 是一个基于 Django 的工业自动化管理系统，核心模块包括：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;TCS&lt;/strong&gt; ：交通控制系统，负责 AGV 车队调度&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;MCS Mock&lt;/strong&gt; ：设备模拟器（电梯、穿梭车、输送线）&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Outdoor AGV Mock&lt;/strong&gt; ：室外无人车仿真，含 Konva.js 地图可视化大屏&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;地图数据来自真实厂区，包含 469+ 个路径节点、充电桩、停车点、业务区（高架库/醇化库）和限制区域。核心挑战是：&lt;strong&gt;如何用 Canvas 2D 高效渲染复杂工业地图，并支持 50+ 车辆的实时位置更新？&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id="为什么选-konvajs"&gt;为什么选 Konva.js&lt;/h2&gt;
+&lt;p&gt;在选型阶段对比了几种方案：&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;方案&lt;/th&gt;
+ &lt;th&gt;优点&lt;/th&gt;
+ &lt;th&gt;缺点&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Leaflet/Mapbox&lt;/td&gt;
+ &lt;td&gt;地理地图成熟&lt;/td&gt;
+ &lt;td&gt;不适合厂区平面布局，坐标系难以自定义&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;原生 Canvas API&lt;/td&gt;
+ &lt;td&gt;无依赖&lt;/td&gt;
+ &lt;td&gt;交互事件、图层管理全靠自己写，工作量巨大&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Konva.js&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;图层管理完善、事件系统成熟、性能优秀&lt;/td&gt;
+ &lt;td&gt;需自行处理坐标转换&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;最终选择 &lt;strong&gt;Konva.js&lt;/strong&gt; （v8.x），因为它在图层隔离、事件委托、动画支持上做得非常到位，且对工业场景的自定义坐标系友好。&lt;/p&gt;
+&lt;h2 id="核心架构多图层分离"&gt;核心架构：多图层分离&lt;/h2&gt;
+&lt;p&gt;不要把所有元素画在一个图层上。我们采用&lt;strong&gt;四图层分离架构&lt;/strong&gt; ：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;this.mapLayer = new Konva.Layer({ name: 'map' }); // 地图连线、节点、区域
+this.labelLayer = new Konva.Layer({ name: 'labels' }); // 文字/图标（不随地图旋转）
+this.vehicleLayer = new Konva.Layer({ name: 'vehicles' }); // 车辆、轨迹
+this.alertLayer = new Konva.Layer({ name: 'alerts' }); // 报警提示
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;分层的好处：&lt;/p&gt;</description></item><item><title>AI Agent 开发实战笔记：技术选型与架构思考</title><link>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/ai-agent-kai-fa-shi-zhan-bi-ji-ji-shu-xuan-xing-yu-jia-gou-si-kao/</guid><description>&lt;h2 id="前言为什么-ai-agent-值得关注"&gt;前言：为什么 AI Agent 值得关注&lt;/h2&gt;
+&lt;p&gt;最近公司计划在总部启动一个 AI Agent 相关的开发项目，我作为参与者之一，需要提前做技术调研和储备。&lt;/p&gt;
+&lt;p&gt;说实话，半年前我对 AI Agent 的理解还停留在&amp;quot;套壳聊天机器人&amp;quot;的层面。但深入研究之后发现，Agent 和传统的&amp;quot;调 API 返回结果&amp;quot;完全不是一回事——它关乎&lt;strong&gt;规划、记忆、工具调用、多步推理&lt;/strong&gt; ，是让 AI 从&amp;quot;能对话&amp;quot;进化到&amp;quot;能干活&amp;quot;的关键一步。&lt;/p&gt;
+&lt;p&gt;这篇文章记录了我调研过程中对主流技术框架的理解和对比，希望能给同样在关注这个方向的朋友一些参考。不保证全对，但保证真实。&lt;/p&gt;
+&lt;h2 id="一什么是-ai-agent"&gt;一、什么是 AI Agent？&lt;/h2&gt;
+&lt;p&gt;先简单定义一下：&lt;strong&gt;AI Agent = 大模型 + 规划能力 + 工具调用 + 记忆系统&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;普通的大模型调用是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用户提问 → 模型回答 → 结束&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Agent 是：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用户提出目标 → Agent 拆解任务 → 选择工具 → 执行操作 → 观察结果 → 调整策略 → 返回最终结果&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;区别在于 Agent 有&amp;quot;自主性&amp;quot;——它不只是回答问题，而是&lt;strong&gt;完成任务&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;举个具体例子：你说&amp;quot;帮我查一下明天北京到上海的机票并订最便宜的&amp;quot;。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;普通 ChatBot&lt;/strong&gt; ：只能告诉你怎么查，或者给你一个链接&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Agent&lt;/strong&gt; ：自己去调用航班查询 API → 筛选结果 → 调用订票接口 → 返回确认信息&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;这就是 Agent 的核心价值：&lt;strong&gt;把自然语言意图转化为具体的行动序列&lt;/strong&gt; 。&lt;/p&gt;</description></item><item><title>国内 AI Coding Plan 横评：DeepSeek、智谱 GLM、通义千问、MiniMax、Kimi</title><link>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</link><pubDate>Sun, 29 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/guo-nei-ai-coding-plan-heng-ping-deepseek-zhi-pu-qian-wen-kimi/</guid><description>&lt;h2 id="前言为什么要对比"&gt;前言：为什么要对比？&lt;/h2&gt;
+&lt;p&gt;作为一个 OpenClaw 用户，模型选择直接决定了两个核心体验：&lt;strong&gt;响应速度&lt;/strong&gt; 和&lt;strong&gt;钱包厚度&lt;/strong&gt; 。&lt;/p&gt;
+&lt;p&gt;OpenClaw 是个&amp;quot;吃 Token 大户&amp;quot;——每次对话都要带上完整的系统提示、工具定义、记忆文件等上下文，单次请求动辄消耗上万 Token。如果选错了模型或套餐，要么经常被限流搞得体验稀烂，要么月底账单让人心梗。&lt;/p&gt;
+&lt;p&gt;这篇文章对比国内五家主流 AI 厂商的 Coding Plan / API 定价和限流策略，聚焦一个问题：&lt;strong&gt;哪个最适合搭配 OpenClaw 使用？&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;本文数据截至 2026 年 3 月，价格和限流策略可能随时调整，请以官方最新信息为准。&lt;/p&gt;
+&lt;h2 id="一各家-coding-plan--api-概览"&gt;一、各家 Coding Plan / API 概览&lt;/h2&gt;
+&lt;h3 id="11-智谱-glm-coding-plan"&gt;1.1 智谱 GLM Coding Plan&lt;/h3&gt;
+&lt;p&gt;智谱推出了专门的 Coding Plan 套餐，面向 Cursor、Copilot、OpenClaw 等 AI 编码工具用户。&lt;/p&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;套餐&lt;/th&gt;
+ &lt;th&gt;月费&lt;/th&gt;
+ &lt;th&gt;定位&lt;/th&gt;
+ &lt;th&gt;建议并发项目数&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Lite&lt;/td&gt;
+ &lt;td&gt;¥49/月（包年¥34/月）&lt;/td&gt;
+ &lt;td&gt;个人轻量&lt;/td&gt;
+ &lt;td&gt;~80 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Pro（最受欢迎）&lt;/td&gt;
+ &lt;td&gt;¥149/月（包年¥104/月）&lt;/td&gt;
+ &lt;td&gt;个人主力&lt;/td&gt;
+ &lt;td&gt;~400 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;Max&lt;/td&gt;
+ &lt;td&gt;¥469/月（包年¥328/月）&lt;/td&gt;
+ &lt;td&gt;重度用户&lt;/td&gt;
+ &lt;td&gt;~1,600 prompts/5h&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;优势：&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lite 套餐仅支持 GLM-4.7/4.6（GLM-5 需 Pro 及以上）；Pro/Max 才支持 GLM-5（744B MoE），且 GLM-5 消耗 3 倍额度&lt;/li&gt;
+&lt;li&gt;套餐制，不用操心 Token 计费&lt;/li&gt;
+&lt;li&gt;低峰期动态提升并发&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;劣势：&lt;/strong&gt;&lt;/p&gt;</description></item><item><title>CAN 总线日志分析入门：自动驾驶测试必备技能</title><link>https://jasper-nan.github.io/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</link><pubDate>Wed, 25 Mar 2026 00:00:00 +0000</pubDate><guid>https://jasper-nan.github.io/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/</guid><description>&lt;blockquote&gt;
+&lt;p&gt;如果你从事自动驾驶或智能网联汽车测试，CAN 总线日志分析是绕不开的技能。这篇从基础概念到实战解析，帮你快速上手。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id="一什么是-can-总线"&gt;一、什么是 CAN 总线？&lt;/h2&gt;
+&lt;p&gt;CAN（Controller Area Network）是汽车内部最主流的通信协议。简单说：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;车辆的各个 ECU（电子控制单元）通过 CAN 总线互相&amp;quot;说话&amp;quot;，比如发动机告诉仪表盘转速、方向盘告诉转向灯亮灯。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="核心概念"&gt;核心概念&lt;/h3&gt;
+&lt;table&gt;
+ &lt;thead&gt;
+ &lt;tr&gt;
+ &lt;th&gt;概念&lt;/th&gt;
+ &lt;th&gt;说明&lt;/th&gt;
+ &lt;/tr&gt;
+ &lt;/thead&gt;
+ &lt;tbody&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;报文（Frame）&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;CAN 总线上传输的最小数据单元&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;ID&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;报文的&amp;quot;身份证&amp;quot;，决定优先级，ID 越小优先级越高&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;DLC&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;数据长度（0-8 字节）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;Payload&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;实际数据内容&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;tr&gt;
+ &lt;td&gt;&lt;strong&gt;周期&lt;/strong&gt;&lt;/td&gt;
+ &lt;td&gt;某些报文按固定周期发送（如 10ms、100ms）&lt;/td&gt;
+ &lt;/tr&gt;
+ &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id="报文结构"&gt;报文结构&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;┌─────────┬───────┬─────┬──────────┬────────┬─────────┐
+│ Start │ ID │ DLC │ Payload │ CRC │ ACK │
+│ of Frame│ 11bit │ │ 0-8 bytes│ Check │ │
+└─────────┴───────┴─────┴──────────┴────────┴─────────┘
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id="二can-dbc-文件"&gt;二、CAN DBC 文件&lt;/h2&gt;
+&lt;p&gt;DBC 是 CAN 数据的&amp;quot;字典文件&amp;quot;，定义了每个 ID 对应什么信号、如何解析。&lt;/p&gt;
+&lt;h3 id="dbc-文件长什么样"&gt;DBC 文件长什么样&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;VERSION &amp;quot;&amp;quot;
+
+NS_ :
+
+BS_:
+
+BU_: ECU1 ECU2 ECU3
+
+BO_ 256 SteeringAngle: 7 ECU1
+ SG_ SteeringAngle_Value : 0|15@1+ (0.1,0) [0|6553.5] &amp;quot;deg&amp;quot; Vector__XXX
+ SG_ SteeringAngle_Speed : 16|15@1+ (1,0) [0|32767] &amp;quot;deg/s&amp;quot; Vector__XXX
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;解读：&lt;/strong&gt;&lt;/p&gt;</description></item></channel></rss>
