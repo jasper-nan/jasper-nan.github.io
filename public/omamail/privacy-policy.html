@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Omamail 隐私权政策 / Privacy Policy</title>
+<meta name="description" content="Omamail 隐私权政策：数据收集、使用、存储与用户权利说明。">
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans CJK SC", sans-serif;
+    background: #f7f4f2; color: #1f1b18;
+  }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.1rem; margin-top: 2em; }
+  p, li { line-height: 1.75; font-size: .95rem; }
+  a { color: #d4553f; }
+  .updated { color: #8a7d75; font-size: .9rem; }
+  @media (prefers-color-scheme: dark) {
+    body { background: #191512; color: #efe9e4; }
+    .updated { color: #a89a90; }
+    a { color: #ff8a70; }
+  }
+</style>
+</head>
+<body>
+<main>
+<h1>Omamail 隐私权政策 / Privacy Policy</h1>
+<p class="updated">最后更新 / Last updated: 2026-09-22</p>
+
+<h2>1. 应用概述 / Overview</h2>
+<p>Omamail 是一款供本站作者（以下简称"用户"）个人使用的桌面邮件与日历客户端。它不是面向公众分发的服务，不运营任何服务器，不提供任何在线账户体系。本政策说明该应用如何访问、使用和存储数据。</p>
+<p class="updated">Omamail is a personal-use desktop email and calendar client for the owner of this site. It is not a public service, operates no servers, and offers no online accounts. This policy explains how the app accesses, uses, and stores data.</p>
+
+<h2>2. 收集与访问的数据 / Data accessed</h2>
+<p>应用仅访问用户主动配置的邮箱账户中的以下数据：</p>
+<ul>
+  <li><strong>邮件内容与元数据</strong>：邮件正文、主题、发件人/收件人、时间戳、附件，用于显示、搜索、撰写与回复；</li>
+  <li><strong>日历数据</strong>（如启用）：日历事件与会议邀请，用于显示和应答；</li>
+  <li><strong>账户凭据</strong>：OAuth 令牌或应用专用密码，仅用于连接用户自己的邮件服务。</li>
+</ul>
+<p class="updated">The app only accesses data in the mailboxes the user configures: message bodies, metadata and attachments; calendar events when enabled; and the OAuth tokens or app passwords used to connect to the user's own mail providers.</p>
+
+<h2>3. 数据的使用目的 / Purpose of use</h2>
+<p>所有数据仅用于：在本地显示用户的邮件与日历、执行用户主动发起的操作（发送、回复、归档、搜索、标记等）。应用不进行任何自动化分析、用户画像或行为追踪。</p>
+<p class="updated">Data is used solely to display the user's mail and calendar locally and to perform actions the user initiates (send, reply, archive, search, label). No automated profiling or behaviour tracking occurs.</p>
+
+<h2>4. 数据存储与位置 / Storage and location</h2>
+<ul>
+  <li>邮件缓存仅存储在用户本机磁盘（<code>~/.cache/omamail</code>）；</li>
+  <li>账户凭据与 OAuth 令牌仅存储在操作系统密钥串（Linux Secret Service / 系统 keyring）；</li>
+  <li>应用配置仅存储在用户本机（<code>~/.config/omamail</code>）。</li>
+</ul>
+<p class="updated">Mail caches live only on the user's own disk; credentials are stored only in the operating system keyring; configuration lives only on the local machine.</p>
+
+<h2>5. 数据共享 / Sharing</h2>
+<p>应用不向任何第三方出售、出租或共享数据，不包含分析组件、广告 SDK 或追踪器。邮件数据的唯一接收方是用户自行选择的邮件服务商（如 Gmail、Outlook），且仅在执行用户请求的操作（如发送邮件）时传输。</p>
+<p class="updated">The app sells or shares no data with third parties and contains no analytics, advertising, or tracking components. The only recipients of mail data are the mail providers the user configures, and only to perform user-requested actions such as sending.</p>
+
+<h2>6. 数据安全 / Security</h2>
+<p>所有网络连接均通过 TLS 加密；凭据不以明文落盘；远程图片在邮件中默认被屏蔽，除非用户主动选择加载。</p>
+<p class="updated">All network connections use TLS; credentials are never written to disk in plain text; remote images are blocked by default until the user chooses to load them.</p>
+
+<h2>7. 数据保留与删除 / Retention and deletion</h2>
+<p>本地缓存与凭据保留至用户退出账户或卸载应用为止。用户可随时：在邮件服务商处撤销 OAuth 授权；在应用内退出登录以清除令牌；删除本机目录（<code>~/.cache/omamail</code>、<code>~/.config/omamail</code>）以清除全部本地数据。</p>
+<p class="updated">Local data is retained until the user signs out or removes the app. The user may revoke OAuth grants at the provider, sign out in-app to clear tokens, or delete the local directories to remove all local data.</p>
+
+<h2>8. 第三方服务 / Third-party services</h2>
+<p>应用本身不集成任何第三方服务。邮件数据在传输中经过用户选择的邮件服务商（Google、Microsoft 等），这些服务商各自适用其隐私政策。</p>
+<p class="updated">The app integrates no third-party services itself. Mail data in transit passes through the providers the user chooses (Google, Microsoft, etc.), each governed by their own policies.</p>
+
+<h2>9. 用户权利 / Your rights</h2>
+<p>由于应用完全在本地运行且不收集任何数据，用户对自身数据拥有完全控制权：可随时查看、导出、删除本机上的全部数据，并可在服务商侧撤销访问授权。</p>
+<p class="updated">Because the app runs entirely locally and collects nothing, the user retains full control: all local data can be inspected, exported, or deleted at any time, and access can be revoked at the provider.</p>
+
+<h2>10. 联系方式 / Contact</h2>
+<p>如对本政策有疑问，请联系：<a href="mailto:nanzhang1211@outlook.com">nanzhang1211@outlook.com</a></p>
+
+<p><a href="./index.html">← 返回 Omamail 主页 / Back</a></p>
+</main>
+</body>
+</html>

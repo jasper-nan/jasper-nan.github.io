@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一次面向真实工作流的收敛：保留高频能力，禁用重复入口，补齐安全与运维能力。">
+<title>OpenClaw 插件与 Skill 优化实战：从堆功能到真好用</title>
+
+
+<link rel="canonical" href="https://jonnynan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="OpenClaw 插件与 Skill 优化实战：从堆功能到真好用">
+<meta property='og:description' content="一次面向真实工作流的收敛：保留高频能力，禁用重复入口，补齐安全与运维能力。">
+<meta property='og:url' content='https://jonnynan.github.io/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/'>
+<meta property='og:site_name' content='Jasper&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='OpenClaw' /><meta property='article:tag' content='AI 助手' /><meta property='article:tag' content='自动化' /><meta property='article:tag' content='效率工具' /><meta property='article:published_time' content='2026-03-29T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-29T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="OpenClaw 插件与 Skill 优化实战：从堆功能到真好用">
+<meta name="twitter:description' content="一次面向真实工作流的收敛：保留高频能力，禁用重复入口，补齐安全与运维能力。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Jasper&#39;s Blog</a></h1>
+            <h2 class="site-description">致良知</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post/' >
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/openclaw-cha-jian-yu-skill-you-hua-shi-zhan/">OpenClaw 插件与 Skill 优化实战：从堆功能到真好用</a>
+        </h2>
+        
+    
+        
+        <h3 class="article-subtitle">
+            一次面向真实工作流的收敛：保留高频能力，禁用重复入口，补齐安全与运维能力
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-31T00:00:00Z'>Tuesday, March 31, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        8 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+<blockquote>
+<p>OpenClaw 好玩的地方，不是它“能装很多 Skill”，而是你能不能把它调成一个真正顺手的个人系统。最近正好做了一轮整理：砍掉重复能力、收敛搜索入口、补上健康检查和安全配置。折腾完之后，一个很明显的感受是——<strong>Agent 不是插件市场，Agent 应该是你的工作流延伸</strong>。</p>
+</blockquote>
+<hr>
+<h2>一、先说结论：OpenClaw 不是装得越多越好</h2>
+<p>很多人刚接触 OpenClaw，第一反应都是：</p>
+<ul>
+<li>先装一堆 Skill 再说</li>
+<li>搜索、浏览器、平台抓取、自动化各来一套</li>
+<li>能接的消息平台全部接上</li>
+</ul>
+<p>刚开始这样玩很爽，但很快就会遇到几个问题：</p>
+<ol>
+<li><strong>同一类功能入口太多</strong>，模型容易摇摆</li>
+<li><strong>Skill 互相重叠</strong>，实际价值并没有叠加</li>
+<li><strong>维护成本上升</strong>，更新、兼容、排错都更麻烦</li>
+<li><strong>安全面变大</strong>，尤其是接了群聊和外部触发后</li>
+</ol>
+<p>所以我这次优化的核心思路很简单：</p>
+<p><strong>一个场景只留一个主入口；平台型能力按需补充；能禁用的重复能力就禁用。</strong></p>
+<hr>
+<h2>二、我最后保留了哪些 Skill</h2>
+<h3>1. multi-search-engine：默认网页搜索入口</h3>
+<p>这是我最后保留下来的默认搜索 Skill。</p>
+<p>原因很直接：</p>
+<ul>
+<li>支持多个搜索引擎</li>
+<li>适合做通用网页检索</li>
+<li>没有太多平台耦合</li>
+<li>适合“先搜、再读、再总结”的标准链路</li>
+</ul>
+<p>我现在的策略是：</p>
+<ul>
+<li><strong>一般网页搜索 → multi-search-engine</strong></li>
+<li><strong>只把它当成默认搜索入口</strong></li>
+</ul>
+<p>这件事看起来只是一个偏好问题，实际上会直接影响 Agent 的行为稳定性。默认入口越清晰，模型越不容易在多个工具之间乱跳。</p>
+<h3>2. agent-reach：平台型内容搜索</h3>
+<p>如果说 multi-search-engine 负责搜网页，那 agent-reach 更适合搜平台：</p>
+<ul>
+<li>X / Twitter</li>
+<li>Reddit</li>
+<li>GitHub</li>
+<li>B 站</li>
+<li>小红书</li>
+<li>播客 / RSS / 一些垂直内容源</li>
+</ul>
+<p>所以我的分工是：</p>
+<ul>
+<li><strong>默认搜索：multi-search-engine</strong></li>
+<li><strong>平台型搜索：agent-reach</strong></li>
+</ul>
+<p>这样做的好处是，模型遇到“帮我搜一下某个网站/平台内容”时，有一个很明确的次级入口，不至于什么都走同一种搜索。</p>
+<h3>3. caldav-sync：把日历接入个人系统</h3>
+<p>这个 Skill 的价值不在于炫技，而在于它足够贴近生活流。</p>
+<p>一旦你本来就有自己的 CalDAV 服务，Agent 直接读写日历会非常自然：</p>
+<ul>
+<li>查今天 / 明天日程</li>
+<li>生成提醒</li>
+<li>做简单的日程协同</li>
+</ul>
+<p>它不是那种“一眼惊艳”的能力，但属于接入之后就很难再拿掉的基础能力。</p>
+<h3>4. money-accounting：和真实生活闭环的 Skill</h3>
+<p>很多 Skill 只是“技术上能做”，但不一定真的高频。记账类 Skill 则不一样，它很容易直接进入日常动作里。</p>
+<p>比如：</p>
+<ul>
+<li>截图识别账单</li>
+<li>快速记录支出</li>
+<li>和自己的记账系统打通</li>
+</ul>
+<p>这种 Skill 一旦和你原本就存在的行为链路接起来，价值会非常高。</p>
+<h3>5. garmin-connect：强垂直、高匹配时很有价值</h3>
+<p>如果你有 Garmin 设备，这个 Skill 就非常合适：</p>
+<ul>
+<li>跑步记录</li>
+<li>睡眠数据</li>
+<li>心率 / 步数 / HRV</li>
+<li>近期训练汇总</li>
+</ul>
+<p>但这类 Skill 的原则也很简单：<strong>高匹配就保留，不匹配就不要因为“看起来强”而硬装。</strong></p>
+<h3>6. server-health：把系统状态做成一个随时可查的简报</h3>
+<p>这是我最近新加的一项能力，也是很值得长期保留的一个方向。</p>
+<p>它能快速查看：</p>
+<ul>
+<li>CPU / 内存 / 磁盘 / uptime</li>
+<li>Top 进程</li>
+<li>OpenClaw Gateway 状态</li>
+<li>Docker 容器情况</li>
+</ul>
+<p>原始版本更偏 Linux，我自己又做了一轮 macOS 兼容适配。对有 NAS、Mac mini、自建服务的人来说，这一类 Skill 非常适合长期留着。</p>
+<hr>
+<h2>三、我主动禁用了哪些重复能力</h2>
+<h3>1. 禁用系统内置 clawhub skill</h3>
+<p>原因不是它不好，而是我不希望“找 Skill / 装 Skill”这件事在日常对话里过于主动地出现。</p>
+<p>对我来说，安装 Skill 应该是一个显式操作，不应该成为日常对话默认的分支路径。</p>
+<h3>2. 禁用系统内置 web search</h3>
+<p>这是这次优化里我觉得最值的一步。</p>
+<p>如果系统里同时存在：</p>
+<ul>
+<li>内置 web search</li>
+<li>第三方搜索 Skill</li>
+<li>平台搜索 Skill</li>
+</ul>
+<p>模型就很容易“看心情走工具”。结果就是：有时行为好，有时行为怪，复现性很差。</p>
+<p>所以我直接做了收口：</p>
+<ul>
+<li>内置 web search 关掉</li>
+<li>默认搜索统一走 multi-search-engine</li>
+<li>平台搜索统一走 agent-reach</li>
+</ul>
+<p>这一步的收益非常大，属于典型的“看起来像做减法，实际上是在提稳定性”。</p>
+<h3>3. 谨慎对待浏览器类重复能力</h3>
+<p>OpenClaw 本身已经有浏览器能力，如果再叠加一层功能接近的外部 Skill，很多时候只是让决策路径变复杂。</p>
+<p>我的结论是：</p>
+<p><strong>同类能力尽量只保留一套主入口。</strong></p>
+<hr>
+<h2>四、除了 Skill，本体配置也值得优化</h2>
+<p>折腾了一圈之后我越来越觉得，OpenClaw 真正值得优化的，不只是 Skill 列表，<strong>配置本身更重要</strong>。</p>
+<h3>1. 清理旧会话</h3>
+<p>如果长期运行，OpenClaw 的 session 会逐渐堆积，尤其是 cron / heartbeat / 历史通道会话。适当清理有几个好处：</p>
+<ul>
+<li>减少噪音</li>
+<li>降低维护成本</li>
+<li>让诊断信息更清爽</li>
+</ul>
+<h3>2. 显式配置 plugins.allow</h3>
+<p>如果你有自定义插件，最好明确写 trusted allowlist，而不是让系统自动发现后直接加载。这样更可控，也更安全。</p>
+<h3>3. 精简模型 fallback 链</h3>
+<p>模型回退链不是越长越好。</p>
+<p>链太长会有两个问题：</p>
+<ul>
+<li>行为风格不一致</li>
+<li>排查问题时很难确认到底是谁在回答</li>
+</ul>
+<p>我最后保留的是一个更简洁的链路：</p>
+<ul>
+<li><strong>主模型：gpt-5.4</strong></li>
+<li><strong>Fallback 1：glm-5-turbo</strong></li>
+<li><strong>Fallback 2：MiniMax-M2.7</strong></li>
+</ul>
+<p>这样既保留可用性，也不会让链路变得太难理解。</p>
+<hr>
+<h2>五、我现在的实践原则</h2>
+<p>经过这轮收敛之后，我给自己定了几个很简单但很有效的规则：</p>
+<h3>规则 1：一个场景只保留一个默认入口</h3>
+<ul>
+<li>网页搜索 → multi-search-engine</li>
+<li>平台搜索 → agent-reach</li>
+</ul>
+<h3>规则 2：高频优先，低频能删就删</h3>
+<p>优先保留：</p>
+<ul>
+<li>搜索</li>
+<li>日历</li>
+<li>记账</li>
+<li>健康检查</li>
+<li>真正进入日常流的垂直 Skill</li>
+</ul>
+<h3>规则 3：先收敛，再扩展</h3>
+<p>比起不停安装新的 Skill，我现在更倾向于：</p>
+<ul>
+<li>先把已有能力整理顺</li>
+<li>让默认路径稳定下来</li>
+<li>确定缺口后再补技能</li>
+</ul>
+<p>一个 10 分但顺手的系统，远比一个 100 分但混乱的系统更适合长期使用。</p>
+<hr>
+<h2>六、如果你也在搭 OpenClaw，我的建议是什么</h2>
+<p>如果你也准备折腾自己的 OpenClaw，我建议先从一个最小可用组合开始：</p>
+<ol>
+<li>一个默认搜索 Skill</li>
+<li>一个平台型搜索 Skill</li>
+<li>一个日历 / 提醒能力</li>
+<li>一个健康检查 / 运维简报能力</li>
+<li>一个与你生活强相关的垂直 Skill（比如记账、运动、知识库）</li>
+</ol>
+<p>只要这几个打通，体验通常已经很好了。</p>
+<p>剩下的，不急着装，先看自己是不是会高频用到。</p>
+<hr>
+<h2>七、结语</h2>
+<p>我越来越觉得，OpenClaw 最有意思的地方，不在于它“功能很多”，而在于：</p>
+<blockquote>
+<p><strong>你能不能把它调成一个适合你自己的系统。</strong></p>
+</blockquote>
+<p>不是越全越好，而是越顺手越好。不是能做多少事，而是能不能真的进入你的工作流。</p>
+<p>对我来说，这轮优化最大的收获不是多了几个 Skill，而是把这件事彻底想明白了：</p>
+<p><strong>Agent 不是软件商店，Agent 是你的操作习惯的延伸。</strong></p>
+<hr>
+<p><em>如果你也在折腾 OpenClaw，不妨先做一次“减法优化”。很多时候，真正提升体验的不是再装一个 Skill，而是把入口收口、把边界理清、把高频路径调顺。</em></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/openclaw/">OpenClaw</a>
+        
+            <a href="/tags/ai%E5%8A%A9%E6%89%8B/">AI 助手</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a>
+        
+            <a href="/tags/%E6%95%88%E7%8E%87%E5%B7%A5%E5%85%B7/">效率工具</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/%E9%87%91%E9%92%B1%E5%BF%83%E7%90%86%E5%AD%A6%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">《金钱心理学》读书笔记：7 个颠覆认知的财富洞察</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    
+<div style="text-align:center; margin-top:2rem;">
+  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:#f0694f;color:#fff;border:none;padding:12px 36px;border-radius:24px;cursor:pointer;font-size:16px;font-weight:bold;box-shadow:0 2px 8px rgba(240,105,79,0.3);">
+    ☕ 请我喝杯咖啡
+  </button>
+</div>
+
+
+<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
+    
+    
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
+      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
+    </div>
+    
+    
+    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    
+    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
+  </div>
+</div>
+
+<script>
+function switchPay(type) {
+  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
+  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
+  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
+  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
+  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
+  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
+}
+</script>
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2019 - 
+        
+        2026 Jasper&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" defer></script>
+
+
+    </body>
+</html>
