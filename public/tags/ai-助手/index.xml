@@ -118,7 +118,7 @@ EOF
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nt"&gt;Set these environment variables in `~/.hermes/.env` or your shell profile&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;```bash&lt;/span&gt;&lt;span class="w"&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_URL=&amp;#34;https://caldav.laji.fun:9999&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_URL=&amp;#34;https://caldav.example.com&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_USERNAME=&amp;#34;your-username&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="l"&gt;export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;&lt;/span&gt;&lt;span class="w"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id="tools"&gt;Tools
@@ -182,7 +182,7 @@ CalDAV（Calendar Distributed Authoring and Versioning）是基于 WebDAV 的日
 
 我家用的是自托管方案：
 
-- **服务器**：`https://caldav.laji.fun:9999`
+- **服务器**：`https://caldav.example.com`
 - **软件**：Baikal（轻量级 CalDAV/CardDAV 服务器）
 - **部署**：Docker + Nginx 反向代理
 - **用户**：每人一个独立账户
@@ -199,7 +199,7 @@ CalDAV（Calendar Distributed Authoring and Versioning）是基于 WebDAV 的日
 ### 4.1 场景需求
 
 - 我老婆也需要通过 Hermes 管理日程
-- 她的 CalDAV 账户是独立的（`zhaoyilei`）
+- 她的 CalDAV 账户是独立的（`wife`）
 - 需要快速部署，不能让她折腾配置
 
 ### 4.2 一键安装脚本
@@ -223,8 +223,8 @@ version: 1.0.0
 ## Configuration
 
 ```bash
-export CALDAV_URL=&amp;#34;https://caldav.laji.fun:9999&amp;#34;
-export CALDAV_USERNAME=&amp;#34;zhaoyilei&amp;#34;
+export CALDAV_URL=&amp;#34;https://caldav.example.com&amp;#34;
+export CALDAV_USERNAME=&amp;#34;wife&amp;#34;
 export CALDAV_PASSWORD=&amp;#34;your-password&amp;#34;
 &lt;/code&gt;&lt;/pre&gt;&lt;h2 id="usage-1"&gt;Usage
 &lt;/h2&gt;&lt;ul&gt;
@@ -243,13 +243,13 @@ EOF&lt;/li&gt;
 
 ```bash
 # ~/.hermes/.env
-CALDAV_URL=https://caldav.laji.fun:9999
-CALDAV_USERNAME=zhaoyilei
+CALDAV_URL=https://caldav.example.com
+CALDAV_USERNAME=wife
 CALDAV_PASSWORD=your-password
 &lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;方法 2：Shell 配置文件&lt;/strong&gt;&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# ~/.zshrc 或 ~/.bashrc&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_URL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;https://caldav.laji.fun:9999&amp;#34;&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;zhaoyilei&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_URL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;https://caldav.example.com&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_USERNAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;wife&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;CALDAV_PASSWORD&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;#34;your-password&amp;#34;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id="44-使用示例"&gt;4.4 使用示例
 &lt;/h3&gt;&lt;p&gt;配置完成后，自然语言就能操作日历：&lt;/p&gt;
@@ -325,12 +325,12 @@ CALDAV_PASSWORD=your-password
 &lt;/ul&gt;
 &lt;h3 id="q2-caldav-连接失败"&gt;Q2: CalDAV 连接失败？
 &lt;/h3&gt;&lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-bash" data-lang="bash"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 测试服务器连通性&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;curl -I https://caldav.laji.fun:9999
+&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;curl -I https://caldav.example.com
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="c1"&gt;# 测试认证&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;curl -u username:password &lt;span class="se"&gt;\
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; -X PROPFIND &lt;span class="se"&gt;\
-&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; https://caldav.laji.fun:9999/calendars/username/
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt; https://caldav.example.com/calendars/username/
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;常见问题：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;证书错误&lt;/strong&gt;：自签名证书需要信任&lt;/li&gt;

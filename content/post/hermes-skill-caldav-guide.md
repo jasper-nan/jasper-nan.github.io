@@ -160,7 +160,7 @@ Connect to CalDAV server to manage calendar events.
 Set these environment variables in `~/.hermes/.env` or your shell profile:
 
 ```bash
-export CALDAV_URL="https://caldav.laji.fun:9999"
+export CALDAV_URL="https://caldav.example.com"
 export CALDAV_USERNAME="your-username"
 export CALDAV_PASSWORD="your-password"
 ```
@@ -220,7 +220,7 @@ CalDAV（Calendar Distributed Authoring and Versioning）是基于 WebDAV 的日
 
 我家用的是自托管方案：
 
-- **服务器**：`https://caldav.laji.fun:9999`
+- **服务器**：`https://caldav.example.com`
 - **软件**：Baikal（轻量级 CalDAV/CardDAV 服务器）
 - **部署**：Docker + Nginx 反向代理
 - **用户**：每人一个独立账户
@@ -237,7 +237,7 @@ CalDAV（Calendar Distributed Authoring and Versioning）是基于 WebDAV 的日
 ### 4.1 场景需求
 
 - 我老婆也需要通过 Hermes 管理日程
-- 她的 CalDAV 账户是独立的（`zhaoyilei`）
+- 她的 CalDAV 账户是独立的（`wife`）
 - 需要快速部署，不能让她折腾配置
 
 ### 4.2 一键安装脚本
@@ -261,8 +261,8 @@ version: 1.0.0
 ## Configuration
 
 ```bash
-export CALDAV_URL="https://caldav.laji.fun:9999"
-export CALDAV_USERNAME="zhaoyilei"
+export CALDAV_URL="https://caldav.example.com"
+export CALDAV_USERNAME="wife"
 export CALDAV_PASSWORD="your-password"
 ```
 
@@ -284,8 +284,8 @@ hermes skills reload
 
 ```bash
 # ~/.hermes/.env
-CALDAV_URL=https://caldav.laji.fun:9999
-CALDAV_USERNAME=zhaoyilei
+CALDAV_URL=https://caldav.example.com
+CALDAV_USERNAME=wife
 CALDAV_PASSWORD=your-password
 ```
 
@@ -293,8 +293,8 @@ CALDAV_PASSWORD=your-password
 
 ```bash
 # ~/.zshrc 或 ~/.bashrc
-export CALDAV_URL="https://caldav.laji.fun:9999"
-export CALDAV_USERNAME="zhaoyilei"
+export CALDAV_URL="https://caldav.example.com"
+export CALDAV_USERNAME="wife"
 export CALDAV_PASSWORD="your-password"
 ```
 
@@ -369,12 +369,12 @@ hermes skills install git+https://github.com/user/hermes-caldav-skill.git
 
 ```bash
 # 测试服务器连通性
-curl -I https://caldav.laji.fun:9999
+curl -I https://caldav.example.com
 
 # 测试认证
 curl -u username:password \
   -X PROPFIND \
-  https://caldav.laji.fun:9999/calendars/username/
+  https://caldav.example.com/calendars/username/
 ```
 
 常见问题：
