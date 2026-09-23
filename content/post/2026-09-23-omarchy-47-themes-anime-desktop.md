@@ -21,7 +21,7 @@ tags: [Linux, Omarchy, Hyprland, 主题美化, 二次元]
 
 选 IP 不看心情看**数据**：写脚本探测 Wallhaven 上各 IP 的 4K 素材量，热门 IP（电锯人 43 张、海贼王 21 张）直接进，素材太薄的（比如某特工全家桶只有 1 张 4K）忍痛跳过。二次元壁纸站 4K 资源分布极不均匀，先查库存再开工能省一半无效功。
 
-![动漫主题预览](/images/showcase/anime-grid.jpg)
+![动漫主题预览](https://img.laji.fun:9999/images/showcase/anime-grid.jpg)
 
 二、壁纸不是找来的，是"造"出来的
 
@@ -41,7 +41,7 @@ tags: [Linux, Omarchy, Hyprland, 主题美化, 二次元]
 
 还有一个更阴的坑：**截断的 JPEG**。下载中断的文件 ImageMagick 只报 warning 不报错，尺寸校验照常通过，处理出来半张图是纯灰。最后靠中部像素采样揪出来——接近 `(128,128,128)` 纯灰即弃。看图工具骗你，像素不会。
 
-![配色卡示例](/images/showcase/palette-frieren.jpg)
+![配色卡示例](https://img.laji.fun:9999/images/showcase/palette-frieren.jpg)
 
 每个主题 = 一份 `colors.toml`（22 个语义色位）+ 图标主题 + 4 张左右加工过的壁纸 + 一张程序生成的抽象渐变备用图（没图也能有氛围）。
 
@@ -54,11 +54,11 @@ Omarchy 的主题系统有个精妙设计：`omarchy theme set` 之后，所有�
 - **btop / Obsidian / Neovim / VSCode / Chromium**：官方模板全套覆盖
 - **输入法 fcitx5**：候选框配色跟主题走
 
-![星穹铁道配色卡](/images/showcase/palette-honkai-star-rail.jpg)
+![星穹铁道配色卡](https://img.laji.fun:9999/images/showcase/palette-honkai-star-rail.jpg)
 
 最远的一环是**开机画面和登录界面（Plymouth + SDDM）**：每个主题生成一枚角色名书法字 logo（Noto Serif CJK 渲染 + 主题色光晕），挂在 `theme-set` 钩子上，切主题时连开机画面一起换。下次重启，迎接你的不是千篇一律的厂商 logo，而是"雷电将军"四个鎏金大字。
 
-![开机画面效果](/images/showcase/boot-preview.jpg)
+![开机画面效果](https://img.laji.fun:9999/images/showcase/boot-preview.jpg)
 
 提权这块有个取舍值得说：改开机画面需要 root，但我不想为图省事留永久的 NOPASSWD 后门。最终用官方的 `omarchy sudo passwordless [分钟]` 临时免密——切主题时静默同步，窗口外则发一条桌面通知提醒。安全性和顺滑度兼得。
 

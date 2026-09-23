@@ -14,7 +14,7 @@ tags:
 
 ## 一、先上成品
 
-![11 主题预览](/images/showcase/genshin-grid.jpg)
+![11 主题预览](https://img.laji.fun:9999/images/showcase/genshin-grid.jpg)
 
 角色 | 元素 | 主配色 | 模式
 ---|---|---|---
