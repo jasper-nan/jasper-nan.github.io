@@ -59,7 +59,7 @@ Omarchy 自带 25 套官方主题（Catppuccin、Tokyo Night、Gruvbox、Rose Pi
 
 我自己又加了 11 套原神主题（[已开源](https://github.com/jasper-nan/omarchy-genshin-themes)），配上 4K@2x 的显示器，每天换壁纸看角色立绘是真实的快乐：
 
-![主题预览](https://raw.githubusercontent.com/jasper-nan/omarchy-genshin-themes/main/docs/preview-grid.png)
+![主题预览](/images/showcase/genshin-grid.jpg)
 
 透明状态栏、毛玻璃模糊、圆角阴影、动态壁纸过渡——这些在 Omarchy 上全是默认开好的，不需要你写一行配置。
 
