@@ -21,7 +21,7 @@ tags: [Linux, Omarchy, Hyprland, 主题美化, 二次元]
 
 选 IP 不看心情看**数据**：写脚本探测 Wallhaven 上各 IP 的 4K 素材量，热门 IP（电锯人 43 张、海贼王 21 张）直接进，素材太薄的（比如某特工全家桶只有 1 张 4K）忍痛跳过。二次元壁纸站 4K 资源分布极不均匀，先查库存再开工能省一半无效功。
 
-![动漫主题预览](https://raw.githubusercontent.com/jasper-nan/omarchy-anime-themes/main/docs/preview-grid.png)
+![动漫主题预览](/images/showcase/anime-grid.jpg)
 
 二、壁纸不是找来的，是"造"出来的
 
