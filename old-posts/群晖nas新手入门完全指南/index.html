@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从拆箱到进阶，一篇搞定群晖 NAS 的安装、配置、安全设置、核心功能和远程访问">
+<title>群晖 Synology NAS 新手入门完全指南</title>
+
+
+<link rel="canonical" href="https://jonnynan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="群晖 Synology NAS 新手入门完全指南">
+<meta property='og:description' content="从拆箱到进阶，一篇搞定群晖 NAS 的安装、配置、安全设置、核心功能和远程访问">
+<meta property='og:url' content='https://jonnynan.github.io/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/'>
+<meta property='og:site_name' content='Jasper&#39;s Blog'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='NAS' /><meta property='article:tag' content='群晖' /><meta property='article:tag' content='Docker' /><meta property='article:tag' content='教程' /><meta property='article:published_time' content='2026-03-25T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-25T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="群晖 Synology NAS 新手入门完全指南">
+<meta name="twitter:description" content="从拆箱到进阶，一篇搞定群晖 NAS 的安装、配置、安全设置、核心功能和远程访问">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">Jasper&#39;s Blog</a></h1>
+            <h2 class="site-description">致良知</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                <span>首页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/post/' >
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/tags/' >
+                
+                <span>标签</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/about/' >
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/%E7%BE%A4%E6%99%96nas%E6%96%B0%E6%89%8B%E5%85%A5%E9%97%A8%E5%AE%8C%E5%85%A8%E6%8C%87%E5%8D%97/">群晖 Synology NAS 新手入门完全指南</a>
+        </h2>
+        
+    
+        
+        <h3 class="article-subtitle">
+            从拆箱到进阶，一篇搞定群晖 NAS 的安装、配置、安全设置、核心功能和远程访问
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-25T00:00:00Z'>Wednesday, March 25, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p>如果你刚入手了一台群晖 NAS，或者正在考虑入手，这篇文章就是为你准备的。从硬件安装到进阶玩法，一步步带你上手。</p>
+
+    </blockquote>
+<h2 id="-一收到设备后做什么">📦 一、收到设备后做什么
+</h2><h3 id="11-硬件检查">1.1 硬件检查
+</h3><p>确认包装内配件齐全：主机、电源线、网线、硬盘笼螺丝。</p>
+<p>群晖主机不含硬盘，需自购。推荐：</p>
+<ul>
+<li><strong>希捷酷狼 IronWolf</strong> — NAS 专用盘，CMR 技术</li>
+<li><strong>西数红盘 Plus</strong> — 同样是 NAS 专用</li>
+</ul>
+<h3 id="12-安装硬盘">1.2 安装硬盘
+</h3><ol>
+<li>关机并拔掉电源线</li>
+<li>抽出硬盘架，固定硬盘（3.5 寸用侧面螺丝，2.5 寸用底部螺丝）</li>
+<li>推回硬盘架，接上电源线和网线</li>
+<li>开机，等待指示灯变为<strong>绿色常亮</strong></li>
+</ol>
+<h3 id="13-初始化设置">1.3 初始化设置
+</h3><ol>
+<li>在电脑访问 <code>find.synology.com</code> 或 <code>http://NAS内网IP:5000</code></li>
+<li>按向导完成 DSM 系统安装</li>
+<li>设置管理员账户和<strong>强密码</strong></li>
+<li>选择&quot;自动更新&quot;保持系统最新</li>
+</ol>
+<hr>
+<h2 id="-二存储池规划shr-新手推荐">💾 二、存储池规划（SHR 新手推荐）
+</h2><h3 id="什么是-shr">什么是 SHR？
+</h3><p>SHR（Synology Hybrid RAID）是群晖自研的智能 RAID，比传统 RAID 更灵活，硬盘利用率更高。</p>
+<h3 id="硬盘组合建议">硬盘组合建议
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>硬盘数</th>
+          <th>推荐模式</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1 块</td>
+          <td>Basic</td>
+          <td>无冗余，但灵活</td>
+      </tr>
+      <tr>
+          <td>2 块</td>
+          <td>SHR-1（推荐）</td>
+          <td>1 块硬盘容错</td>
+      </tr>
+      <tr>
+          <td>3 块+</td>
+          <td>SHR-1</td>
+          <td>1 块硬盘容错</td>
+      </tr>
+      <tr>
+          <td>4 块+</td>
+          <td>SHR-2</td>
+          <td>2 块硬盘容错（安全性更高）</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    <blockquote>
+        <p>⚠️
+<strong>新手千万别组 RAID0！</strong> 一块硬盘损坏 = 所有数据全丢。</p>
+
+    </blockquote>
+<h3 id="创建存储池步骤">创建存储池步骤
+</h3><ol>
+<li>进入<strong>存储管理器</strong> → <strong>存储池</strong> → <strong>新增</strong></li>
+<li>选择 SHR（自动模式）</li>
+<li>选择要加入的硬盘</li>
+<li>完成初始化</li>
+</ol>
+<hr>
+<h2 id="-三安全设置必做">🔐 三、安全设置（必做！）
+</h2><h3 id="31-开启防火墙">3.1 开启防火墙
+</h3><p><code>控制面板</code> → <code>安全性</code> → <code>防火墙</code> → <code>编辑规则</code></p>
+<p>只开放必要端口，禁用 DMZ。</p>
+<h3 id="32-禁用-admin-账户">3.2 禁用 Admin 账户
+</h3><p><code>控制面板</code> → <code>用户与群组</code> → <code>本地用户</code></p>
+<p>新建日常使用账户并赋予管理员权限，<strong>禁用默认 admin 账户</strong>。</p>
+<h3 id="33-开启两步验证2fa">3.3 开启两步验证（2FA）
+</h3><p><code>控制面板</code> → <code>用户与群组</code> → <code>账户</code> → <code>两步验证</code></p>
+<p>下载 Google Authenticator 或 Authy App 绑定。</p>
+<hr>
+<h2 id="-四核心功能使用">📁 四、核心功能使用
+</h2><h3 id="41-file-station文件管理器">4.1 File Station（文件管理器）
+</h3><p>网页端直接管理文件，支持拖拽上传/下载，可创建共享链接。</p>
+<h3 id="42-drive私有云盘-强烈推荐">4.2 Drive（私有云盘）⭐ 强烈推荐
+</h3><ul>
+<li>同步文件到电脑/手机（类似 OneDrive）</li>
+<li>支持多人协作编辑</li>
+<li>版本历史（误删可恢复）</li>
+</ul>
+<p>客户端支持：Windows / Mac / iOS / Android</p>
+<h3 id="43-photo-station--moments照片备份">4.3 Photo Station / Moments（照片备份）
+</h3><ul>
+<li>手机安装 Synology Photos App</li>
+<li>开启自动备份照片到 NAS</li>
+<li>从此解放手机存储空间</li>
+</ul>
+<h3 id="44-download-station下载机">4.4 Download Station（下载机）
+</h3><p>集成 PT / BT / 磁力链下载，配合私有云盘直接管理下载文件。</p>
+<h3 id="45-surveillance-station监控录像">4.5 Surveillance Station（监控录像）
+</h3><p>接入摄像头后支持移动侦测、录像回放。</p>
+<hr>
+<h2 id="-五docker-入门进阶">🐳 五、Docker 入门（进阶）
+</h2>
+    <blockquote>
+        <p>💡
+等熟悉基础操作后再折腾，新手阶段可以先跳过此章节。</p>
+
+    </blockquote>
+<h3 id="docker-能做什么">Docker 能做什么？
+</h3><ul>
+<li>跑 PT 下载工具（qBittorrent、Transmission）</li>
+<li>HomeAssistant 智能家居</li>
+<li>Jellyfin / Emby 影视库</li>
+<li>Nginx 反向代理</li>
+<li>各种自动化脚本工具</li>
+</ul>
+<h3 id="基础概念">基础概念
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>概念</th>
+          <th>解释</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>镜像（Image）</td>
+          <td>应用的模板</td>
+      </tr>
+      <tr>
+          <td>容器（Container）</td>
+          <td>运行起来的实例</td>
+      </tr>
+      <tr>
+          <td>端口映射</td>
+          <td>容器端口 → 主机端口</td>
+      </tr>
+      <tr>
+          <td>卷（Volume）</td>
+          <td>容器数据的持久化存储</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="推荐新手先安装">推荐新手先安装
+</h3><ol>
+<li>安装 <code>Container Manager</code> 套件</li>
+<li>安装 <strong>Portainer</strong>（可视化管理 Docker）</li>
+</ol>
+<hr>
+<h2 id="-六远程访问设置">🌐 六、远程访问设置
+</h2><h3 id="61-内网访问">6.1 内网访问
+</h3><p>直接用 NAS 的内网 IP 访问，如 <code>http://192.168.1.100:5000</code></p>
+<h3 id="62-外网访问--quickconnect适合新手">6.2 外网访问 — QuickConnect（适合新手）
+</h3><ol>
+<li><code>控制面板</code> → <code>外部访问</code> → <code>QuickConnect</code></li>
+<li>注册 Synology 账号</li>
+<li>获取专属 QuickConnect ID</li>
+<li>之后用 <code>https://你的ID.quickconnect.to</code> 随时随地访问</li>
+</ol>
+<ul>
+<li>✅ 优点：无需设置路由器端口转发</li>
+<li>⚠️ 缺点：速度比内网稍慢</li>
+</ul>
+<h3 id="63-外网访问--ddns--端口转发更专业">6.3 外网访问 — DDNS + 端口转发（更专业）
+</h3><p>申请公网 IP → 设置路由器端口转发 → 使用群晖内置 DDNS 或花生壳服务。</p>
+<hr>
+<h2 id="-七数据备份建议">🛡️ 七、数据备份建议
+</h2><h3 id="3-2-1-备份原则">3-2-1 备份原则
+</h3><ul>
+<li><strong>3</strong> 份数据副本</li>
+<li><strong>2</strong> 种不同存储介质（如 NAS + 外接硬盘）</li>
+<li><strong>1</strong> 份异地备份（云端或另一台 NAS）</li>
+</ul>
+<h3 id="群晖内置备份工具">群晖内置备份工具
+</h3><ul>
+<li><strong>Hyper Backup</strong>：备份到本地/外接硬盘/另一台 NAS/云端</li>
+<li><strong>Snapshot Replication</strong>：快照备份（需配合 Btrfs 文件系统）</li>
+</ul>
+<hr>
+<h2 id="-八新手学习路径">📚 八、新手学习路径
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>时间</th>
+          <th>任务</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>第 1 天</td>
+          <td>完成初始化、存储池创建、基础安全设置</td>
+      </tr>
+      <tr>
+          <td>第 2 天</td>
+          <td>体验 File Station、Drive 文件同步</td>
+      </tr>
+      <tr>
+          <td>第 3 天</td>
+          <td>Photo Station 照片备份</td>
+      </tr>
+      <tr>
+          <td>第 4 天</td>
+          <td>开启 QuickConnect 远程访问</td>
+      </tr>
+      <tr>
+          <td>第 5 天+</td>
+          <td>学习 Docker，折腾更多玩法</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="-常见问题">⚠️ 常见问题
+</h2><p><strong>Q：硬盘发出异响怎么办？</strong>
+立刻关机备份数据，可能硬盘即将损坏。</p>
+<p><strong>Q：忘记管理员密码怎么办？</strong>
+重置 NAS（按住 reset 键 4 秒），但会丢失数据。</p>
+<p><strong>Q：NAS 能 24 小时开着吗？</strong>
+可以，群晖设计为 7×24 小时运行。注意散热和定期检查硬盘健康。</p>
+<p><strong>Q：能装 Windows 虚拟机吗？</strong>
+可以，安装 <code>Virtual Machine Manager</code> 套件，分配 CPU/内存资源即可。</p>
+<hr>
+<h2 id="-推荐学习资源">📖 推荐学习资源
+</h2><ul>
+<li>群晖官方帮助中心：<a class="link" href="https://www.synology.com/zh-cn/knowledgebase"  target="_blank" rel="noopener"
+    >synology.com/zh-cn/knowledgebase</a></li>
+<li>少数派 — 搜索&quot;群晖&quot;有大量教程</li>
+<li>恩山无线论坛 — 群晖板块干货很多</li>
+<li>B 站 — 搜索&quot;群晖NAS入门&quot;有中文视频教程</li>
+</ul>
+<hr>
+<p><em>如果这篇文章对你有帮助，欢迎请我喝杯咖啡 ☕</em></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/nas/">NAS</a>
+        
+            <a href="/tags/%E7%BE%A4%E6%99%96/">群晖</a>
+        
+            <a href="/tags/docker/">Docker</a>
+        
+            <a href="/tags/%E6%95%99%E7%A8%8B/">教程</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/%E9%A3%9E%E7%89%9Bnas-vs-%E7%BE%A4%E6%99%96dsm%E5%AF%B9%E6%AF%94/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">飞牛 NAS vs 群晖 DSM：真实使用对比，哪个更适合你？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E6%89%8B%E5%86%8C/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Docker 常用命令速查手册</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/jenkins-cicd%E4%BB%8E%E5%85%A5%E9%97%A8%E5%88%B0%E5%AE%9E%E6%88%98/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Jenkins CI/CD 从入门到实战：自动化部署不再难</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    
+<div style="text-align:center; margin-top:2rem;">
+  <button onclick="document.getElementById('rewardModal').style.display='flex'" style="background:#f0694f;color:#fff;border:none;padding:12px 36px;border-radius:24px;cursor:pointer;font-size:16px;font-weight:bold;box-shadow:0 2px 8px rgba(240,105,79,0.3);">
+    ☕ 请我喝杯咖啡
+  </button>
+</div>
+
+
+<div id="rewardModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#fff;border-radius:16px;padding:2rem;text-align:center;max-width:320px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 style="margin:0 0 1.5rem 0;color:#333;font-size:1.2rem;">谢谢支持 ❤️</h3>
+    
+    
+    <div style="display:flex;gap:0;margin-bottom:1.5rem;border-radius:8px;overflow:hidden;border:1px solid #e0e0e0;">
+      <button id="btnWechat" onclick="switchPay('wechat')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#07c160;color:#fff;">微信支付</button>
+      <button id="btnAlipay" onclick="switchPay('alipay')" style="flex:1;padding:8px;border:none;cursor:pointer;font-size:14px;background:#f5f5f5;color:#666;">支付宝</button>
+    </div>
+    
+    
+    <div id="qrWechat"><img src="/wechat.jpg" alt="微信支付" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    <div id="qrAlipay" style="display:none;"><img src="/alipay.jpg" alt="支付宝" style="width:200px;height:200px;border-radius:8px;border:1px solid #eee;"></div>
+    
+    <button onclick="document.getElementById('rewardModal').style.display='none'" style="margin-top:1.5rem;padding:6px 24px;border:1px solid #ddd;border-radius:16px;background:none;cursor:pointer;color:#999;font-size:13px;">关闭</button>
+  </div>
+</div>
+
+<script>
+function switchPay(type) {
+  document.getElementById('qrWechat').style.display = type === 'wechat' ? 'block' : 'none';
+  document.getElementById('qrAlipay').style.display = type === 'alipay' ? 'block' : 'none';
+  document.getElementById('btnWechat').style.background = type === 'wechat' ? '#07c160' : '#f5f5f5';
+  document.getElementById('btnWechat').style.color = type === 'wechat' ? '#fff' : '#666';
+  document.getElementById('btnAlipay').style.background = type === 'alipay' ? '#1677ff' : '#f5f5f5';
+  document.getElementById('btnAlipay').style.color = type === 'alipay' ? '#fff' : '#666';
+}
+</script>
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2019 - 
+        
+        2026 Jasper&#39;s Blog
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js" defer></script>
+
+
+    </body>
+</html>

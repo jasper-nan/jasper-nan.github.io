@@ -1,0 +1,336 @@
+<!doctype html><html lang=zh-cn dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="用 Python + requests + pytest 搭建接口自动化测试框架，零基础也能上手。附完整代码。"><title>Python 接口自动化测试从 0 到 1</title><link rel=canonical href=https://jasper-nan.github.io/post/python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E4%BB%8E0%E5%88%B01/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=preload as=style href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap"><link rel=stylesheet href=/scss/style.min.276fc082d94d92b56ef0ef63d8f1cf64b011575777afa30473d1bfa580661480.css><meta property='og:title' content="Python 接口自动化测试从 0 到 1"><meta property='og:description' content="用 Python + requests + pytest 搭建接口自动化测试框架，零基础也能上手。附完整代码。"><meta property='og:url' content='https://jasper-nan.github.io/post/python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E4%BB%8E0%E5%88%B01/'><meta property='og:site_name' content="Jasper's Blog"><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='Python'><meta property='article:tag' content='测试'><meta property='article:tag' content='接口测试'><meta property='article:published_time' content='2026-03-25T00:00:00+00:00'><meta property='article:modified_time' content='2026-03-25T00:00:00+00:00'><meta name=twitter:title content="Python 接口自动化测试从 0 到 1"><meta name=twitter:description content="用 Python + requests + pytest 搭建接口自动化测试框架，零基础也能上手。附完整代码。"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><div class=site-meta><h1 class=site-name><a href=/>Jasper's Blog</a></h1><h2 class=site-description>致良知</h2></div></header><ol class=menu id=main-menu><li><a href=/><span>首页</span></a></li><li><a href=/post/><span>文章</span></a></li><li><a href=/tags/><span>标签</span></a></li><li><a href=/categories/><span>分类</span></a></li><li><a href=/buy-me-a-coffee/><span>☕ 请我喝咖啡</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span></span></li></ol></li></ol></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><div class=article-title-wrapper><h2 class=article-title><a href=/post/python%E6%8E%A5%E5%8F%A3%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95%E4%BB%8E0%E5%88%B01/>Python 接口自动化测试从 0 到 1</a></h2><h3 class=article-subtitle>用 Python + requests + pytest 搭建接口自动化测试框架，零基础也能上手。附完整代码。</h3></div><footer class=article-meta><div class=inline-meta><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published datetime=2026-03-25T00:00:00Z>Wednesday, March 25, 2026</time>
+<svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading></time></div></footer></div></header><section class=article-content><blockquote><p>接口测试是测试工程师的基本功，但很多人还在用 Postman 手工点。这篇文章教你用 Python 搭一套真正的自动化测试框架。</p></blockquote><hr><h2 id=一为什么用-python-做接口测试>一、为什么用 Python 做接口测试？</h2><div class=table-wrapper><table><thead><tr><th>方案</th><th>优点</th><th>缺点</th></tr></thead><tbody><tr><td>Postman</td><td>简单直观</td><td>不方便 CI 集成，团队协作弱</td></tr><tr><td>JMeter</td><td>性能测试强</td><td>界面复杂，脚本难维护</td></tr><tr><td><strong>Python</strong></td><td><strong>灵活、可读性好、CI 友好、免费</strong></td><td>需要写代码</td></tr><tr><td>Java+RestAssured</td><td>企业级</td><td>太重了</td></tr></tbody></table></div><p><strong>Python 的优势：代码即文档，Git 管理方便，Jenkins 集成简单，学习成本低。</strong></p><hr><h2 id=二环境准备>二、环境准备</h2><pre><code># 安装依赖
+pip install requests pytest pytest-html allure-pytest
+
+# 项目结构
+api_test/
+├── config/
+│   └── settings.py       # 配置文件（URL、账号等）
+├── common/
+│   ├── base_api.py       # 封装的请求方法
+│   └── assertions.py     # 自定义断言
+├── testcases/
+│   ├── test_login.py     # 登录测试
+│   ├── test_user.py      # 用户管理测试
+│   └── test_order.py     # 订单测试
+├── data/
+│   └── test_data.yaml    # 测试数据
+├── conftest.py           # pytest fixtures
+├── pytest.ini            # pytest 配置
+└── requirements.txt
+</code></pre><hr><h2 id=三基础封装>三、基础封装</h2><h3 id=configsettingspy>config/settings.py</h3><pre><code>BASE_URL = &quot;https://api.example.com&quot;
+
+# 测试账号
+USERNAME = &quot;test_user&quot;
+PASSWORD = &quot;test_password&quot;
+
+# 超时设置
+TIMEOUT = 10
+</code></pre><h3 id=commonbase_apipy>common/base_api.py</h3><pre><code>import requests
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+class BaseAPI:
+    &quot;&quot;&quot;封装 requests，统一处理请求和响应&quot;&quot;&quot;
+    
+    def __init__(self, base_url, token=None):
+        self.base_url = base_url
+        self.session = requests.Session()
+        self.session.headers.update({
+            &quot;Content-Type&quot;: &quot;application/json&quot;,
+            &quot;Accept&quot;: &quot;application/json&quot;,
+        })
+        if token:
+            self.session.headers[&quot;Authorization&quot;] = f&quot;Bearer {token}&quot;
+    
+    def request(self, method, path, **kwargs):
+        &quot;&quot;&quot;统一请求方法&quot;&quot;&quot;
+        url = f&quot;{self.base_url}{path}&quot;
+        kwargs.setdefault(&quot;timeout&quot;, 10)
+        
+        logger.info(f&quot;请求: {method} {url}&quot;)
+        logger.debug(f&quot;参数: {kwargs}&quot;)
+        
+        try:
+            response = self.session.request(method, url, **kwargs)
+            logger.info(f&quot;响应: {response.status_code}&quot;)
+            logger.debug(f&quot;响应体: {response.text[:500]}&quot;)
+            return response
+        except requests.RequestException as e:
+            logger.error(f&quot;请求失败: {e}&quot;)
+            raise
+    
+    def get(self, path, params=None):
+        return self.request(&quot;GET&quot;, path, params=params)
+    
+    def post(self, path, json=None, data=None):
+        return self.request(&quot;POST&quot;, path, json=json, data=data)
+    
+    def put(self, path, json=None):
+        return self.request(&quot;PUT&quot;, path, json=json)
+    
+    def delete(self, path):
+        return self.request(&quot;DELETE&quot;, path)
+</code></pre><h3 id=conftestpy>conftest.py</h3><pre><code>import pytest
+from common.base_api import BaseAPI
+from config.settings import BASE_URL
+
+
+@pytest.fixture(scope=&quot;session&quot;)
+def api():
+    &quot;&quot;&quot;全局 API 实例&quot;&quot;&quot;
+    return BaseAPI(BASE_URL)
+
+
+@pytest.fixture(scope=&quot;session&quot;)
+def auth_api(api):
+    &quot;&quot;&quot;带登录态的 API 实例&quot;&quot;&quot;
+    response = api.post(&quot;/auth/login&quot;, json={
+        &quot;username&quot;: &quot;test_user&quot;,
+        &quot;password&quot;: &quot;test_password&quot;
+    })
+    token = response.json()[&quot;data&quot;][&quot;token&quot;]
+    return BaseAPI(BASE_URL, token=token)
+</code></pre><hr><h2 id=四编写测试用例>四、编写测试用例</h2><h3 id=testcasestest_loginpy>testcases/test_login.py</h3><pre><code>import pytest
+
+
+class TestLogin:
+    &quot;&quot;&quot;登录接口测试&quot;&quot;&quot;
+    
+    def test_login_success(self, api):
+        &quot;&quot;&quot;正常登录&quot;&quot;&quot;
+        resp = api.post(&quot;/auth/login&quot;, json={
+            &quot;username&quot;: &quot;test_user&quot;,
+            &quot;password&quot;: &quot;test_password&quot;
+        })
+        
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data[&quot;code&quot;] == 0
+        assert &quot;token&quot; in data[&quot;data&quot;]
+        assert len(data[&quot;data&quot;][&quot;token&quot;]) &gt; 0
+    
+    def test_login_wrong_password(self, api):
+        &quot;&quot;&quot;密码错误&quot;&quot;&quot;
+        resp = api.post(&quot;/auth/login&quot;, json={
+            &quot;username&quot;: &quot;test_user&quot;,
+            &quot;password&quot;: &quot;wrong_password&quot;
+        })
+        
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data[&quot;code&quot;] != 0
+    
+    def test_login_empty_username(self, api):
+        &quot;&quot;&quot;用户名为空&quot;&quot;&quot;
+        resp = api.post(&quot;/auth/login&quot;, json={
+            &quot;username&quot;: &quot;&quot;,
+            &quot;password&quot;: &quot;test_password&quot;
+        })
+        
+        assert resp.status_code == 400  # 或 422，取决于接口设计
+    
+    @pytest.mark.parametrize(&quot;username, password, expected_code&quot;, [
+        (&quot;test_user&quot;, &quot;test_password&quot;, 0),
+        (&quot;test_user&quot;, &quot;wrong&quot;, 1001),
+        (&quot;not_exist&quot;, &quot;test_password&quot;, 1002),
+    ])
+    def test_login_scenarios(self, api, username, password, expected_code):
+        &quot;&quot;&quot;参数化测试：多种登录场景&quot;&quot;&quot;
+        resp = api.post(&quot;/auth/login&quot;, json={
+            &quot;username&quot;: username,
+            &quot;password&quot;: password
+        })
+        
+        assert resp.json()[&quot;code&quot;] == expected_code
+</code></pre><h3 id=testcasestest_userpy>testcases/test_user.py</h3><pre><code>import pytest
+
+
+class TestUser:
+    &quot;&quot;&quot;用户管理接口测试&quot;&quot;&quot;
+    
+    def test_get_user_info(self, auth_api):
+        &quot;&quot;&quot;获取当前用户信息&quot;&quot;&quot;
+        resp = auth_api.get(&quot;/user/info&quot;)
+        
+        assert resp.status_code == 200
+        data = resp.json()
+        assert data[&quot;code&quot;] == 0
+        assert data[&quot;data&quot;][&quot;username&quot;] == &quot;test_user&quot;
+    
+    def test_update_nickname(self, auth_api):
+        &quot;&quot;&quot;修改昵称&quot;&quot;&quot;
+        resp = auth_api.put(&quot;/user/info&quot;, json={
+            &quot;nickname&quot;: f&quot;test_user_{int(time.time())}&quot;
+        })
+        
+        assert resp.status_code == 200
+        assert resp.json()[&quot;code&quot;] == 0
+    
+    def test_get_user_list(self, auth_api):
+        &quot;&quot;&quot;获取用户列表（需要管理员权限）&quot;&quot;&quot;
+        resp = auth_api.get(&quot;/admin/users&quot;, params={&quot;page&quot;: 1, &quot;size&quot;: 10})
+        
+        assert resp.status_code == 200
+        data = resp.json()
+        assert &quot;list&quot; in data[&quot;data&quot;]
+        assert len(data[&quot;data&quot;][&quot;list&quot;]) &lt;= 10
+</code></pre><hr><h2 id=五数据驱动测试>五、数据驱动测试</h2><h3 id=datatest_datayaml>data/test_data.yaml</h3><pre><code>login_cases:
+  - name: 正常登录
+    username: test_user
+    password: test_password
+    expected_code: 0
+  - name: 密码错误
+    username: test_user
+    password: wrong123
+    expected_code: 1001
+  - name: 用户不存在
+    username: ghost_user
+    password: any123
+    expected_code: 1002
+</code></pre><h3 id=使用-yaml-数据>使用 YAML 数据</h3><pre><code>import pytest
+import yaml
+
+
+def load_test_data():
+    with open(&quot;data/test_data.yaml&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:
+        return yaml.safe_load(f)[&quot;login_cases&quot;]
+
+
+@pytest.mark.parametrize(&quot;case&quot;, load_test_data())
+def test_login_data_driven(api, case):
+    resp = api.post(&quot;/auth/login&quot;, json={
+        &quot;username&quot;: case[&quot;username&quot;],
+        &quot;password&quot;: case[&quot;password&quot;]
+    })
+    assert resp.json()[&quot;code&quot;] == case[&quot;expected_code&quot;]
+</code></pre><hr><h2 id=六运行测试>六、运行测试</h2><h3 id=基本命令>基本命令</h3><pre><code># 运行所有测试
+pytest testcases/ -v
+
+# 运行指定文件
+pytest testcases/test_login.py -v
+
+# 运行指定类
+pytest testcases/test_login.py::TestLogin -v
+
+# 运行指定用例
+pytest testcases/test_login.py::TestLogin::test_login_success -v
+
+# 按标签运行
+pytest -m smoke -v
+</code></pre><h3 id=生成报告>生成报告</h3><pre><code># HTML 报告
+pytest testcases/ --html=report.html --self-contained-html
+
+# Allure 报告（更美观）
+pytest testcases/ --alluredir=allure-results
+allure serve allure-results
+</code></pre><h3 id=pytestini-配置>pytest.ini 配置</h3><pre><code>[pytest]
+testpaths = testcases
+python_files = test_*.py
+python_classes = Test*
+python_functions = test_*
+markers =
+    smoke: 冒烟测试
+    regression: 回归测试
+addopts = -v --tb=short
+</code></pre><hr><h2 id=七ci-集成jenkins>七、CI 集成（Jenkins）</h2><h3 id=jenkinsfile>Jenkinsfile</h3><pre><code>pipeline {
+    agent any
+    
+    stages {
+        stage('安装依赖') {
+            steps {
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        
+        stage('运行测试') {
+            steps {
+                sh 'pytest testcases/ --html=report.html --junitxml=report.xml'
+            }
+            post {
+                always {
+                    junit 'report.xml'
+                    publishHTML(target: [
+                        allowMissing: true,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: '.',
+                        reportFiles: 'report.html',
+                        reportName: '接口测试报告'
+                    ])
+                }
+            }
+        }
+    }
+}
+</code></pre><hr><h2 id=八进阶技巧>八、进阶技巧</h2><h3 id=接口依赖处理>接口依赖处理</h3><pre><code>class TestOrderFlow:
+    &quot;&quot;&quot;订单流程测试：下单 → 支付 → 查询&quot;&quot;&quot;
+    
+    def test_order_flow(self, auth_api):
+        # 1. 创建订单
+        resp = auth_api.post(&quot;/orders&quot;, json={&quot;product_id&quot;: 1, &quot;quantity&quot;: 2})
+        order_id = resp.json()[&quot;data&quot;][&quot;order_id&quot;]
+        
+        # 2. 支付订单
+        resp = auth_api.post(f&quot;/orders/{order_id}/pay&quot;, json={&quot;pay_method&quot;: &quot;alipay&quot;})
+        assert resp.json()[&quot;code&quot;] == 0
+        
+        # 3. 查询订单状态
+        resp = auth_api.get(f&quot;/orders/{order_id}&quot;)
+        assert resp.json()[&quot;data&quot;][&quot;status&quot;] == &quot;paid&quot;
+</code></pre><h3 id=接口签名处理>接口签名处理</h3><pre><code>import hashlib
+import time
+
+
+def generate_sign(params, secret):
+    &quot;&quot;&quot;生成接口签名&quot;&quot;&quot;
+    sorted_params = sorted(params.items())
+    sign_str = &quot;&amp;&quot;.join(f&quot;{k}={v}&quot; for k, v in sorted_params)
+    sign_str += f&quot;&amp;secret={secret}&quot;
+    return hashlib.md5(sign_str.encode()).hexdigest()
+
+
+# 在 BaseAPI 中使用
+class SignedAPI(BaseAPI):
+    def request(self, method, path, **kwargs):
+        params = kwargs.get(&quot;params&quot;, {})
+        params[&quot;timestamp&quot;] = int(time.time())
+        params[&quot;sign&quot;] = generate_sign(params, &quot;your_secret&quot;)
+        kwargs[&quot;params&quot;] = params
+        return super().request(method, path, **kwargs)
+</code></pre><hr><p><em>接口自动化不难，难的是坚持维护。一个好的测试框架，代码结构清晰、断言明确、数据分离。从第一个接口开始，慢慢积累，你会越来越得心应手。</em></p></section><footer class="article-meta article-footer"><section class=article-tags><a href=/tags/python/>Python</a>
+<a href=/tags/%E6%B5%8B%E8%AF%95/>测试</a>
+<a href=/tags/%E6%8E%A5%E5%8F%A3%E6%B5%8B%E8%AF%95/>接口测试</a></section></footer></article><aside><h2 class=section-title></h2><div class=subsection-list><div class=article-list--tile><article><a href=/post/can%E6%80%BB%E7%BA%BF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8/><div class=article-details><h2 class=article-title>CAN 总线日志分析入门：自动驾驶测试必备技能</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2019 -
+2026 Jasper's Blog</section><section class=powerby><br></section></footer><script type=module>
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script></main></div><script type=text/javascript src=/ts/main.acaf849f2b273f6a8368a58b001f336738d0c948d92e79b116467d0c7515f932.js defer></script></body></html>
