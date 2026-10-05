@@ -1,46 +1,74 @@
 ---
-title: A Tailscale MTU Cliff, Quantified
-description: "SSH hangs while ping flies? Small packets pass and large packets die — a classic black hole. How to measure the exact cliff with a DF ping sweep, and how to make the fix stick."
+title: 量化一条 Tailscale MTU 悬崖：小包通、大包死的排查与持久化修复
+description: SSH 握手挂死、大 JSON 拉不回来，ping 却通得好好的——一次公司↔家 WireGuard 链路的黑洞实测：DF ping 扫出悬崖位置，MTU 降到 1200，再 systemd timer + 看门狗让修复不被重连冲掉。
 date: 2026-10-05T12:10:00+08:00
-tags: [Networking, Tailscale, WireGuard, Troubleshooting]
+tags: [网络, Tailscale, WireGuard, 排查实录]
 ---
 
-## The Symptom: "Online" Services That Hang
+## 症状："在线"的服务挂死
 
-Two sites, connected via Tailscale. Small requests fly: the identity endpoint responds in 20 ms, single pings pass. But anything with a *large* response — an SSH handshake, a JSON list of media sections — hangs forever. The connection looks alive. It isn't.
+两台机器，公司↔家，Tailscale 直连。小请求飞快：identity 端点 20ms 秒回，小 ping 通。但任何**大响应**——SSH 握手、媒体库 JSON 列表——全部无限挂死。连接看起来活着，其实已经死了。
 
-Classic black-hole network path: **small packets pass, large packets die**. The tricky part is that "small packets pass" is exactly what makes it look like a configuration problem on your end, not the network.
+另一个干扰项：`plexplay` 播放器无响应、`ssh` 卡死，同一时间 RAG 索引这类小流量业务一切正常。这种"部分服务挂、部分服务活"的分裂景象，第一反应总是去查应用配置——**这正是黑洞路径最坑人的地方**：
 
-## Measure the Cliff, Don't Guess
+> 小包通，大包死。而"小包通"恰恰让你误以为是自己这边配置出了问题。
 
-Tailscale's interface MTU is 1280 by default, which means the inner packet plus WireGuard overhead (roughly +60 bytes) must survive the UDP path. To map the cliff, send DF-set pings of increasing inner size and watch where loss begins:
+## 别猜，测：DF ping 扫描定位悬崖
 
-| Inner payload | WireGuard-wrapped | Loss |
+Tailscale 接口 MTU 默认 1280，意味着内层包 + WireGuard 封装开销（约 +60B）必须能在 UDP 路径上活下来。逐级加大内层包长、置 DF 位发 ping，盯着丢包率从哪里开始爬升：
+
+| 内层负载 | WireGuard 封装后 | 丢包率 |
 |---|---|---|
-| 1200 B | ~1260 B | 0% |
-| 1230 B | ~1290 B | 66% |
-| 1272 B | ~1332 B | 100% |
+| 1200 B | ~1260 B | **0%** |
+| 1230 B | ~1290 B | **66%** |
+| 1272 B | ~1332 B | **100%** |
 
-The cliff sits between **1260 and 1290 wrapped bytes** — some middlebox on the path drops encapsulated packets above that threshold. Everything TCP tries to push a full-size segment into that gap and stalls.
+悬崖卡在**封装后 1260~1290 字节之间**——路径上某个中间盒把超过这个阈值的封装包全丢了。TCP 每次想推一个满尺寸分段进这个缝隙，就原地卡死。
 
-Two measurement gotchas worth their weight in gold:
+两个测试坑，值回票价：
 
-1. **Packets larger than MTU-28 get rejected locally** ("message too long") — that's your kernel refusing, not evidence about the path.
-2. Always set `-M do` (DF). Fragmentation will happily lie to you about path behavior.
+1. **超过 MTU-28 的包会被本地内核直接拒**（"message too long"）——那是你的内核在拒绝，不是路径证据。tailscale0 MTU=1280 时测试包 >1252B 全部本地报错，别当成丢包算；
+2. 一定带 `-M do`（DF 位）。分片会快乐地对你撒谎，把路径真实行为藏起来。
 
-## The Fix: Drop the Interface to 1200
+```bash
+ping -c 20 -s 1230 -M do <对端 tailscale IP>
+```
+
+## 修复：接口降到 1200
 
 ```bash
 ip link set dev tailscale0 mtu 1200
 ```
 
-TCP MSS automatically converges to 1160. After this: SSH transfers 1 MB in 1.45 s, API calls 0.02 s, streaming stable at the real uplink rate.
+TCP MSS 自动收敛到 1160。修复前后对比：
 
-But `tailscaled` **resets the MTU back to 1280 on reconnect** — so a one-shot command rots. Persist it:
+| 操作 | 修复前 | 修复后 |
+|---|---|---|
+| SSH 传 1MB | 挂死 | **1.45 s** |
+| Plex API 调用 | 部分挂 | **0.02 s** |
+| 流媒体测速 | 不可用 | **17 MB/s**（4Mbps，家宽上行真实水位） |
 
-- A systemd timer that idempotently re-sets MTU every 2 minutes;
-- A watchdog (every 3 min, rate-limited to once per 30 min) that detects the black-hole signature — small pings pass, ≥50% loss on 1200 B DF probes — and bounces the tunnel to renegotiate endpoints.
+## 一次性命令会腐烂：持久化两件套
 
-## The Takeaway
+坑在后面：`tailscaled` **每次重连都会把 MTU 重置回 1280**。手动敲的命令活不过一次网络切换。两层防护：
 
-"Everything works except the big things" is an MTU problem until proven otherwise. Quantify the cliff with a DF ping sweep before touching any application config — five minutes of scanning saves hours of blaming the wrong layer.
+**① systemd timer（每 2 分钟幂等重设）**
+
+```ini
+# /etc/systemd/system/tailscale-mtu.timer
+[Timer]
+OnBootSec=30
+OnUnitActiveSec=120
+```
+
+**② 看门狗（每 3 分钟探测黑洞特征，30 分钟限频）**
+
+探测逻辑 = 小 ping 通 **且** 1200B DF 探测丢包 ≥50% —— 这组组合就是黑洞签名。命中后 `tailscale down/up` 重协商，换一个 UDP endpoint 试试运气。日志落 `~/.local/state/omarchy/tailscale-watchdog.log`，健康轮次静默。
+
+配合 `tailscale set --operator=jasper`（用户级免 sudo 重连），整条链路无人值守。跑了一个月，链路瞬态劣化自愈，零人工介入。
+
+## 结论
+
+"什么都好，就是大事干不了"——在你碰任何应用配置之前，这**就是一个 MTU 问题，直到被证伪为止**。五分钟的 DF ping 扫描，能省下几个小时对着错误的层骂街。
+
+附赠一个现场判例：同一晚还出现过"午后大响应集体超时、两小时后自愈"的瞬态劣化——这类走公用 UDP 路径的抖动，重协商换 endpoint 即可，不是你机器的病。
